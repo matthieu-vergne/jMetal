@@ -8,6 +8,7 @@ import org.uma.jmetal.measure.PushMeasure;
 import org.uma.jmetal.measure.impl.SimplePushMeasure;
 import org.uma.jmetal.parameter.Parameter;
 import org.uma.jmetal.parameter.ParameterManager;
+import org.uma.jmetal.parameter.space.ParameterSpace;
 import org.uma.jmetal.util.naming.impl.SimpleDescribedEntity;
 
 /**
@@ -79,6 +80,11 @@ public class MeasurableParameter<Value> extends SimpleDescribedEntity implements
 	@Override
 	public Value get() {
 		return parameter.get();
+	}
+
+	@Override
+	public ParameterSpace<Value> getSpace() {
+		return parameter.getSpace();
 	}
 
 	@Override

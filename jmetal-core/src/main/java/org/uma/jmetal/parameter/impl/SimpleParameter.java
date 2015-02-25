@@ -1,6 +1,8 @@
 package org.uma.jmetal.parameter.impl;
 
 import org.uma.jmetal.parameter.Parameter;
+import org.uma.jmetal.parameter.space.ParameterSpace;
+import org.uma.jmetal.parameter.space.ParameterSpaceFactory;
 import org.uma.jmetal.util.naming.impl.SimpleDescribedEntity;
 
 /**
@@ -19,6 +21,11 @@ public class SimpleParameter<Value> extends SimpleDescribedEntity implements
 	 * The current {@link Value} of this {@link Parameter}.
 	 */
 	private Value value;
+	/**
+	 * The {@link ParameterSpace} which tells which values are compatible.
+	 */
+	private ParameterSpace<Value> space = new ParameterSpaceFactory()
+			.createFullSpace(true);
 
 	/**
 	 * Create a {@link SimpleParameter} with a given name and a given
@@ -55,11 +62,30 @@ public class SimpleParameter<Value> extends SimpleDescribedEntity implements
 
 	@Override
 	public void set(Value value) {
-		this.value = value;
+		if (!space.contains(value)) {
+			throw new InvalidValueException(this, value);
+		} else {
+			this.value = value;
+		}
 	}
 
 	@Override
 	public Value get() {
 		return value;
+	}
+
+	@Override
+	public ParameterSpace<Value> getSpace() {
+		return space;
+	}
+
+	public void setSpace(ParameterSpace<Value> space) {
+		if (!space.contains(value)) {
+			throw new InvalidValueException(this, value,
+					"impossible to change the space from " + this.space
+							+ " to " + space);
+		} else {
+			this.space = space;
+		}
 	}
 }
