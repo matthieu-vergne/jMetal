@@ -20,4 +20,5 @@ public interface ParameterSpace<Value> {
 	 */
 	public boolean contains(Value value);
 
+	public ParameterSpaceBrowser<Value> getBrowser();
 }

@@ -2,27 +2,51 @@ package org.uma.jmetal.parameter.space;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+
+import org.uma.jmetal.parameter.space.ParameterSpaceBrowser.BrowserMode;
+import org.uma.jmetal.parameter.space.impl.ImmutableExplicitParameterSpaceBrowser;
 
 public class ParameterSpaceFactory {
 
+	private final ParameterSpaceBrowserFactory browserFactory = new ParameterSpaceBrowserFactory();
+
 	public <Value> ParameterSpace<Value> createEmptySpace(
 			final boolean isNullAccepted) {
+		Collection<Value> values = isNullAccepted ? Arrays
+				.<Value> asList((Value) null) : Collections.<Value> emptyList();
+		final ParameterSpaceBrowser<Value> browser = new ImmutableExplicitParameterSpaceBrowser<>(
+				BrowserMode.INCLUSION, values);
 		return new ParameterSpace<Value>() {
 
 			@Override
 			public boolean contains(Value value) {
-				return value == null && isNullAccepted;
+				return browser.contains(value);
+			}
+
+			@Override
+			public ParameterSpaceBrowser<Value> getBrowser() {
+				return browser;
 			}
 		};
 	}
 
 	public <Value> ParameterSpace<Value> createFullSpace(
 			final boolean isNullAccepted) {
+		Collection<Value> values = !isNullAccepted ? Arrays
+				.<Value> asList((Value) null) : Collections.<Value> emptyList();
+		final ParameterSpaceBrowser<Value> browser = new ImmutableExplicitParameterSpaceBrowser<>(
+				BrowserMode.EXCLUSION, values);
 		return new ParameterSpace<Value>() {
 
 			@Override
 			public boolean contains(Value value) {
-				return value != null || isNullAccepted;
+				return !browser.contains(value);
+			}
+
+			@Override
+			public ParameterSpaceBrowser<Value> getBrowser() {
+				return browser;
 			}
 		};
 	}
@@ -34,22 +58,42 @@ public class ParameterSpaceFactory {
 
 	public <Value> ParameterSpace<Value> createExplicitSpace(
 			final Collection<Value> values) {
+		final ParameterSpaceBrowser<Value> browser = new ImmutableExplicitParameterSpaceBrowser<>(
+				BrowserMode.INCLUSION, values);
 		return new ParameterSpace<Value>() {
 
 			@Override
 			public boolean contains(Value value) {
-				return values.contains(value);
+				return browser.contains(value);
+			}
+
+			@Override
+			public ParameterSpaceBrowser<Value> getBrowser() {
+				return browser;
 			}
 		};
 	}
 
 	public <Value> ParameterSpace<Value> createComplementSpace(
 			final ParameterSpace<Value> space) {
+		final ParameterSpaceBrowser<Value> browser = browserFactory
+				.createComplementBrowser(space.getBrowser());
 		return new ParameterSpace<Value>() {
 
 			@Override
 			public boolean contains(Value value) {
-				return !space.contains(value);
+				if (browser.getMode() == BrowserMode.INCLUSION) {
+					return browser.contains(value);
+				} else if (browser.getMode() == BrowserMode.EXCLUSION) {
+					return !browser.contains(value);
+				} else {
+					throw new RuntimeException("Unmanaged case.");
+				}
+			}
+
+			@Override
+			public ParameterSpaceBrowser<Value> getBrowser() {
+				return browser;
 			}
 		};
 	}
@@ -88,6 +132,12 @@ public class ParameterSpaceFactory {
 					return c2;
 				}
 			}
+
+			@Override
+			public ParameterSpaceBrowser<Value> getBrowser() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		};
 	}
 
@@ -124,6 +174,12 @@ public class ParameterSpaceFactory {
 					}
 					return c2;
 				}
+			}
+
+			@Override
+			public ParameterSpaceBrowser<Value> getBrowser() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 		};
 	}
