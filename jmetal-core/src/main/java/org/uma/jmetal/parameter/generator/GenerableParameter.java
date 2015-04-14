@@ -1,6 +1,7 @@
 package org.uma.jmetal.parameter.generator;
 
 import org.uma.jmetal.parameter.Parameter;
+import org.uma.jmetal.parameter.generator.representer.ValueRepresenter;
 
 /**
  * A {@link GenerableParameter} is a {@link Parameter} providing facilities to
@@ -21,4 +22,15 @@ public interface GenerableParameter<Value> extends Parameter<Value> {
 	 *         {@link Parameter}
 	 */
 	public ValueGenerator<Value> getValueGenerator();
+
+	/**
+	 * 
+	 * @param representationClass
+	 *            the type of data to use to represent the {@link Value}s
+	 * @return <code>null</code> if no {@link ValueRepresenter} is available for
+	 *         the requested representation, a valid {@link ValueRepresenter}
+	 *         otherwise
+	 */
+	public <Representation> ValueRepresenter<Value, Representation> getRepresenterFor(
+			Class<Representation> representationClass);
 }
