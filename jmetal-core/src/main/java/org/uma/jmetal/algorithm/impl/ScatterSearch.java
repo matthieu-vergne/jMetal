@@ -12,9 +12,9 @@ import org.uma.jmetal.measure.impl.MeasureFactory;
 import org.uma.jmetal.measure.impl.SimpleMeasureManager;
 import org.uma.jmetal.measure.impl.SimplePushMeasure;
 import org.uma.jmetal.operator.Operator;
-import org.uma.jmetal.parameter.Parameter;
 import org.uma.jmetal.parameter.ParameterManager;
 import org.uma.jmetal.parameter.Parameterable;
+import org.uma.jmetal.parameter.impl.ParameterFactory;
 import org.uma.jmetal.parameter.impl.SimpleParameterManager;
 import org.uma.jmetal.solution.Solution;
 
@@ -103,28 +103,28 @@ public class ScatterSearch<S extends Solution<?>, ReferenceSet extends ScatterSe
 		this.referenceSetLimit = referenceSetLimit;
 	}
 
-	private int totalNumberOfEnhancedTrialSolutions = 100;
+	private int initialGenerationLimit = 100;
 
-	public int getTotalNumberOfEnhancedTrialSolutions() {
-		return totalNumberOfEnhancedTrialSolutions;
+	public int getInitialGenerationLimit() {
+		return initialGenerationLimit;
 	}
 
-	public void setTotalNumberOfEnhancedTrialSolutions(int totalNumberOfEnhancedTrialSolutions) {
-		this.totalNumberOfEnhancedTrialSolutions = totalNumberOfEnhancedTrialSolutions;
+	public void setInitialGenerationLimit(int totalNumberOfEnhancedTrialSolutions) {
+		this.initialGenerationLimit = totalNumberOfEnhancedTrialSolutions;
 	}
 
-	private Operator<Collection<Subset>, Boolean> subsetGenerationDecisionMaker;
+	private Operator<Collection<Subset>, Boolean> subsetLimiter;
 
-	public Operator<Collection<Subset>, Boolean> getSubsetGenerationDecisionMaker() {
-		return subsetGenerationDecisionMaker;
+	public Operator<Collection<Subset>, Boolean> getSubsetLimiter() {
+		return subsetLimiter;
 	}
 
-	public void setSubsetGenerationDecisionMaker(Operator<Collection<Subset>, Boolean> subsetGenerationDecisionMaker) {
-		this.subsetGenerationDecisionMaker = subsetGenerationDecisionMaker;
+	public void setSubsetLimiter(Operator<Collection<Subset>, Boolean> subsetGenerationDecisionMaker) {
+		this.subsetLimiter = subsetGenerationDecisionMaker;
 	}
 
 	public boolean shouldGenerateMoreSubsets(Collection<Subset> subsets) {
-		return subsetGenerationDecisionMaker.execute(subsets);
+		return subsetLimiter.execute(subsets);
 	}
 
 	private int iterationLimit = 1000;
@@ -161,243 +161,65 @@ public class ScatterSearch<S extends Solution<?>, ReferenceSet extends ScatterSe
          * Parameters *
         \**************/
     	
-		parameterManager.addParameter(new Parameter<Operator<S, Collection<S>>>() {
-
-			@Override
-			public void set(Operator<S, Collection<S>> value) {
-				setDiversificationGenerator(value);
-			}
-
-			@Override
-			public Operator<S, Collection<S>> get() {
-				return getDiversificationGenerator();
-			}
-
-			@Override
-			public String getName() {
-				return "Diversification Generator";
-			}
-
-			@Override
-			public String getDescription() {
-				return "Generate a collection of diverse trial solutions, " +
-						"using an arbitrary trial solution (or seed solution) " +
-						"as an input.";
-			}
-		});
-		parameterManager.addParameter(new Parameter<Operator<S, Collection<S>>>() {
-
-			@Override
-			public void set(Operator<S, Collection<S>> value) {
-				setImprovementMethod(value);
-			}
-
-			@Override
-			public Operator<S, Collection<S>> get() {
-				return getImprovementMethod();
-			}
-
-			@Override
-			public String getName() {
-				return "Improvement Method";
-			}
-
-			@Override
-			public String getDescription() {
-				return "Transform a trial solution into one or more " +
-						"enhanced trial solutions.  (Neither the input " +
-						"nor output solutions are required to be feasible, " +
-						"though the output solutions will more usually be " +
-						"expected to be so. If no improvement of the input " +
-						"trial solution results, the “enhanced” solution is " +
-						"considered to be the same as the input solution.)";
-			}
-		});
-		parameterManager.addParameter(new Parameter<Operator<Integer, ReferenceSet>>() {
-
-			@Override
-			public void set(Operator<Integer, ReferenceSet> value) {
-				setReferenceSetBuilder(value);
-			}
-
-			@Override
-			public Operator<Integer, ReferenceSet> get() {
-				return getReferenceSetBuilder();
-			}
-
-			@Override
-			public String getName() {
-				return "Reference Set Builder";
-			}
-
-			@Override
-			public String getDescription() {
-				return "Build a Reference Set consisting of the b best solutions " +
-						"found (where the value of b is typically small, e.g., " +
-						"between 20 and 40), organized to provide efficient " +
-						"accessing by other parts of the method.";
-			}
-		});
-		parameterManager.addParameter(new Parameter<Operator<ReferenceSet, Subset>>() {
-
-			@Override
-			public void set(Operator<ReferenceSet, Subset> value) {
-				setSubsetGenerationMethod(value);
-			}
-
-			@Override
-			public Operator<ReferenceSet, Subset> get() {
-				return getSubsetGenerationMethod();
-			}
-
-			@Override
-			public String getName() {
-				return "Subset Generation Method";
-			}
-
-			@Override
-			public String getDescription() {
-				return "Operate on the Reference Set, to produce a subset of its " +
-						"solutions as a basis for creating combined solutions.";
-			}
-		});
-		parameterManager.addParameter(new Parameter<Operator<Subset, Collection<S>>>() {
-
-			@Override
-			public void set(Operator<Subset, Collection<S>> value) {
-				setSolutionCombinationMethod(value);
-			}
-
-			@Override
-			public Operator<Subset, Collection<S>> get() {
-				return getSolutionCombinationMethod();
-			}
-
-			@Override
-			public String getName() {
-				return "Solution Combination Method";
-			}
-
-			@Override
-			public String getDescription() {
-				return "Transform a given subset of solutions produced by the " +
-						"Subset Generation Method into one or more combined " +
-						"solution vectors.";
-			}
-		});
-		parameterManager.addParameter(new Parameter<Collection<S>>() {
-
-			@Override
-			public void set(Collection<S> value) {
-				setSeedSolutions(value);
-			}
-
-			@Override
-			public Collection<S> get() {
-				return getSeedSolutions();
-			}
-
-			@Override
-			public String getName() {
-				return "Seed Solutions";
-			}
-
-			@Override
-			public String getDescription() {
-				return "The initial solutions to use as seeds for the initial " +
-						"phase of the Scatter Search algorithm.";
-			}
-		});
-		parameterManager.addParameter(new Parameter<Integer>() {
-
-			@Override
-			public void set(Integer value) {
-				setReferenceSetLimit(value);
-			}
-
-			@Override
-			public Integer get() {
-				return getReferenceSetLimit();
-			}
-
-			@Override
-			public String getName() {
-				return "Reference Set Limit";
-			}
-
-			@Override
-			public String getDescription() {
-				return "The maximal number of solutions to store in the Reference Set.";
-			}
-		});
-		parameterManager.addParameter(new Parameter<Integer>() {
-
-			@Override
-			public void set(Integer value) {
-				setTotalNumberOfEnhancedTrialSolutions(value);
-			}
-
-			@Override
-			public Integer get() {
-				return getTotalNumberOfEnhancedTrialSolutions();
-			}
-
-			@Override
-			public String getName() {
-				return "Initial Generation Limit";
-			}
-
-			@Override
-			public String getDescription() {
-				return "The number of solutions to generate for the initial phase.";
-			}
-		});
-		parameterManager.addParameter(new Parameter<Integer>() {
-
-			@Override
-			public void set(Integer value) {
-				setIterationLimit(value);
-			}
-
-			@Override
-			public Integer get() {
-				return getIterationLimit();
-			}
-
-			@Override
-			public String getName() {
-				return "Iteration Limit";
-			}
-
-			@Override
-			public String getDescription() {
-				return "The number of iteration to perform before to stop " +
-						"the Scatter Search phase.";
-			}
-		});
-		parameterManager.addParameter(new Parameter<Operator<Collection<Subset>, Boolean>>() {
-
-			@Override
-			public void set(Operator<Collection<Subset>, Boolean> value) {
-				setSubsetGenerationDecisionMaker(value);
-			}
-
-			@Override
-			public Operator<Collection<Subset>, Boolean> get() {
-				return getSubsetGenerationDecisionMaker();
-			}
-
-			@Override
-			public String getName() {
-				return "Subset Limiter";
-			}
-
-			@Override
-			public String getDescription() {
-				return "Tells when the subsets generated are enough to pass " +
-						"to the solution combination step.";
-			}
-		});
+    	ParameterFactory parameterFactory = new ParameterFactory();
+		parameterManager.addParameter(parameterFactory.<Operator<S, Collection<S>>> createParameterFromSetterGetter(
+				this,
+				"Diversification Generator",
+				"Generate a collection of diverse trial solutions, "
+				+ "using an arbitrary trial solution (or seed solution) "
+				+ "as an input."));
+		parameterManager.addParameter(parameterFactory.<Operator<S, Collection<S>>> createParameterFromSetterGetter(
+				this,
+				"Improvement Method",
+				"Transform a trial solution into one or more "
+				+ "enhanced trial solutions.  (Neither the input "
+				+ "nor output solutions are required to be feasible, "
+				+ "though the output solutions will more usually be "
+				+ "expected to be so. If no improvement of the input "
+				+ "trial solution results, the “enhanced” solution is "
+				+ "considered to be the same as the input solution.)"));
+		parameterManager.addParameter(parameterFactory.<Operator<Integer, ReferenceSet>> createParameterFromSetterGetter(
+				this,
+				"Reference Set Builder",
+				"Build a Reference Set consisting of the b best solutions "
+				+ "found (where the value of b is typically small, e.g., "
+				+ "between 20 and 40), organized to provide efficient "
+				+ "accessing by other parts of the method."));
+		parameterManager.addParameter(parameterFactory.<Operator<ReferenceSet, Subset>> createParameterFromSetterGetter(
+				this,
+				"Subset Generation Method",
+				"Operate on the Reference Set, to produce a subset of its "
+				+ "solutions as a basis for creating combined solutions."));
+		parameterManager.addParameter(parameterFactory.<Operator<Subset, Collection<S>>> createParameterFromSetterGetter(
+				this,
+				"Solution Combination Method",
+				"Transform a given subset of solutions produced by the "
+				+ "Subset Generation Method into one or more combined "
+				+ "solution vectors."));
+		
+		parameterManager.addParameter(parameterFactory.<Collection<S>> createParameterFromSetterGetter(
+				this,
+				"Seed Solutions",
+				"The initial solutions to use as seeds for the initial "
+				+ "phase of the Scatter Search algorithm."));
+		parameterManager.addParameter(parameterFactory.<Integer> createParameterFromSetterGetter(
+				this,
+				"Reference Set Limit",
+				"The maximal number of solutions to store in the Reference Set."));
+		parameterManager.addParameter(parameterFactory.<Integer> createParameterFromSetterGetter(
+				this,
+				"Initial Generation Limit",
+				"The number of solutions to generate for the initial phase."));
+		parameterManager.addParameter(parameterFactory.<Integer> createParameterFromSetterGetter(
+				this,
+				"Iteration Limit",
+				"The number of iteration to perform before to stop "
+				+ "the Scatter Search phase."));
+		parameterManager.addParameter(parameterFactory.<Operator<Collection<Subset>, Boolean>> createParameterFromSetterGetter(
+				this,
+				"Subset Limiter",
+				"Tells when the subsets generated are enough to pass "
+				+ "to the solution combination step."));
 		
         /************\
          * Measures *
@@ -412,9 +234,9 @@ public class ScatterSearch<S extends Solution<?>, ReferenceSet extends ScatterSe
 		measureManager.setPushMeasure(phaseMeasure.getName(), phaseMeasure);
 		measureManager.setPushMeasure(iteration.getName(), iteration);
 	    
-		MeasureFactory factory = new MeasureFactory();
-		measureManager.setPullMeasure(lastReferenceSetUpdate.getName(), factory.createPullFromPush(lastReferenceSetUpdate, null));
-		measureManager.setPullMeasure(phaseMeasure.getName(), factory.createPullFromPush(phaseMeasure, Phase.STOP));
+		MeasureFactory measureFactory = new MeasureFactory();
+		measureManager.setPullMeasure(lastReferenceSetUpdate.getName(), measureFactory.createPullFromPush(lastReferenceSetUpdate, null));
+		measureManager.setPullMeasure(phaseMeasure.getName(), measureFactory.createPullFromPush(phaseMeasure, Phase.STOP));
 		measureManager.setPullMeasure(iteration.getName(), iteration);
 		
 	}
@@ -468,7 +290,7 @@ public class ScatterSearch<S extends Solution<?>, ReferenceSet extends ScatterSe
                 seedSolutions.addAll(enhancedTrialSolutions);
                 enhancedTrialSolutionsCounter += enhancedTrialSolutions.size();
             }
-        } while(enhancedTrialSolutionsCounter < getTotalNumberOfEnhancedTrialSolutions() && !seedSolutions.isEmpty());
+        } while(enhancedTrialSolutionsCounter < getInitialGenerationLimit() && !seedSolutions.isEmpty());
         
         /************************\
          * Scatter Search Phase *
