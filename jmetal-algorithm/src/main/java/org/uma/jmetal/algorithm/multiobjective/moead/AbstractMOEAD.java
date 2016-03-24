@@ -21,6 +21,10 @@ import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
+import org.uma.jmetal.util.weight.WeightingStrategy;
+import org.uma.jmetal.util.weight.impl.MOEAD_AGG;
+import org.uma.jmetal.util.weight.impl.MOEAD_PBI;
+import org.uma.jmetal.util.weight.impl.MOEAD_TCHE;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -40,10 +44,10 @@ public abstract class AbstractMOEAD<S extends Solution<?>> implements Algorithm<
   protected enum NeighborType {NEIGHBOR, POPULATION}
   public enum FunctionType {TCHE, PBI, AGG}
 
-  protected Problem<S> problem ;
+  protected final Problem<S> problem ;
 
   /** Z vector in Zhang & Li paper */
-  protected double[] idealPoint;
+  protected final double[] idealPoint;
   // nadir point
   protected double[] nadirPoint;
   /** Lambda vectors */
@@ -57,7 +61,7 @@ public abstract class AbstractMOEAD<S extends Solution<?>> implements Algorithm<
   protected int maximumNumberOfReplacedSolutions;
 
   protected Solution<?>[] indArray;
-  protected FunctionType functionType;
+  protected WeightingStrategy<S, Double> fitnessFunction;
 
   protected String dataDirectory;
 
@@ -78,7 +82,7 @@ public abstract class AbstractMOEAD<S extends Solution<?>> implements Algorithm<
 
   public AbstractMOEAD(Problem<S> problem, int populationSize, int resultPopulationSize,
       int maxEvaluations, CrossoverOperator<S> crossoverOperator, MutationOperator<S> mutation,
-      FunctionType functionType, String dataDirectory, double neighborhoodSelectionProbability,
+      WeightingStrategy<S, Double> fitnessFunction, String dataDirectory, double neighborhoodSelectionProbability,
       int maximumNumberOfReplacedSolutions, int neighborSize) {
     this.problem = problem ;
     this.populationSize = populationSize ;
@@ -86,7 +90,7 @@ public abstract class AbstractMOEAD<S extends Solution<?>> implements Algorithm<
     this.maxEvaluations = maxEvaluations ;
     this.mutationOperator = mutation ;
     this.crossoverOperator = crossoverOperator ;
-    this.functionType = functionType ;
+    this.fitnessFunction = fitnessFunction ;
     this.dataDirectory = dataDirectory ;
     this.neighborhoodSelectionProbability = neighborhoodSelectionProbability ;
     this.maximumNumberOfReplacedSolutions = maximumNumberOfReplacedSolutions ;
@@ -307,57 +311,18 @@ public abstract class AbstractMOEAD<S extends Solution<?>> implements Algorithm<
   }
 
   double fitnessFunction(S individual, double[] lambda) throws JMetalException {
-    double fitness;
-
-    if (MOEAD.FunctionType.TCHE.equals(functionType)) {
-      double maxFun = -1.0e+30;
-
-      for (int n = 0; n < problem.getNumberOfObjectives(); n++) {
-        double diff = Math.abs(individual.getObjective(n) - idealPoint[n]);
-
-        double feval;
-        if (lambda[n] == 0) {
-          feval = 0.0001 * diff;
-        } else {
-          feval = diff * lambda[n];
-        }
-        if (feval > maxFun) {
-          maxFun = feval;
-        }
-      }
-
-      fitness = maxFun;
-    } else if (MOEAD.FunctionType.AGG.equals(functionType)) {
-      double sum = 0.0;
-      for (int n = 0; n < problem.getNumberOfObjectives(); n++) {
-        sum += (lambda[n]) * individual.getObjective(n);
-      }
-
-      fitness = sum;
-
-    } else if (MOEAD.FunctionType.PBI.equals(functionType)) {
-      double d1, d2, nl;
-      double theta = 5.0;
-
-      d1 = d2 = nl = 0.0;
-
-      for (int i = 0; i < problem.getNumberOfObjectives(); i++) {
-        d1 += (individual.getObjective(i) - idealPoint[i]) * lambda[i];
-        nl += Math.pow(lambda[i], 2.0);
-      }
-      nl = Math.sqrt(nl);
-      d1 = Math.abs(d1) / nl;
-
-      for (int i = 0; i < problem.getNumberOfObjectives(); i++) {
-        d2 += Math.pow((individual.getObjective(i) - idealPoint[i]) - d1 * (lambda[i] / nl), 2.0);
-      }
-      d2 = Math.sqrt(d2);
-
-      fitness = (d1 + theta * d2);
+    if (MOEAD.FunctionType.TCHE.equals(fitnessFunction)) {
+    	WeightingStrategy<S, Double> function = new MOEAD_TCHE<>(idealPoint, lambda, problem.getNumberOfObjectives());
+		return function.weight(individual);
+    } else if (MOEAD.FunctionType.AGG.equals(fitnessFunction)) {
+    	WeightingStrategy<S, Double> function = new MOEAD_AGG<>(lambda, problem.getNumberOfObjectives());
+		return function.weight(individual);
+    } else if (MOEAD.FunctionType.PBI.equals(fitnessFunction)) {
+    	WeightingStrategy<S, Double> function = new MOEAD_PBI<>(idealPoint, lambda, problem.getNumberOfObjectives());
+		return function.weight(individual);
     } else {
-      throw new JMetalException(" MOEAD.fitnessFunction: unknown type " + functionType);
+      throw new JMetalException(" MOEAD.fitnessFunction: unknown type " + fitnessFunction);
     }
-    return fitness;
   }
 
   @Override public List<S> getResult() {
