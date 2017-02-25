@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
-public class GenerateBoxplotsWithR<Result> implements ExperimentComponent {
+public class GenerateBoxplotsWithR<Result extends List<?>> implements ExperimentComponent {
   private static final String DEFAULT_R_DIRECTORY = "R";
 
   private final Experiment<?, Result> experiment;

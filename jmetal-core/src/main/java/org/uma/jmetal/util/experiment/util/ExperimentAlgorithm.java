@@ -30,7 +30,7 @@ import java.util.concurrent.Callable;
  *
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
-public class ExperimentAlgorithm<S extends Solution<?>, Result>  {
+public class ExperimentAlgorithm<S extends Solution<?>, Result extends List<S>>  {
   private Algorithm<Result> algorithm;
   private String algorithmTag;
   private String problemTag;
@@ -82,7 +82,7 @@ public class ExperimentAlgorithm<S extends Solution<?>, Result>  {
     algorithm.run();
     Result population = algorithm.getResult();
 
-    new SolutionListOutput((List<S>) population)
+    new SolutionListOutput(population)
             .setSeparator("\t")
             .setVarFileOutputContext(new DefaultFileOutputContext(varFile))
             .setFunFileOutputContext(new DefaultFileOutputContext(funFile))

@@ -49,7 +49,7 @@ import java.util.*;
  *
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
-public class ComputeQualityIndicators<S extends Solution<?>, Result> implements ExperimentComponent {
+public class ComputeQualityIndicators<S extends Solution<?>, Result extends List<S>> implements ExperimentComponent {
 
   private final Experiment<S, Result> experiment;
 

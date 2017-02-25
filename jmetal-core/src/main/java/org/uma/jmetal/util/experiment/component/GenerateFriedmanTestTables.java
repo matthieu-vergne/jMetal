@@ -41,7 +41,7 @@ import java.util.*;
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
 
-public class GenerateFriedmanTestTables<Result> implements ExperimentComponent {
+public class GenerateFriedmanTestTables<Result extends List<?>> implements ExperimentComponent {
   private static final String DEFAULT_LATEX_DIRECTORY = "latex";
 
   private final Experiment<?, Result> experiment;
