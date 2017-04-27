@@ -1,7 +1,7 @@
 package org.uma.jmetal.solution.impl;
 
 import org.junit.Test;
-import org.uma.jmetal.solution.SolutionBuilder.Variable;
+import org.uma.jmetal.solution.Variable;
 import org.uma.jmetal.solution.impl.VariableFactory.IsInterfaceException;
 
 import java.util.Arrays;
@@ -16,7 +16,7 @@ public class VariableFactoryTest {
 			Collection<Variable<Solution, ?>> variables) {
 		Collection<String> names = new LinkedList<>();
 		for (Variable<Solution, ?> variable : variables) {
-			names.add(variable.getName());
+			names.add(variable.toString());
 		}
 		return names;
 	}
@@ -30,19 +30,14 @@ public class VariableFactoryTest {
 			this.name = name;
 			this.value = value;
 		}
-
+		
 		@Override
-		public String getName() {
+		public String toString() {
 			return name;
 		}
 
 		@Override
-		public String getDescription() {
-			return "Description of " + name;
-		}
-
-		@Override
-		public Object get(Object solution) {
+		public Object readFrom(Object solution) {
 			return value;
 		}
 
@@ -58,9 +53,9 @@ public class VariableFactoryTest {
 
 		Collection<String> names = retrieveVariableNames(variables);
 		assertEquals(names.toString(), 3, names.size());
-		assertTrue(names.contains(variable1.getName()));
-		assertTrue(names.contains(variable2.getName()));
-		assertTrue(names.contains(variable3.getName()));
+		assertTrue(names.contains(variable1.toString()));
+		assertTrue(names.contains(variable2.toString()));
+		assertTrue(names.contains(variable3.toString()));
 	}
 
 	private interface EmptySolution {

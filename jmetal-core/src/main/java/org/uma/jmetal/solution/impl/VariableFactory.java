@@ -1,6 +1,6 @@
 package org.uma.jmetal.solution.impl;
 
-import org.uma.jmetal.solution.SolutionBuilder.Variable;
+import org.uma.jmetal.solution.Variable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -221,7 +221,7 @@ public class VariableFactory {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public Value get(Solution solution) {
+			public Value readFrom(Solution solution) {
 				try {
 					return (Value) getter.invoke(solution);
 				} catch (Exception e) {
@@ -230,19 +230,8 @@ public class VariableFactory {
 			}
 
 			@Override
-			public String getName() {
-				return name;
-			}
-
-			@Override
-			public String getDescription() {
-				return type.getSimpleName() + " value for the "
-						+ solutionClass.getSimpleName() + " solutions.";
-			}
-
-			@Override
 			public String toString() {
-				return getName();
+				return name;
 			}
 		};
 	}

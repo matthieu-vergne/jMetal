@@ -1,22 +1,20 @@
 package org.uma.jmetal.solution.impl;
 
-import org.junit.Test;
-import org.uma.jmetal.solution.SolutionEvaluator.Objective;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.uma.jmetal.solution.Objective;
 
 public class ObjectiveFactoryTest {
 
-	private <Solution> Collection<String> retrieveObjectiveNames(
-			Collection<Objective<Solution, ?>> objectives) {
+	private <Solution> Collection<String> retrieveObjectiveNames(Collection<Objective<Solution, ?>> objectives) {
 		Collection<String> names = new LinkedList<>();
 		for (Objective<Solution, ?> objective : objectives) {
-			names.add(objective.getName());
+			names.add(objective.toString());
 		}
 		return names;
 	}
@@ -32,17 +30,12 @@ public class ObjectiveFactoryTest {
 		}
 
 		@Override
-		public String getName() {
+		public String toString() {
 			return name;
 		}
 
 		@Override
-		public String getDescription() {
-			return "Description of " + name;
-		}
-
-		@Override
-		public Object get(Object solution) {
+		public Object readFrom(Object solution) {
 			return value;
 		}
 
@@ -53,14 +46,13 @@ public class ObjectiveFactoryTest {
 		Objective<Object, ?> objective1 = new FakeObjective("a", null);
 		Objective<Object, ?> objective2 = new FakeObjective("b", null);
 		Objective<Object, ?> objective3 = new FakeObjective("c", null);
-		Collection<Objective<Object, ?>> objectives = Arrays.asList(objective1,
-				objective2, objective3);
+		Collection<Objective<Object, ?>> objectives = Arrays.asList(objective1, objective2, objective3);
 
 		Collection<String> names = retrieveObjectiveNames(objectives);
 		assertEquals(names.toString(), 3, names.size());
-		assertTrue(names.contains(objective1.getName()));
-		assertTrue(names.contains(objective2.getName()));
-		assertTrue(names.contains(objective3.getName()));
+		assertTrue(names.contains(objective1.toString()));
+		assertTrue(names.contains(objective2.toString()));
+		assertTrue(names.contains(objective3.toString()));
 	}
 
 	private interface EmptySolution {
@@ -90,8 +82,7 @@ public class ObjectiveFactoryTest {
 		ObjectiveFactory factory = new ObjectiveFactory();
 
 		{
-			Collection<Objective<EmptySolution, ?>> objectives = factory
-					.createFromGetters(EmptySolution.class);
+			Collection<Objective<EmptySolution, ?>> objectives = factory.createFromGetters(EmptySolution.class);
 			assertTrue(objectives.toString(), objectives.isEmpty());
 		}
 

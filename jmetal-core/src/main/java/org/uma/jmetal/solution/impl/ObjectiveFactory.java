@@ -1,13 +1,13 @@
 package org.uma.jmetal.solution.impl;
 
-import org.uma.jmetal.solution.SolutionEvaluator.Objective;
-
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.uma.jmetal.solution.Objective;
 
 /**
  * This factory provides facilities to generate {@link Objective}s from usual
@@ -122,23 +122,17 @@ public class ObjectiveFactory {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public Value get(Solution solution) {
+			public Value readFrom(Solution solution) {
 				try {
 					return (Value) getter.invoke(solution);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
 			}
-
+			
 			@Override
-			public String getName() {
+			public String toString() {
 				return name;
-			}
-
-			@Override
-			public String getDescription() {
-				return type.getSimpleName() + " value for the "
-						+ solutionClass.getSimpleName() + " solutions.";
 			}
 		};
 	}
