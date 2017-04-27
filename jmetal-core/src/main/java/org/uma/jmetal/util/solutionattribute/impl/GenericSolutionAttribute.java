@@ -24,37 +24,24 @@ import org.uma.jmetal.util.solutionattribute.SolutionAttribute;
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
 @SuppressWarnings("serial")
-public class GenericSolutionAttribute <S extends Solution<?>, V> implements SolutionAttribute<S, V>{
-  private Object identifier;
+public class GenericSolutionAttribute <S extends Solution<?>, V> extends ReaderWriterSolutionAttribute<S, V>{
 
   /**
    * Constructor
    */
+  @SuppressWarnings("unchecked")
   public GenericSolutionAttribute() {
-    identifier = this.getClass() ;
+    super(null, null);
+    setAttributeReader((s) -> (V) s.getAttribute(getAttributeIdentifier()));
+    setAttributeWriter((s,v) -> s.setAttribute(getAttributeIdentifier(), v));
   }
 
   /**
    * Constructor
    * @param id Attribute identifier
    */
-  public GenericSolutionAttribute(Object id) {
-    this.identifier = id ;
-  }
-
   @SuppressWarnings("unchecked")
-  @Override
-  public V getAttribute(S solution) {
-    return (V)solution.getAttribute(getAttributeIdentifier());
-  }
-
-  @Override
-  public void setAttribute(S solution, V value) {
-     solution.setAttribute(getAttributeIdentifier(), value);
-  }
-
-  @Override
-  public Object getAttributeIdentifier() {
-    return identifier;
+  public GenericSolutionAttribute(Object id) {
+    super((s) -> (V) s.getAttribute(id), (s,v) -> s.setAttribute(id, v));
   }
 }
