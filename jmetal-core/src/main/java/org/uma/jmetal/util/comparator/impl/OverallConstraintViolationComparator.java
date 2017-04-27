@@ -13,7 +13,6 @@
 
 package org.uma.jmetal.util.comparator.impl;
 
-import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.comparator.ConstraintViolationComparator;
 import org.uma.jmetal.util.solutionattribute.impl.OverallConstraintViolation;
 
@@ -24,7 +23,7 @@ import org.uma.jmetal.util.solutionattribute.impl.OverallConstraintViolation;
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
 @SuppressWarnings("serial")
-public class OverallConstraintViolationComparator<S extends Solution<?>>
+public class OverallConstraintViolationComparator<S>
     implements ConstraintViolationComparator<S> {
   private OverallConstraintViolation<S> overallConstraintViolation ;
 

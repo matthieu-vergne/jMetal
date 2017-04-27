@@ -41,14 +41,6 @@ public class ReaderWriterSolutionAttribute <S, V> implements SolutionAttribute<S
   }
 
   /**
-   * Constructor usable only by extensions for cases where they cannot provide the
-   * reader/writer to the constructor.
-   */
-  protected ReaderWriterSolutionAttribute() {
-    identifier = this.getClass() ;
-  }
-
-  /**
    * Constructor
    * @param id Attribute identifier
    */
