@@ -2,6 +2,8 @@ package org.uma.jmetal.solution.impl;
 
 import org.uma.jmetal.problem.IntegerDoubleProblem;
 import org.uma.jmetal.solution.IntegerDoubleSolution;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.HashMap;
 
@@ -20,12 +22,22 @@ public class DefaultIntegerDoubleSolution
 
   /** Constructor */
   public DefaultIntegerDoubleSolution(IntegerDoubleProblem<?> problem) {
+	  this(problem, (min, max) -> JMetalRandom.getInstance().nextInt(min, max), (min, max) -> JMetalRandom.getInstance().nextDouble(min, max));
+  }
+
+  /** Constructor */
+  public DefaultIntegerDoubleSolution(IntegerDoubleProblem<?> problem, BoundedRandomGenerator<Double> randomValueGenerator) {
+	  this(problem, BoundedRandomGenerator.fromDoubleToInteger(randomValueGenerator), randomValueGenerator);
+  }
+
+  /** Constructor */
+  public DefaultIntegerDoubleSolution(IntegerDoubleProblem<?> problem, BoundedRandomGenerator<Integer> integerRandomGenerator, BoundedRandomGenerator<Double> doubleRandomGenerator) {
     super(problem) ;
 
     numberOfIntegerVariables = problem.getNumberOfIntegerVariables() ;
     numberOfDoubleVariables = problem.getNumberOfDoubleVariables() ;
 
-    initializeIntegerDoubleVariables() ;
+    initializeIntegerDoubleVariables(integerRandomGenerator, doubleRandomGenerator) ;
     initializeObjectiveValues() ;
   }
 
@@ -78,14 +90,14 @@ public class DefaultIntegerDoubleSolution
     return getVariableValue(index).toString() ;
   }
   
-  private void initializeIntegerDoubleVariables() {
+  private void initializeIntegerDoubleVariables(BoundedRandomGenerator<Integer> integerRandomGenerator, BoundedRandomGenerator<Double> doubleRandomGenerator) {
     for (int i = 0 ; i < numberOfIntegerVariables; i++) {
-      Integer value = randomGenerator.nextInt((Integer)getLowerBound(i), (Integer)getUpperBound(i)) ;
+      Integer value = integerRandomGenerator.getRandomValue((Integer)getLowerBound(i), (Integer)getUpperBound(i)) ;
       setVariableValue(i, value) ;
     }
 
     for (int i = numberOfIntegerVariables ; i < getNumberOfVariables(); i++) {
-      Double value = randomGenerator.nextDouble((Double)getLowerBound(i), (Double)getUpperBound(i)) ;
+      Double value = doubleRandomGenerator.getRandomValue((Double)getLowerBound(i), (Double)getUpperBound(i)) ;
       setVariableValue(i, value) ;
     }
   }
