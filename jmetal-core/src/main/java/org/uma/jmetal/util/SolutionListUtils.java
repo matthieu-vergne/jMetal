@@ -224,11 +224,11 @@ public class SolutionListUtils {
    * This operation is needed for minimization problem
    *
    * @param solutionList The front to invert
-   * @param randomGenerator The random generator to use
+   * @param randomIndexGenerator The random generator to use
    * @return The inverted front
    */
   public static <S> List<S> selectNRandomDifferentSolutions(
-      int numberOfSolutionsToBeReturned, List<S> solutionList, BoundedRandomGenerator<Integer> randomGenerator) {
+      int numberOfSolutionsToBeReturned, List<S> solutionList, BoundedRandomGenerator<Integer> randomIndexGenerator) {
     if (null == solutionList) {
       throw new JMetalException("The solution list is null") ;
     } else if (solutionList.size() == 0) {
@@ -245,7 +245,7 @@ public class SolutionListUtils {
     } else {
       Collection<Integer> positions = new HashSet<>(numberOfSolutionsToBeReturned);
       while (positions.size() < numberOfSolutionsToBeReturned) {
-        int nextPosition = randomGenerator.getRandomValue(0, solutionList.size() - 1);
+        int nextPosition = randomIndexGenerator.getRandomValue(0, solutionList.size() - 1);
         if (!positions.contains(nextPosition)) {
           positions.add(nextPosition);
           resultList.add(solutionList.get(nextPosition));
