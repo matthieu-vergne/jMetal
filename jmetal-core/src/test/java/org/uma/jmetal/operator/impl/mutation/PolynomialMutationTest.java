@@ -23,6 +23,7 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 import org.uma.jmetal.solution.util.RepairDoubleSolutionAtBounds;
 import org.uma.jmetal.util.JMetalException;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 import org.uma.jmetal.util.pseudorandom.impl.AuditableRandomGenerator;
@@ -137,7 +138,7 @@ public class PolynomialMutationTest {
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(1.0) ;
 
     PolynomialMutation mutation = new PolynomialMutation(mutationProbability, distributionIndex, randomGenerator) ;
-    DoubleProblem problem = new MockDoubleProblem(1) ;
+    DoubleProblem problem = new MockDoubleProblem(1, BoundedRandomGenerator.bound(randomGenerator)) ;
     DoubleSolution solution = problem.createSolution() ;
     DoubleSolution oldSolution = (DoubleSolution)solution.copy() ;
 
@@ -157,7 +158,7 @@ public class PolynomialMutationTest {
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.005, 0.6) ;
 
     PolynomialMutation mutation = new PolynomialMutation(mutationProbability, distributionIndex, randomGenerator) ;
-    DoubleProblem problem = new MockDoubleProblem(1) ;
+    DoubleProblem problem = new MockDoubleProblem(1, BoundedRandomGenerator.bound(randomGenerator)) ;
     DoubleSolution solution = problem.createSolution() ;
 
     mutation.execute(solution) ;
@@ -178,7 +179,7 @@ public class PolynomialMutationTest {
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.005, 0.1) ;
 
     PolynomialMutation mutation = new PolynomialMutation(mutationProbability, distributionIndex, randomGenerator) ;
-    DoubleProblem problem = new MockDoubleProblem(1) ;
+    DoubleProblem problem = new MockDoubleProblem(1, BoundedRandomGenerator.bound(randomGenerator)) ;
     DoubleSolution solution = problem.createSolution() ;
 
     mutation.execute(solution) ;
@@ -199,7 +200,7 @@ public class PolynomialMutationTest {
 
     PolynomialMutation mutation = new PolynomialMutation(mutationProbability, distributionIndex, randomGenerator) ;
 
-    MockDoubleProblem problem = new MockDoubleProblem(1) ;
+    MockDoubleProblem problem = new MockDoubleProblem(1, BoundedRandomGenerator.bound(randomGenerator)) ;
     ReflectionTestUtils.setField(problem, "lowerLimit", Arrays.asList(new Double[]{1.0}));
     ReflectionTestUtils.setField(problem, "upperLimit", Arrays.asList(new Double[]{1.0}));
 
@@ -216,10 +217,18 @@ public class PolynomialMutationTest {
   @SuppressWarnings("serial")
   private class MockDoubleProblem extends AbstractDoubleProblem {
 
+      private BoundedRandomGenerator<Double> variableRandomGenerator;
+      
     /** Constructor */
     public MockDoubleProblem(Integer numberOfVariables) {
+      this(numberOfVariables, (min, max) -> JMetalRandom.getInstance().nextDouble(min, max));
+    }
+
+    /** Constructor */
+    public MockDoubleProblem(Integer numberOfVariables, BoundedRandomGenerator<Double> variableRandomGenerator) {
       setNumberOfVariables(numberOfVariables);
       setNumberOfObjectives(2);
+      this.variableRandomGenerator = variableRandomGenerator;
 
       List<Double> lowerLimit = new ArrayList<>(getNumberOfVariables()) ;
       List<Double> upperLimit = new ArrayList<>(getNumberOfVariables()) ;
@@ -235,7 +244,7 @@ public class PolynomialMutationTest {
 
     @Override
     public DoubleSolution createSolution() {
-      return new DefaultDoubleSolution(this) ;
+      return new DefaultDoubleSolution(this, variableRandomGenerator) ;
     }
 
     /** Evaluate() method */

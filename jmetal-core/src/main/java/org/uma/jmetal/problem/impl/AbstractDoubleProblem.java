@@ -3,6 +3,8 @@ package org.uma.jmetal.problem.impl;
 import org.uma.jmetal.problem.DoubleProblem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ public abstract class AbstractDoubleProblem extends AbstractGenericProblem<Doubl
 
   private List<Double> lowerLimit ;
   private List<Double> upperLimit ;
+  private BoundedRandomGenerator<Double> variableRandomGenerator = (min, max) -> JMetalRandom.getInstance().nextDouble(min, max) ;
 
   /* Getters */
 	@Override
@@ -23,6 +26,10 @@ public abstract class AbstractDoubleProblem extends AbstractGenericProblem<Doubl
 	public Double getLowerBound(int index) {
 		return lowerLimit.get(index);
 	}
+	
+	public BoundedRandomGenerator<Double> getVariableRandomGenerator() {
+		return variableRandomGenerator;
+	}
 
   /* Setters */
   protected void setLowerLimit(List<Double> lowerLimit) {
@@ -32,9 +39,13 @@ public abstract class AbstractDoubleProblem extends AbstractGenericProblem<Doubl
   protected void setUpperLimit(List<Double> upperLimit) {
     this.upperLimit = upperLimit;
   }
+  
+  public void setVariableRandomGenerator(BoundedRandomGenerator<Double> variableRandomGenerator) {
+    this.variableRandomGenerator = variableRandomGenerator;
+  }
 
   @Override
   public DoubleSolution createSolution() {
-    return new DefaultDoubleSolution(this)  ;
+    return new DefaultDoubleSolution(this, variableRandomGenerator)  ;
   }
 }

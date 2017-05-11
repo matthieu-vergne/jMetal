@@ -15,8 +15,12 @@ package org.uma.jmetal.solution.impl;
 
 import org.uma.jmetal.problem.DoubleProblem;
 import org.uma.jmetal.solution.DoubleSolution;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.HashMap;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Defines an implementation of a double solution
@@ -30,9 +34,24 @@ public class DefaultDoubleSolution
 
   /** Constructor */
   public DefaultDoubleSolution(DoubleProblem problem) {
+    this(problem, (BoundedRandomGenerator<Double>) (min, max) -> JMetalRandom.getInstance().nextDouble(min, max)) ;
+  }
+
+  /** Constructor */
+  public DefaultDoubleSolution(DoubleProblem problem, BoundedRandomGenerator<Double> variableRandomGenerator) {
+    this(problem, (BiFunction<DefaultDoubleSolution, Integer, Double>) (s, i) -> variableRandomGenerator.getRandomValue(s.getLowerBound(i), s.getUpperBound(i)));
+  }
+
+  /** Constructor */
+  public DefaultDoubleSolution(DoubleProblem problem, Function<Integer, Double> variableGenerator) {
+    this(problem, (BiFunction<DefaultDoubleSolution, Integer, Double>) (s, i) -> variableGenerator.apply(i));
+  }
+
+  /** Constructor */
+  private DefaultDoubleSolution(DoubleProblem problem, BiFunction<DefaultDoubleSolution, Integer, Double> variableGenerator) {
     super(problem) ;
 
-    initializeDoubleVariables();
+    initializeDoubleVariables(variableGenerator);
     initializeObjectiveValues();
   }
 
@@ -71,9 +90,9 @@ public class DefaultDoubleSolution
     return getVariableValue(index).toString() ;
   }
   
-  private void initializeDoubleVariables() {
+  private void initializeDoubleVariables(BiFunction<DefaultDoubleSolution, Integer, Double> variableGenerator) {
     for (int i = 0 ; i < problem.getNumberOfVariables(); i++) {
-      Double value = randomGenerator.nextDouble(getLowerBound(i), getUpperBound(i)) ;
+      Double value = variableGenerator.apply(this, i) ;
       setVariableValue(i, value) ;
     }
   }
