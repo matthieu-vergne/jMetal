@@ -16,7 +16,6 @@ package org.uma.jmetal.util.neighborhood.impl;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.IntegerSolution;
 import org.uma.jmetal.util.JMetalException;
@@ -179,21 +178,20 @@ public class AdaptiveRandomNeighborhoodTest {
   public void shouldGetNeighborsReturnThreeNeighborsPlusTheCurrentSolution() {
     int solutionListSize = 3 ;
     int numberOfNeighbors = 1 ;
-    AdaptiveRandomNeighborhood<IntegerSolution> neighborhood =
-            new AdaptiveRandomNeighborhood<IntegerSolution>(solutionListSize, numberOfNeighbors) ;
-
     @SuppressWarnings("unchecked")
-	BoundedRandomGenerator<Integer> randomGenerator = mock(BoundedRandomGenerator.class) ;
+    BoundedRandomGenerator<Integer> randomGenerator = mock(BoundedRandomGenerator.class) ;
     when(randomGenerator.getRandomValue(0, solutionListSize-1)).thenReturn(2, 0, 0) ;
-
-    ReflectionTestUtils.setField(neighborhood, "randomGenerator", randomGenerator);
+    
+    AdaptiveRandomNeighborhood<IntegerSolution> neighborhood =
+            new AdaptiveRandomNeighborhood<IntegerSolution>(solutionListSize, numberOfNeighbors, randomGenerator) ;
 
     List<IntegerSolution> list = new ArrayList<>(solutionListSize) ;
     for (int i = 0 ; i < solutionListSize; i++) {
       list.add(mock(IntegerSolution.class)) ;
     }
 
-    neighborhood.recompute();
+    // Already computed, no need to recompute
+    //neighborhood.recompute();
 
     List<IntegerSolution> result ;
     result = neighborhood.getNeighbors(list, 0) ;
