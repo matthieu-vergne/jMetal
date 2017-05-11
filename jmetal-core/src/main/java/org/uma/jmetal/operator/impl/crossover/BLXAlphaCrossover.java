@@ -42,12 +42,22 @@ public class BLXAlphaCrossover implements CrossoverOperator<DoubleSolution> {
 
   /** Constructor */
   public BLXAlphaCrossover(double crossoverProbability) {
-    this (crossoverProbability, DEFAULT_ALPHA, new RepairDoubleSolutionAtBounds()) ;
+    this (crossoverProbability, () -> JMetalRandom.getInstance().nextDouble()) ;
+  }
+
+  /** Constructor */
+  public BLXAlphaCrossover(double crossoverProbability, RandomGenerator<Double> randomGenerator) {
+    this (crossoverProbability, DEFAULT_ALPHA, randomGenerator) ;
   }
 
   /** Constructor */
   public BLXAlphaCrossover(double crossoverProbability, double alpha) {
-    this (crossoverProbability, alpha, new RepairDoubleSolutionAtBounds()) ;
+    this (crossoverProbability, alpha, () -> JMetalRandom.getInstance().nextDouble()) ;
+  }
+
+  /** Constructor */
+  public BLXAlphaCrossover(double crossoverProbability, double alpha, RandomGenerator<Double> randomGenerator) {
+    this (crossoverProbability, alpha, new RepairDoubleSolutionAtBounds(), randomGenerator) ;
   }
 
   /** Constructor */
