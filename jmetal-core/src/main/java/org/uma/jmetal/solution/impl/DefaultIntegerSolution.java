@@ -15,6 +15,8 @@ package org.uma.jmetal.solution.impl;
 
 import org.uma.jmetal.problem.IntegerProblem;
 import org.uma.jmetal.solution.IntegerSolution;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.HashMap;
 
@@ -30,9 +32,14 @@ public class DefaultIntegerSolution
 
   /** Constructor */
   public DefaultIntegerSolution(IntegerProblem problem) {
+    this(problem, (min, max) -> JMetalRandom.getInstance().nextInt(min, max));
+  }
+
+  /** Constructor */
+  public DefaultIntegerSolution(IntegerProblem problem, BoundedRandomGenerator<Integer> variableRandomGenerator) {
     super(problem) ;
 
-    initializeIntegerVariables();
+    initializeIntegerVariables(variableRandomGenerator);
     initializeObjectiveValues();
   }
 
@@ -71,9 +78,9 @@ public class DefaultIntegerSolution
     return getVariableValue(index).toString() ;
   }
   
-  private void initializeIntegerVariables() {
+  private void initializeIntegerVariables(BoundedRandomGenerator<Integer> variableRandomGenerator) {
     for (int i = 0 ; i < problem.getNumberOfVariables(); i++) {
-      Integer value = randomGenerator.nextInt(getLowerBound(i), getUpperBound(i));
+      Integer value = variableRandomGenerator.getRandomValue(getLowerBound(i), getUpperBound(i));
       setVariableValue(i, value) ;
     }
   }
