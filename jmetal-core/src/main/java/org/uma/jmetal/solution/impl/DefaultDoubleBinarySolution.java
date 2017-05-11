@@ -15,6 +15,9 @@ package org.uma.jmetal.solution.impl;
 
 import org.uma.jmetal.problem.DoubleBinaryProblem;
 import org.uma.jmetal.solution.DoubleBinarySolution;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
+import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 
 import java.util.BitSet;
 import java.util.HashMap;
@@ -37,12 +40,22 @@ public class DefaultDoubleBinarySolution
 
   /** Constructor */
   public DefaultDoubleBinarySolution(DoubleBinaryProblem<?> problem) {
+	  this(problem, (min, max) -> JMetalRandom.getInstance().nextDouble(min, max), () -> JMetalRandom.getInstance().nextDouble() > 0.5);
+  }
+
+  /** Constructor */
+  public DefaultDoubleBinarySolution(DoubleBinaryProblem<?> problem, RandomGenerator<Double> randomGenerator) {
+	  this(problem, BoundedRandomGenerator.bound(randomGenerator), () -> randomGenerator.getRandomValue() > 0.5);
+  }
+
+  /** Constructor */
+  public DefaultDoubleBinarySolution(DoubleBinaryProblem<?> problem, BoundedRandomGenerator<Double> randomDoubleGenerator, RandomGenerator<Boolean> randomBitGenerator) {
     super(problem) ;
 
     numberOfDoubleVariables = problem.getNumberOfDoubleVariables() ;
 
-    initializeDoubleVariables();
-    initializeBitSet() ;
+    initializeDoubleVariables(randomDoubleGenerator);
+    initializeBitSet(randomBitGenerator) ;
     initializeObjectiveValues();
   }
 
@@ -59,16 +72,16 @@ public class DefaultDoubleBinarySolution
     attributes = new HashMap<Object, Object>(solution.attributes) ;
   }
 
-  private void initializeDoubleVariables() {
+  private void initializeDoubleVariables(BoundedRandomGenerator<Double> randomDoubleGenerator) {
     for (int i = 0 ; i < numberOfDoubleVariables; i++) {
-      Double value = randomGenerator.nextDouble(getLowerBound(i), getUpperBound(i)) ;
+      Double value = randomDoubleGenerator.getRandomValue(getLowerBound(i), getUpperBound(i)) ;
       //variables.add(value) ;
       setVariableValue(i, value);
     }
   }
 
-  private void initializeBitSet() {
-    BitSet bitset = createNewBitSet(problem.getNumberOfBits()) ;
+  private void initializeBitSet(RandomGenerator<Boolean> randomBitGenerator) {
+    BitSet bitset = createNewBitSet(problem.getNumberOfBits(), randomBitGenerator) ;
     setVariableValue(numberOfDoubleVariables, bitset);
   }
 
@@ -113,15 +126,11 @@ public class DefaultDoubleBinarySolution
     return getVariableValue(index).toString() ;
   }
 
-  private BitSet createNewBitSet(int numberOfBits) {
+  private BitSet createNewBitSet(int numberOfBits, RandomGenerator<Boolean> randomBitGenerator) {
     BitSet bitSet = new BitSet(numberOfBits) ;
 
     for (int i = 0; i < numberOfBits; i++) {
-      if (randomGenerator.nextDouble() < 0.5) {
-        bitSet.set(i, true);
-      } else {
-        bitSet.set(i, false);
-      }
+      bitSet.set(i, randomBitGenerator.getRandomValue());
     }
     return bitSet ;
   }
