@@ -70,12 +70,10 @@ public class BitFlipMutationTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.02, 0.02, 0.02, 0.02) ;
 
-    BitFlipMutation mutation = new BitFlipMutation(mutationProbability) ;
+    BitFlipMutation mutation = new BitFlipMutation(mutationProbability, randomGenerator) ;
     BinaryProblem problem = new MockBinaryProblem(1) ;
     BinarySolution solution = problem.createSolution() ;
     BinarySolution oldSolution = (BinarySolution)solution.copy() ;
-
-    ReflectionTestUtils.setField(mutation, "randomGenerator", randomGenerator);
 
     mutation.execute(solution) ;
 
@@ -91,12 +89,10 @@ public class BitFlipMutationTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.02, 0.0, 0.02, 0.02) ;
 
-    BitFlipMutation mutation = new BitFlipMutation(mutationProbability) ;
+    BitFlipMutation mutation = new BitFlipMutation(mutationProbability, randomGenerator) ;
     BinaryProblem problem = new MockBinaryProblem(1) ;
     BinarySolution solution = problem.createSolution() ;
     BinarySolution oldSolution = (BinarySolution)solution.copy() ;
-
-    ReflectionTestUtils.setField(mutation, "randomGenerator", randomGenerator);
 
     mutation.execute(solution) ;
 
@@ -112,12 +108,10 @@ public class BitFlipMutationTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.02, 0.02, 0.02, 0.02, 0.2, 0.2, 0.2, 0.2) ;
 
-    BitFlipMutation mutation = new BitFlipMutation(mutationProbability) ;
+    BitFlipMutation mutation = new BitFlipMutation(mutationProbability, randomGenerator) ;
     BinaryProblem problem = new MockBinaryProblem(2) ;
     BinarySolution solution = problem.createSolution() ;
     BinarySolution oldSolution = (BinarySolution)solution.copy() ;
-
-    ReflectionTestUtils.setField(mutation, "randomGenerator", randomGenerator);
 
     mutation.execute(solution) ;
 
@@ -133,12 +127,10 @@ public class BitFlipMutationTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.01, 0.02) ;
 
-    BitFlipMutation mutation = new BitFlipMutation(mutationProbability) ;
+    BitFlipMutation mutation = new BitFlipMutation(mutationProbability, randomGenerator) ;
     BinaryProblem problem = new MockBinaryProblem(2) ;
     BinarySolution solution = problem.createSolution() ;
     BinarySolution oldSolution = (BinarySolution)solution.copy() ;
-
-    ReflectionTestUtils.setField(mutation, "randomGenerator", randomGenerator);
 
     mutation.execute(solution) ;
 
