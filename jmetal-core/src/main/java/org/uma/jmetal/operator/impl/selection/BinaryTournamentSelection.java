@@ -15,6 +15,8 @@ package org.uma.jmetal.operator.impl.selection;
 
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.comparator.DominanceComparator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
+import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 
 import java.util.Comparator;
 
@@ -30,11 +32,21 @@ import java.util.Comparator;
 public class BinaryTournamentSelection<S extends Solution<?>> extends TournamentSelection<S> {
     /** Constructor */
   public BinaryTournamentSelection() {
-    super(new DominanceComparator<S>(), 2) ;
+    this(() -> JMetalRandom.getInstance().nextDouble()) ;
+  }
+
+  /** Constructor */
+  public BinaryTournamentSelection(RandomGenerator<Double> randomGenerator) {
+    this(new DominanceComparator<S>(), randomGenerator) ;
   }
 
   /** Constructor */
   public BinaryTournamentSelection(Comparator<S> comparator) {
-    super(comparator,2);
+    this(comparator, () -> JMetalRandom.getInstance().nextDouble());
+  }
+
+  /** Constructor */
+  public BinaryTournamentSelection(Comparator<S> comparator, RandomGenerator<Double> randomGenerator) {
+    super(comparator, 2, randomGenerator);
   }
 }
