@@ -16,6 +16,8 @@ package org.uma.jmetal.operator.impl.selection;
 import org.uma.jmetal.operator.SelectionOperator;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.SolutionListUtils;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.List;
 
@@ -29,15 +31,27 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class NaryRandomSelection<S> implements SelectionOperator<List<S>,List<S>> {
   private int numberOfSolutionsToBeReturned ;
+  private BoundedRandomGenerator<Integer> randomIndexGenerator;
 
   /** Constructor */
   public NaryRandomSelection() {
-    this(1) ;
+    this((low, up) -> JMetalRandom.getInstance().nextInt(low, up)) ;
+  }
+
+  /** Constructor */
+  public NaryRandomSelection(BoundedRandomGenerator<Integer> randomIndexGenerator) {
+    this(1, randomIndexGenerator) ;
   }
 
   /** Constructor */
   public NaryRandomSelection(int numberOfSolutionsToBeReturned) {
+    this(numberOfSolutionsToBeReturned, (low, up) -> JMetalRandom.getInstance().nextInt(low, up));
+  }
+
+  /** Constructor */
+  public NaryRandomSelection(int numberOfSolutionsToBeReturned, BoundedRandomGenerator<Integer> randomIndexGenerator) {
     this.numberOfSolutionsToBeReturned = numberOfSolutionsToBeReturned ;
+    this.randomIndexGenerator = randomIndexGenerator;
   }
 
   /** Execute() method */
@@ -51,6 +65,6 @@ public class NaryRandomSelection<S> implements SelectionOperator<List<S>,List<S>
           + "the number of requested solutions ("+numberOfSolutionsToBeReturned+")") ;
     }
 
-    return SolutionListUtils.selectNRandomDifferentSolutions(numberOfSolutionsToBeReturned, solutionList) ;
+    return SolutionListUtils.selectNRandomDifferentSolutions(numberOfSolutionsToBeReturned, solutionList, randomIndexGenerator) ;
   }
 }
