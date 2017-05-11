@@ -116,12 +116,10 @@ public class IntegerPolynomialMutationTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(1.0) ;
 
-    IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(mutationProbability, distributionIndex) ;
+    IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(mutationProbability, distributionIndex, randomGenerator) ;
     IntegerProblem problem = new MockIntegerProblem(1) ;
     IntegerSolution solution = problem.createSolution() ;
     IntegerSolution oldSolution = (IntegerSolution)solution.copy() ;
-
-    ReflectionTestUtils.setField(mutation, "randomGenerator", randomGenerator);
 
     mutation.execute(solution) ;
 
@@ -138,11 +136,9 @@ public class IntegerPolynomialMutationTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.005, 0.6) ;
 
-    IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(mutationProbability, distributionIndex) ;
+    IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(mutationProbability, distributionIndex, randomGenerator) ;
     IntegerProblem problem = new MockIntegerProblem(1) ;
     IntegerSolution solution = problem.createSolution() ;
-
-    ReflectionTestUtils.setField(mutation, "randomGenerator", randomGenerator);
 
     mutation.execute(solution) ;
 
@@ -161,11 +157,9 @@ public class IntegerPolynomialMutationTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.005, 0.1) ;
 
-    IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(mutationProbability, distributionIndex) ;
+    IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(mutationProbability, distributionIndex, randomGenerator) ;
     IntegerProblem problem = new MockIntegerProblem(1) ;
     IntegerSolution solution = problem.createSolution() ;
-
-    ReflectionTestUtils.setField(mutation, "randomGenerator", randomGenerator);
 
     mutation.execute(solution) ;
 
@@ -183,15 +177,13 @@ public class IntegerPolynomialMutationTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.005, 0.1) ;
 
-    IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(mutationProbability, distributionIndex) ;
+    IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(mutationProbability, distributionIndex, randomGenerator) ;
 
     MockIntegerProblem problem = new MockIntegerProblem(1) ;
     ReflectionTestUtils.setField(problem, "lowerLimit", Arrays.asList(new Integer[]{1}));
     ReflectionTestUtils.setField(problem, "upperLimit", Arrays.asList(new Integer[]{1}));
 
     IntegerSolution solution = problem.createSolution() ;
-
-    ReflectionTestUtils.setField(mutation, "randomGenerator", randomGenerator);
 
     mutation.execute(solution) ;
 

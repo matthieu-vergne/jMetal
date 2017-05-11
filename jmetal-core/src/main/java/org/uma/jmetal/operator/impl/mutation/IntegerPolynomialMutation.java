@@ -46,17 +46,32 @@ public class IntegerPolynomialMutation implements MutationOperator<IntegerSoluti
 
   /** Constructor */
   public IntegerPolynomialMutation() {
-    this(DEFAULT_PROBABILITY, DEFAULT_DISTRIBUTION_INDEX) ;
+    this(() -> JMetalRandom.getInstance().nextDouble()) ;
+  }
+
+  /** Constructor */
+  public IntegerPolynomialMutation(RandomGenerator<Double> randomGenerator) {
+    this(DEFAULT_PROBABILITY, DEFAULT_DISTRIBUTION_INDEX, randomGenerator) ;
   }
 
   /** Constructor */
   public IntegerPolynomialMutation(IntegerProblem problem, double distributionIndex) {
-    this(1.0/problem.getNumberOfVariables(), distributionIndex) ;
+    this(problem, distributionIndex, () -> JMetalRandom.getInstance().nextDouble()) ;
+  }
+
+  /** Constructor */
+  public IntegerPolynomialMutation(IntegerProblem problem, double distributionIndex, RandomGenerator<Double> randomGenerator) {
+    this(1.0/problem.getNumberOfVariables(), distributionIndex, randomGenerator) ;
   }
 
   /** Constructor */
   public IntegerPolynomialMutation(double mutationProbability, double distributionIndex) {
-    this(mutationProbability, distributionIndex, new RepairDoubleSolutionAtBounds()) ;
+    this(mutationProbability, distributionIndex, new RepairDoubleSolutionAtBounds(), () -> JMetalRandom.getInstance().nextDouble()) ;
+  }
+
+  /** Constructor */
+  public IntegerPolynomialMutation(double mutationProbability, double distributionIndex, RandomGenerator<Double> randomGenerator) {
+    this(mutationProbability, distributionIndex, new RepairDoubleSolutionAtBounds(), randomGenerator) ;
   }
 
   /** Constructor */
