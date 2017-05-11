@@ -98,13 +98,11 @@ public class SinglePointCrossoverTest {
 
     Mockito.when(crossoverRandomGenerator.getRandomValue()).thenReturn(0.02) ;
 
-    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability) ;
+    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability, crossoverRandomGenerator, (a, b) -> JMetalRandom.getInstance().nextInt(a, b)) ;
     BinaryProblem problem = new MockBinaryProblem(numberOfVariables) ;
     ArrayList<BinarySolution> solutions = new ArrayList<>(3) ;
     solutions.add(problem.createSolution()) ;
     solutions.add(problem.createSolution()) ;
-
-    ReflectionTestUtils.setField(crossover, "crossoverRandomGenerator", crossoverRandomGenerator);
 
     List<BinarySolution> resultSolutions = crossover.execute(solutions) ;
 
@@ -127,14 +125,11 @@ public class SinglePointCrossoverTest {
     Mockito.when(crossoverRandomGenerator.getRandomValue()).thenReturn(0.5) ;
     Mockito.when(pointRandomGenerator.getRandomValue(0, BITS_OF_MOCKED_BINARY_PROBLEM - 1)).thenReturn(cuttingBit) ;
 
-    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability) ;
+    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability, crossoverRandomGenerator, pointRandomGenerator) ;
     BinaryProblem problem = new MockBinaryProblem(numberOfVariables) ;
     ArrayList<BinarySolution> solutions = new ArrayList<>(3) ;
     solutions.add(problem.createSolution()) ;
     solutions.add(problem.createSolution()) ;
-
-    ReflectionTestUtils.setField(crossover, "crossoverRandomGenerator", crossoverRandomGenerator);
-    ReflectionTestUtils.setField(crossover, "pointRandomGenerator", pointRandomGenerator);
 
     List<BinarySolution> resultSolutions = crossover.execute(solutions) ;
 
@@ -161,14 +156,11 @@ public class SinglePointCrossoverTest {
     Mockito.when(pointRandomGenerator.getRandomValue(0,
         BITS_OF_MOCKED_BINARY_PROBLEM - 1)).thenReturn(cuttingBit) ;
 
-    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability) ;
+    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability, crossoverRandomGenerator, pointRandomGenerator) ;
     BinaryProblem problem = new MockBinaryProblem(numberOfVariables) ;
     ArrayList<BinarySolution> solutions = new ArrayList<>(3) ;
     solutions.add(problem.createSolution()) ;
     solutions.add(problem.createSolution()) ;
-
-    ReflectionTestUtils.setField(crossover, "crossoverRandomGenerator", crossoverRandomGenerator);
-    ReflectionTestUtils.setField(crossover, "pointRandomGenerator", pointRandomGenerator);
 
     List<BinarySolution> resultSolutions = crossover.execute(solutions) ;
 
@@ -195,14 +187,11 @@ public class SinglePointCrossoverTest {
     Mockito.when(pointRandomGenerator.getRandomValue(0,
         BITS_OF_MOCKED_BINARY_PROBLEM - 1)).thenReturn(cuttingBit) ;
 
-    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability) ;
+    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability, crossoverRandomGenerator, pointRandomGenerator) ;
     BinaryProblem problem = new MockBinaryProblem(numberOfVariables) ;
     ArrayList<BinarySolution> solutions = new ArrayList<>(3) ;
     solutions.add(problem.createSolution()) ;
     solutions.add(problem.createSolution()) ;
-
-    ReflectionTestUtils.setField(crossover, "crossoverRandomGenerator", crossoverRandomGenerator);
-    ReflectionTestUtils.setField(crossover, "pointRandomGenerator", pointRandomGenerator);
 
     List<BinarySolution> resultSolutions = crossover.execute(solutions) ;
 
@@ -234,14 +223,11 @@ public class SinglePointCrossoverTest {
     Mockito.when(pointRandomGenerator.
         getRandomValue(0, BITS_OF_MOCKED_BINARY_PROBLEM * numberOfVariables - 1)).thenReturn(cuttingBit) ;
 
-    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability) ;
+    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability, crossoverRandomGenerator, pointRandomGenerator) ;
     BinaryProblem problem = new MockBinaryProblem(numberOfVariables) ;
     ArrayList<BinarySolution> solutions = new ArrayList<>(3) ;
     solutions.add(problem.createSolution()) ;
     solutions.add(problem.createSolution()) ;
-
-    ReflectionTestUtils.setField(crossover, "crossoverRandomGenerator", crossoverRandomGenerator);
-    ReflectionTestUtils.setField(crossover, "pointRandomGenerator", pointRandomGenerator);
 
     List<BinarySolution> resultSolutions = crossover.execute(solutions) ;
 
@@ -272,14 +258,11 @@ public class SinglePointCrossoverTest {
         getRandomValue(0, BITS_OF_MOCKED_BINARY_PROBLEM * numberOfVariables - 1))
         .thenReturn(cuttingBit) ;
 
-    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability) ;
+    SinglePointCrossover crossover = new SinglePointCrossover(crossoverProbability, crossoverRandomGenerator, pointRandomGenerator) ;
     BinaryProblem problem = new MockBinaryProblem(numberOfVariables) ;
     ArrayList<BinarySolution> solutions = new ArrayList<>(3) ;
     solutions.add(problem.createSolution()) ;
     solutions.add(problem.createSolution()) ;
-
-    ReflectionTestUtils.setField(crossover, "crossoverRandomGenerator", crossoverRandomGenerator);
-    ReflectionTestUtils.setField(crossover, "pointRandomGenerator", pointRandomGenerator);
 
     List<BinarySolution> resultSolutions = crossover.execute(solutions) ;
 
