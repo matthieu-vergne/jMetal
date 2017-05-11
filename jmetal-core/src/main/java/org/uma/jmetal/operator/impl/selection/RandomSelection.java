@@ -16,6 +16,8 @@ package org.uma.jmetal.operator.impl.selection;
 import org.uma.jmetal.operator.SelectionOperator;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.SolutionListUtils;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.List;
 
@@ -27,6 +29,16 @@ import java.util.List;
  */
 @SuppressWarnings("serial")
 public class RandomSelection<S> implements SelectionOperator<List<S>, S> {
+	
+    private BoundedRandomGenerator<Integer> randomIndexGenerator;
+    
+	public RandomSelection() {
+		this((min, max) -> JMetalRandom.getInstance().nextInt(min, max));
+	}
+
+	public RandomSelection(BoundedRandomGenerator<Integer> randomIndexGenerator) {
+		this.randomIndexGenerator = randomIndexGenerator;
+	}
 
   /** Execute() method */
   public S execute(List<S> solutionList) {
@@ -36,7 +48,7 @@ public class RandomSelection<S> implements SelectionOperator<List<S>, S> {
       throw new JMetalException("The solution list is empty") ;
     }
 
-    List<S> list = SolutionListUtils.selectNRandomDifferentSolutions(1, solutionList);
+    List<S> list = SolutionListUtils.selectNRandomDifferentSolutions(1, solutionList, randomIndexGenerator);
 
     return list.get(0) ;
   }
