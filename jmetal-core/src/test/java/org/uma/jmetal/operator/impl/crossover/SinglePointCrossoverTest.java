@@ -323,7 +323,7 @@ public class SinglePointCrossoverTest {
     }
   }
   
-  @Test
+	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration
 		double crossoverProbability = 1.0;

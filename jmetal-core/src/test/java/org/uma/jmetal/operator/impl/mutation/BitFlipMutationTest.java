@@ -176,7 +176,7 @@ public class BitFlipMutationTest {
     }
   }
   
-  @Test
+	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration
 		double mutationProbability = 0.1;
