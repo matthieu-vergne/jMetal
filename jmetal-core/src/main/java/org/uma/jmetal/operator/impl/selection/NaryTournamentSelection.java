@@ -18,6 +18,8 @@ import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.SolutionListUtils;
 import org.uma.jmetal.util.comparator.DominanceComparator;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.Comparator;
 import java.util.List;
@@ -32,16 +34,28 @@ import java.util.List;
 public class NaryTournamentSelection<S extends Solution<?>> implements SelectionOperator<List<S>, S> {
   private Comparator<S> comparator;
   private int numberOfSolutionsToBeReturned ;
+  private BoundedRandomGenerator<Integer> randomIndexGenerator ;
 
   /** Constructor */
   public NaryTournamentSelection() {
-    this(2, new DominanceComparator<S>()) ;
+    this((min, max) -> JMetalRandom.getInstance().nextInt(min, max)) ;
+  }
+
+  /** Constructor */
+  public NaryTournamentSelection(BoundedRandomGenerator<Integer> randomIndexGenerator) {
+    this(2, new DominanceComparator<S>(), randomIndexGenerator) ;
   }
 
   /** Constructor */
   public NaryTournamentSelection(int numberOfSolutionsToBeReturned, Comparator<S> comparator) {
+    this(numberOfSolutionsToBeReturned, comparator, (min, max) -> JMetalRandom.getInstance().nextInt(min, max));
+  }
+
+  /** Constructor */
+  public NaryTournamentSelection(int numberOfSolutionsToBeReturned, Comparator<S> comparator, BoundedRandomGenerator<Integer> randomIndexGenerator) {
     this.numberOfSolutionsToBeReturned = numberOfSolutionsToBeReturned ;
     this.comparator = comparator ;
+    this.randomIndexGenerator = randomIndexGenerator ;
   }
 
   @Override
@@ -61,7 +75,7 @@ public class NaryTournamentSelection<S extends Solution<?>> implements Selection
       result = solutionList.get(0) ;
     } else {
       List<S> selectedSolutions = SolutionListUtils.selectNRandomDifferentSolutions(
-          numberOfSolutionsToBeReturned, solutionList) ;
+          numberOfSolutionsToBeReturned, solutionList, randomIndexGenerator) ;
       result = SolutionListUtils.findBestSolution(selectedSolutions, comparator) ;
     }
 
