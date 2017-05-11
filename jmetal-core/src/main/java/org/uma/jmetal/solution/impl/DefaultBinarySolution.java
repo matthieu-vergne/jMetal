@@ -16,6 +16,8 @@ package org.uma.jmetal.solution.impl;
 import org.uma.jmetal.problem.BinaryProblem;
 import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.util.binarySet.BinarySet;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
+import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 
 import java.util.HashMap;
 
@@ -31,9 +33,14 @@ public class DefaultBinarySolution
 
   /** Constructor */
   public DefaultBinarySolution(BinaryProblem problem) {
+    this(problem, () -> JMetalRandom.getInstance().nextDouble() < 0.5 ) ;
+  }
+
+  /** Constructor */
+  public DefaultBinarySolution(BinaryProblem problem, RandomGenerator<Boolean> randomBitGenerator) {
     super(problem) ;
 
-    initializeBinaryVariables();
+    initializeBinaryVariables(randomBitGenerator);
     initializeObjectiveValues();
   }
 
@@ -52,12 +59,11 @@ public class DefaultBinarySolution
     attributes = new HashMap<Object, Object>(solution.attributes) ;
   }
 
-  private BinarySet createNewBitSet(int numberOfBits) {
+  private BinarySet createNewBitSet(int numberOfBits, RandomGenerator<Boolean> randomBitGenerator) {
     BinarySet bitSet = new BinarySet(numberOfBits) ;
 
     for (int i = 0; i < numberOfBits; i++) {
-      double rnd = randomGenerator.nextDouble() ;
-      if (rnd < 0.5) {
+      if (randomBitGenerator.getRandomValue() == true) {
         bitSet.set(i);
       } else {
         bitSet.clear(i);
@@ -100,9 +106,9 @@ public class DefaultBinarySolution
     return result ;
   }
   
-  private void initializeBinaryVariables() {
+  private void initializeBinaryVariables(RandomGenerator<Boolean> randomBitGenerator) {
     for (int i = 0; i < problem.getNumberOfVariables(); i++) {
-      setVariableValue(i, createNewBitSet(problem.getNumberOfBits(i)));
+      setVariableValue(i, createNewBitSet(problem.getNumberOfBits(i), randomBitGenerator));
     }
   }
 }
