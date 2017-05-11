@@ -19,6 +19,9 @@ import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.SolutionListUtils;
 import org.uma.jmetal.util.SolutionUtils;
 import org.uma.jmetal.util.comparator.DominanceComparator;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
+import org.uma.jmetal.util.pseudorandom.JMetalRandom;
+import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 
 import java.util.Comparator;
 import java.util.List;
@@ -32,18 +35,30 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class TournamentSelection<S extends Solution<?>> implements SelectionOperator<List<S>,S> {
   private Comparator<S> comparator;
+  private RandomGenerator<Double> randomGenerator;
 
   private final int numberOfTournaments;
 
   /** Constructor */
   public TournamentSelection(int numberOfTournaments) {
-    this(new DominanceComparator<S>(), numberOfTournaments) ;
+    this(numberOfTournaments, () -> JMetalRandom.getInstance().nextDouble()) ;
+  }
+
+  /** Constructor */
+  public TournamentSelection(int numberOfTournaments, RandomGenerator<Double> randomGenerator) {
+    this(new DominanceComparator<S>(), numberOfTournaments, randomGenerator) ;
   }
 
   /** Constructor */
   public TournamentSelection(Comparator<S> comparator, int numberOfTournaments) {
+    this(comparator, numberOfTournaments, () -> JMetalRandom.getInstance().nextDouble());
+  }
+
+  /** Constructor */
+  public TournamentSelection(Comparator<S> comparator, int numberOfTournaments, RandomGenerator<Double> randomGenerator) {
     this.numberOfTournaments = numberOfTournaments;
     this.comparator = comparator ;
+    this.randomGenerator = randomGenerator;
   }
 
   @Override
@@ -59,11 +74,12 @@ public class TournamentSelection<S extends Solution<?>> implements SelectionOper
     if (solutionList.size() == 1) {
       result = solutionList.get(0);
     } else {
-      result = SolutionListUtils.selectNRandomDifferentSolutions(1, solutionList).get(0);
+      BoundedRandomGenerator<Integer> randomIndexGenerator = BoundedRandomGenerator.fromDoubleToInteger(randomGenerator);
+      result = SolutionListUtils.selectNRandomDifferentSolutions(1, solutionList, randomIndexGenerator).get(0);
       int count = 1; // at least 2 solutions are compared
       do {
-        S candidate = SolutionListUtils.selectNRandomDifferentSolutions(1, solutionList).get(0);
-        result = SolutionUtils.getBestSolution(result, candidate, comparator) ;
+        S candidate = SolutionListUtils.selectNRandomDifferentSolutions(1, solutionList, randomIndexGenerator).get(0);
+        result = SolutionUtils.getBestSolution(result, candidate, comparator, randomGenerator) ;
       } while (++count < this.numberOfTournaments);
     }
 
