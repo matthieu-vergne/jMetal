@@ -21,6 +21,7 @@ import org.uma.jmetal.solution.impl.ArrayDoubleSolution;
 import org.uma.jmetal.util.archive.Archive;
 import org.uma.jmetal.util.comparator.DominanceComparator;
 import org.uma.jmetal.util.comparator.EqualSolutionsComparator;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.ArrayList;
@@ -118,7 +119,7 @@ public class NonDominatedSolutionListArchive<S extends Solution<?>> implements A
   public static void main(String args[]) {
     JMetalRandom.getInstance().setSeed(1L);
     Archive<DoubleSolution> archive = new NonDominatedSolutionListArchive<>() ;
-    DoubleProblem problem = new MockedDoubleProblem1(100) ;
+    DoubleProblem problem = new MockedDoubleProblem1(100, (min, max) -> JMetalRandom.getInstance().nextDouble(min, max)) ;
     long initTime = System.currentTimeMillis() ;
     for (int i = 0; i < 1000000; i++) {
       DoubleSolution solution = problem.createSolution() ;
@@ -129,10 +130,13 @@ public class NonDominatedSolutionListArchive<S extends Solution<?>> implements A
   }
 
   private static class MockedDoubleProblem1 extends AbstractDoubleProblem {
-    public MockedDoubleProblem1(int numberOfVariables) {
+    private BoundedRandomGenerator<Double> variableRandomGenerator;
+    
+    public MockedDoubleProblem1(int numberOfVariables, BoundedRandomGenerator<Double> variableRandomGenerator) {
       setNumberOfVariables(numberOfVariables);
       setNumberOfObjectives(2);
       setNumberOfConstraints(0);
+      this.variableRandomGenerator = variableRandomGenerator;
 
       List<Double> lowerLimit = new ArrayList<>(getNumberOfVariables()) ;
       List<Double> upperLimit = new ArrayList<>(getNumberOfVariables()) ;
@@ -188,7 +192,7 @@ public class NonDominatedSolutionListArchive<S extends Solution<?>> implements A
 
     @Override
     public DoubleSolution createSolution() {
-      return new ArrayDoubleSolution(this)  ;
+      return new ArrayDoubleSolution(this, variableRandomGenerator)  ;
     }
   }
 }

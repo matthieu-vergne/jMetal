@@ -3,6 +3,7 @@ package org.uma.jmetal.solution.impl;
 import org.uma.jmetal.problem.DoubleProblem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.Arrays;
@@ -20,20 +21,43 @@ public class ArrayDoubleSolution implements DoubleSolution {
   private double[] variables;
   protected DoubleProblem problem ;
   protected Map<Object, Object> attributes ;
-  protected final JMetalRandom randomGenerator ;
+  /**
+   * @deprecated This field is deprecated because it stores a
+   *             {@link JMetalRandom} instance, which is provided only through
+   *             the singleton method {@link JMetalRandom#getInstance()},
+   *             which is always available. If you need it, please directly
+   *             call the singleton method. If all what you need is a random
+   *             generator, you may request one from the user by requesting a
+   *             {@link RandomGenerator} or a {@link BoundedRandomGenerator}.
+   *             If several types of generators are required, you may request
+   *             each of them or only a generic generator, like a
+   *             {@link RandomGenerator} which provides {@link Double} values
+   *             in [0;1], and generate customized generators based on it. You
+   *             can also use the static methods provided by
+   *             {@link RandomGenerator} and {@link BoundedRandomGenerator} to
+   *             help you in this task.
+   */
+  @Deprecated
+  protected final JMetalRandom randomGenerator = JMetalRandom.getInstance() ;
 
   /**
    * Constructor
    */
   public ArrayDoubleSolution(DoubleProblem problem) {
+	  this(problem, (min, max) -> JMetalRandom.getInstance().nextDouble(min, max));
+  }
+
+  /**
+   * Constructor
+   */
+  public ArrayDoubleSolution(DoubleProblem problem, BoundedRandomGenerator<Double> variableRandomGenerator) {
     this.problem = problem ;
     attributes = new HashMap<>() ;
-    randomGenerator = JMetalRandom.getInstance() ;
 
     objectives = new double[problem.getNumberOfObjectives()] ;
     variables = new double[problem.getNumberOfVariables()] ;
     for (int i = 0; i < problem.getNumberOfVariables(); i++) {
-      variables[i] = randomGenerator.nextDouble(getLowerBound(i), getUpperBound(i)) ;
+      variables[i] = variableRandomGenerator.getRandomValue(getLowerBound(i), getUpperBound(i)) ;
     }
   }
 
