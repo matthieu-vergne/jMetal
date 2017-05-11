@@ -48,7 +48,7 @@ public class SBXCrossover implements CrossoverOperator<DoubleSolution> {
 
   /** Constructor */
   public SBXCrossover(double crossoverProbability, double distributionIndex) {
-    this (crossoverProbability, distributionIndex, new RepairDoubleSolutionAtBounds()) ;
+    this (crossoverProbability, distributionIndex, new RepairDoubleSolutionAtBounds(), () -> JMetalRandom.getInstance().nextDouble()) ;
   }
 
   /** Constructor */

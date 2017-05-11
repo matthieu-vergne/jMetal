@@ -125,13 +125,12 @@ public class SBXCrossoverTest {
     double crossoverProbability = 0.9;
     double distributionIndex = 20.0 ;
 
-    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex) ;
+    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex, randomGenerator) ;
     DoubleProblem problem = new MockDoubleProblem(1) ;
     List<DoubleSolution> solutions = Arrays.asList(problem.createSolution(), problem.createSolution()) ;
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(1.0) ;
 
-    ReflectionTestUtils.setField(crossover, "randomGenerator", randomGenerator);
     List<DoubleSolution> newSolutions = crossover.execute(solutions) ;
 
     assertEquals(solutions.get(0), newSolutions.get(0)) ;
@@ -148,12 +147,10 @@ public class SBXCrossoverTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.2, 0.2, 0.6, 0.6) ;
 
-    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex) ;
+    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex, randomGenerator) ;
     DoubleProblem problem = new MockDoubleProblem(1) ;
     List<DoubleSolution> solutions = Arrays.asList(problem.createSolution(),
         problem.createSolution()) ;
-
-    ReflectionTestUtils.setField(crossover, "randomGenerator", randomGenerator);
 
     List<DoubleSolution> newSolutions = crossover.execute(solutions) ;
 
@@ -177,14 +174,12 @@ public class SBXCrossoverTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.2, 0.2) ;
 
-    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex) ;
+    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex, randomGenerator) ;
     DoubleProblem problem = new MockDoubleProblem(1) ;
     List<DoubleSolution> solutions = Arrays.asList(problem.createSolution(),
         problem.createSolution()) ;
     solutions.get(0).setVariableValue(0, 1.0);
     solutions.get(1).setVariableValue(0, 1.0);
-
-    ReflectionTestUtils.setField(crossover, "randomGenerator", randomGenerator);
 
     List<DoubleSolution> newSolutions = crossover.execute(solutions) ;
 
@@ -202,7 +197,7 @@ public class SBXCrossoverTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.2, 0.2, 0.8, 0.3, 0.2, 0.8, 0.3) ;
 
-    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex) ;
+    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex, randomGenerator) ;
     DoubleProblem problem = new MockDoubleProblem(2) ;
     DoubleSolution solution1 = problem.createSolution() ;
     DoubleSolution solution2 = problem.createSolution() ;
@@ -211,8 +206,6 @@ public class SBXCrossoverTest {
     solution2.setVariableValue(0, 2.0);
     solution2.setVariableValue(1, 1.0);
     List<DoubleSolution> solutions = Arrays.asList(solution1, solution2) ;
-
-    ReflectionTestUtils.setField(crossover, "randomGenerator", randomGenerator);
 
     List<DoubleSolution> newSolutions = crossover.execute(solutions) ;
 
@@ -244,12 +237,11 @@ public class SBXCrossoverTest {
 
     Mockito.when(randomGenerator.getRandomValue()).thenReturn(0.3, 0.7,  0.2, 0.2, 0.2, 0.7) ;
 
-    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex) ;
+    SBXCrossover crossover = new SBXCrossover(crossoverProbability, distributionIndex, randomGenerator) ;
     DoubleProblem problem = new MockDoubleProblem(3) ;
 
     List<DoubleSolution> solutions = Arrays.asList(problem.createSolution(), problem.createSolution()) ;
 
-    ReflectionTestUtils.setField(crossover, "randomGenerator", randomGenerator);
     List<DoubleSolution> newSolutions = crossover.execute(solutions) ;
 
     assertEquals(solutions.get(0).getVariableValue(0), newSolutions.get(0).getVariableValue(0), EPSILON);
