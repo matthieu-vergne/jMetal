@@ -15,7 +15,9 @@ package org.uma.jmetal.solution.impl;
 
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.pseudorandom.BoundedRandomGenerator;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
+import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 
 import java.util.*;
 
@@ -30,7 +32,24 @@ public abstract class AbstractGenericSolution<T, P extends Problem<?>> implement
   private List<T> variables;
   protected P problem ;
   protected Map<Object, Object> attributes ;
-  protected final JMetalRandom randomGenerator ;
+  /**
+   * @deprecated This field is deprecated because it stores a
+   *             {@link JMetalRandom} instance, which is provided only through
+   *             the singleton method {@link JMetalRandom#getInstance()},
+   *             which is always available. If you need it, please directly
+   *             call the singleton method. If all what you need is a random
+   *             generator, you may request one from the user by requesting a
+   *             {@link RandomGenerator} or a {@link BoundedRandomGenerator}.
+   *             If several types of generators are required, you may request
+   *             each of them or only a generic generator, like a
+   *             {@link RandomGenerator} which provides {@link Double} values
+   *             in [0;1], and generate customized generators based on it. You
+   *             can also use the static methods provided by
+   *             {@link RandomGenerator} and {@link BoundedRandomGenerator} to
+   *             help you in this task.
+   */
+  @Deprecated
+  protected final JMetalRandom randomGenerator = JMetalRandom.getInstance() ;
 
   /**
    * Constructor
@@ -38,7 +57,6 @@ public abstract class AbstractGenericSolution<T, P extends Problem<?>> implement
   protected AbstractGenericSolution(P problem) {
     this.problem = problem ;
     attributes = new HashMap<>() ;
-    randomGenerator = JMetalRandom.getInstance() ;
 
     objectives = new double[problem.getNumberOfObjectives()] ;
     variables = new ArrayList<>(problem.getNumberOfVariables()) ;
