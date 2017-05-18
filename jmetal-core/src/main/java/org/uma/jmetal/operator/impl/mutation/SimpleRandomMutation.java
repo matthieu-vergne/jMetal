@@ -30,6 +30,8 @@ public class SimpleRandomMutation implements MutationOperator<DoubleSolution> {
   private RandomGenerator<Double> randomGenerator ;
 
   /**  Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public SimpleRandomMutation(double probability) {
 	  this(probability, () -> JMetalRandom.getInstance().nextDouble());
   }

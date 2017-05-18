@@ -138,6 +138,7 @@ public class DoubleSolutionComparisonIT {
       return h;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public DoubleSolution createSolution() {
       return new ArrayDoubleSolution(this)  ;
@@ -150,6 +151,7 @@ public class DoubleSolutionComparisonIT {
       super(numberOfVariables) ;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public DoubleSolution createSolution() {
       return new DefaultDoubleSolution(this)  ;

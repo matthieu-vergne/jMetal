@@ -36,6 +36,8 @@ public class PermutationSwapMutation<T> implements MutationOperator<PermutationS
   /**
    * Constructor
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public PermutationSwapMutation(double mutationProbability) {
 	  this(mutationProbability, () -> JMetalRandom.getInstance().nextDouble(), (a, b) -> JMetalRandom.getInstance().nextInt(a,  b));
   }

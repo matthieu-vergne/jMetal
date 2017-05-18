@@ -44,6 +44,7 @@ public class DominanceRankingTest {
     assertEquals(0, ranking.getNumberOfSubfronts()) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldTheRankingOfAnEmptyPopulationReturnOneSubfronts(){
     problem = new DummyProblem(2) ;

@@ -116,6 +116,7 @@ public class NonDominatedSolutionListArchive<S extends Solution<?>> implements A
     return solutionList.get(index);
   }
 
+  @SuppressWarnings("deprecation")
   public static void main(String args[]) {
     JMetalRandom.getInstance().setSeed(1L);
     Archive<DoubleSolution> archive = new NonDominatedSolutionListArchive<>() ;

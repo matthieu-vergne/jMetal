@@ -32,6 +32,7 @@ import java.util.Random;
 public class RepairDoubleSolutionAtRandomTest {
   private RepairDoubleSolution repair;
 
+  @SuppressWarnings("deprecation")
   @Before public void setup() {
     repair = new RepairDoubleSolutionAtRandom();
   }
@@ -63,6 +64,7 @@ public class RepairDoubleSolutionAtRandomTest {
         Matchers.greaterThanOrEqualTo(lowerBound));
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

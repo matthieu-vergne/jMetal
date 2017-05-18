@@ -43,6 +43,8 @@ public class ArrayDoubleSolution implements DoubleSolution {
   /**
    * Constructor
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public ArrayDoubleSolution(DoubleProblem problem) {
 	  this(problem, (min, max) -> JMetalRandom.getInstance().nextDouble(min, max));
   }

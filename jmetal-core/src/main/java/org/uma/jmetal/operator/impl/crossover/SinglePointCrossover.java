@@ -36,6 +36,8 @@ public class SinglePointCrossover implements CrossoverOperator<BinarySolution> {
   private BoundedRandomGenerator<Integer> pointRandomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public SinglePointCrossover(double crossoverProbability) {
 	  this(crossoverProbability, () -> JMetalRandom.getInstance().nextDouble(), (a, b) -> JMetalRandom.getInstance().nextInt(a, b));
   }

@@ -113,6 +113,7 @@ public class AdaptiveGridTest {
     assertEquals(9.0/3.0, adaptiveGrid.getAverageOccupation(), EPSILON) ;
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvidedInRouletteWheel() {
 		// Configuration
@@ -139,6 +140,7 @@ public class AdaptiveGridTest {
 		assertTrue("No use of the custom generator", customUses[0] > 0);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvidedInRandomOccupiedHypercube() {
 		// Configuration

@@ -37,6 +37,8 @@ public class DifferentialEvolutionSelection implements SelectionOperator<List<Do
   private BoundedRandomGenerator<Integer> randomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public DifferentialEvolutionSelection() {
 	  this((a, b) -> JMetalRandom.getInstance().nextInt(a, b));
   }

@@ -48,6 +48,7 @@ public class BinaryTournamentSelectionTest {
   @Mock private Problem<Solution<Object>> problem ;
   private List<Solution<Object>> population ;
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteRaiseAnExceptionIfTheListOfSolutionsIsNull() {
     population = null ;
@@ -55,6 +56,7 @@ public class BinaryTournamentSelectionTest {
     selection.execute(population) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteRaiseAnExceptionIfTheListOfSolutionsIsEmpty() {
     population = new ArrayList<>(0) ;
@@ -62,6 +64,7 @@ public class BinaryTournamentSelectionTest {
     selection.execute(population) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnAValidSolutionIsWithCorrectParameters() {
 	  @SuppressWarnings("unchecked")
@@ -78,6 +81,7 @@ public class BinaryTournamentSelectionTest {
     verify(problem, times(POPULATION_SIZE)).createSolution();
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnTheSameSolutionIfTheListContainsOneSolution() {
 	  @SuppressWarnings("unchecked")
@@ -100,6 +104,7 @@ public class BinaryTournamentSelectionTest {
     assertEquals(2, population.size());
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteWorkProperlyIfTheTwoSolutionsInTheListAreNondominated() {
     @SuppressWarnings("unchecked")

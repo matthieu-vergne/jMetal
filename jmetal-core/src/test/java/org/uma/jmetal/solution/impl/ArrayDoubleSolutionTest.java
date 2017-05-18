@@ -80,6 +80,7 @@ public class ArrayDoubleSolutionTest {
     public void evaluate(DoubleSolution solution) {
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public DoubleSolution createSolution() {
       return new ArrayDoubleSolution(this)  ;

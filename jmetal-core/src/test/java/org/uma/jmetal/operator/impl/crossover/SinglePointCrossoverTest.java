@@ -38,6 +38,7 @@ public class SinglePointCrossoverTest {
   private static final double EPSILON = 0.00000000000001 ;
   private static final int BITS_OF_MOCKED_BINARY_PROBLEM = 7 ;
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectProbabilityValue() {
     double crossoverProbability = 0.1 ;
@@ -46,12 +47,14 @@ public class SinglePointCrossoverTest {
         .getField(crossover, "crossoverProbability"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeProbabilityValue() {
     double crossoverProbability = -0.1 ;
     new SinglePointCrossover(crossoverProbability) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetMutationProbabilityReturnTheRightValue() {
     double crossoverProbability = 0.1 ;
@@ -59,6 +62,7 @@ public class SinglePointCrossoverTest {
     assertEquals(crossoverProbability, crossover.getCrossoverProbability(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteWithNullParameterThrowAnException() {
     SinglePointCrossover crossover = new SinglePointCrossover(0.1) ;
@@ -66,6 +70,7 @@ public class SinglePointCrossoverTest {
     crossover.execute(null) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteFailIfTheListContainsOnlyOneSolution() {
     MockBinaryProblem problem = new MockBinaryProblem(1) ;
@@ -76,6 +81,7 @@ public class SinglePointCrossoverTest {
     crossover.execute(solutions) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteFailIfTheListContainsMoreThanTwoSolutions() {
     MockBinaryProblem problem = new MockBinaryProblem(1) ;
@@ -88,6 +94,7 @@ public class SinglePointCrossoverTest {
     crossover.execute(solutions) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldCrossingTwoVariableSolutionsReturnTheSameSolutionsIfNoBitsAreMutated() {
     int numberOfVariables = 1;
@@ -310,6 +317,7 @@ public class SinglePointCrossoverTest {
       return bitsPerVariable[index] ;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public BinarySolution createSolution() {
       return new DefaultBinarySolution(this) ;
@@ -323,6 +331,7 @@ public class SinglePointCrossoverTest {
     }
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

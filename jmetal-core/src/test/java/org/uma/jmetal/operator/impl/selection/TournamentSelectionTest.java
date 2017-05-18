@@ -26,6 +26,7 @@ public class TournamentSelectionTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheSolutionListIsNull() {
     exception.expect(JMetalException.class);
@@ -35,6 +36,7 @@ public class TournamentSelectionTest {
     selection.execute(null) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheSolutionListIsEmpty() {
     exception.expect(JMetalException.class);
@@ -46,6 +48,7 @@ public class TournamentSelectionTest {
     selection.execute(list) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectValueToTheNumberOfTournaments() {
     TournamentSelection<Solution<?>> selection = new TournamentSelection<Solution<?>>(5) ;
@@ -55,6 +58,7 @@ public class TournamentSelectionTest {
     assertEquals(expectedResult, result) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectValueSToTheNumberOfTournamentsAndTheComparator() {
     @SuppressWarnings("unchecked")
@@ -69,6 +73,7 @@ public class TournamentSelectionTest {
     assertSame(comp, comparator) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnAnElementIfTheListHasOneElement() {
     List<Solution<?>> population = new ArrayList<>(1);

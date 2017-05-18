@@ -33,6 +33,8 @@ public class DefaultDoubleSolution
     implements DoubleSolution {
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public DefaultDoubleSolution(DoubleProblem problem) {
     this(problem, (BoundedRandomGenerator<Double>) (min, max) -> JMetalRandom.getInstance().nextDouble(min, max)) ;
   }

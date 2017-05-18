@@ -40,6 +40,8 @@ public class TournamentSelection<S extends Solution<?>> implements SelectionOper
   private final int numberOfTournaments;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public TournamentSelection(int numberOfTournaments) {
     this(numberOfTournaments, () -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -50,6 +52,8 @@ public class TournamentSelection<S extends Solution<?>> implements SelectionOper
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public TournamentSelection(Comparator<S> comparator, int numberOfTournaments) {
     this(comparator, numberOfTournaments, () -> JMetalRandom.getInstance().nextDouble());
   }

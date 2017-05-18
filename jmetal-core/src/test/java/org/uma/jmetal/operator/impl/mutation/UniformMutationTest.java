@@ -13,6 +13,7 @@ import org.uma.jmetal.util.pseudorandom.impl.AuditableRandomGenerator;
 
 public class UniformMutationTest {
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testJMetalRandomGeneratorNotUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

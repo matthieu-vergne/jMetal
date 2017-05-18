@@ -62,6 +62,8 @@ public class DifferentialEvolutionCrossover implements CrossoverOperator<DoubleS
   private BoundedRandomGenerator<Double> crRandomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public DifferentialEvolutionCrossover() {
     this(DEFAULT_CR, DEFAULT_F, DEFAULT_K, DEFAULT_DE_VARIANT, (a, b) -> JMetalRandom.getInstance().nextInt(a, b), (a, b) -> JMetalRandom.getInstance().nextDouble(a, b)) ;
   }
@@ -72,6 +74,8 @@ public class DifferentialEvolutionCrossover implements CrossoverOperator<DoubleS
    * @param f
    * @param variant
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public DifferentialEvolutionCrossover(double cr, double f, String variant) {
 	  this(cr, f, variant, (a, b) -> JMetalRandom.getInstance().nextInt(a, b), (a, b) -> JMetalRandom.getInstance().nextDouble(a, b));
   }
@@ -101,6 +105,8 @@ public class DifferentialEvolutionCrossover implements CrossoverOperator<DoubleS
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public DifferentialEvolutionCrossover(double cr, double f, double k, String variant) {
     this(cr, f, k, variant, (a, b) -> JMetalRandom.getInstance().nextInt(a, b), (a, b) -> JMetalRandom.getInstance().nextDouble(a, b)) ;
   }

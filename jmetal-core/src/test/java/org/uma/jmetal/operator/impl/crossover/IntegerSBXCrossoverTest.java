@@ -15,6 +15,7 @@ import org.uma.jmetal.util.pseudorandom.impl.AuditableRandomGenerator;
 
 public class IntegerSBXCrossoverTest {
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testJMetalRandomGeneratorNotUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

@@ -34,6 +34,8 @@ public class NaryRandomSelection<S> implements SelectionOperator<List<S>,List<S>
   private BoundedRandomGenerator<Integer> randomIndexGenerator;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public NaryRandomSelection() {
     this((low, up) -> JMetalRandom.getInstance().nextInt(low, up)) ;
   }
@@ -44,6 +46,8 @@ public class NaryRandomSelection<S> implements SelectionOperator<List<S>,List<S>
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public NaryRandomSelection(int numberOfSolutionsToBeReturned) {
     this(numberOfSolutionsToBeReturned, (low, up) -> JMetalRandom.getInstance().nextInt(low, up));
   }

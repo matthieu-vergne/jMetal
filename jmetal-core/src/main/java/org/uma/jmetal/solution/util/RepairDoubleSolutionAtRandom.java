@@ -28,6 +28,8 @@ public class RepairDoubleSolutionAtRandom implements RepairDoubleSolution {
   /**
    * Constructor
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public RepairDoubleSolutionAtRandom() {
 	  this((a, b) -> JMetalRandom.getInstance().nextDouble(a, b));
   }

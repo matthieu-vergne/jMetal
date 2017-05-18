@@ -29,6 +29,7 @@ public class DifferentialEvolutionSelectionTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheListOfSolutionsIsNull() {
     exception.expect(JMetalException.class);
@@ -39,6 +40,7 @@ public class DifferentialEvolutionSelectionTest {
     selection.execute(null) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheListOfSolutionsHasOneSolution() {
     exception.expect(JMetalException.class);
@@ -52,6 +54,7 @@ public class DifferentialEvolutionSelectionTest {
     selection.execute(population) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheListOfSolutionsIsEmpty() {
     exception.expect(JMetalException.class);
@@ -65,6 +68,7 @@ public class DifferentialEvolutionSelectionTest {
     selection.execute(population) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheIndexIsNegative() {
     exception.expect(JMetalException.class);
@@ -79,6 +83,7 @@ public class DifferentialEvolutionSelectionTest {
     selection.execute(population) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheIndexIsNotIndicated() {
     exception.expect(JMetalException.class);
@@ -91,6 +96,7 @@ public class DifferentialEvolutionSelectionTest {
     selection.execute(population) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheIndexIsHigherThanTheSolutionListLength() {
     exception.expect(JMetalException.class);
@@ -104,6 +110,7 @@ public class DifferentialEvolutionSelectionTest {
     selection.execute(population) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnThreeDifferentSolutionsIfTheListHasFourElements() {
     selection = new DifferentialEvolutionSelection() ;
@@ -126,6 +133,7 @@ public class DifferentialEvolutionSelectionTest {
     assertThat(parents, not(hasItem(population.get(1)))) ;
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

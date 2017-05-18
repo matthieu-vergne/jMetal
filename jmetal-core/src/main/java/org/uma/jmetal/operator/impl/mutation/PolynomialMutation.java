@@ -45,6 +45,8 @@ public class PolynomialMutation implements MutationOperator<DoubleSolution> {
   private RandomGenerator<Double> randomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public PolynomialMutation() {
     this(() -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -55,6 +57,8 @@ public class PolynomialMutation implements MutationOperator<DoubleSolution> {
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public PolynomialMutation(DoubleProblem problem, double distributionIndex) {
     this(1.0/problem.getNumberOfVariables(), distributionIndex, () -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -67,6 +71,8 @@ public class PolynomialMutation implements MutationOperator<DoubleSolution> {
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public PolynomialMutation(double mutationProbability, double distributionIndex) {
     this(mutationProbability, distributionIndex, new RepairDoubleSolutionAtBounds(), () -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -79,6 +85,8 @@ public class PolynomialMutation implements MutationOperator<DoubleSolution> {
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public PolynomialMutation(double mutationProbability, double distributionIndex,
       RepairDoubleSolution solutionRepair) {
 	  this(mutationProbability, distributionIndex, solutionRepair, () -> JMetalRandom.getInstance().nextDouble());

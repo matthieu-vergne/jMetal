@@ -29,6 +29,7 @@ public class JMetalRandom implements Serializable {
     randomGenerator = new JavaRandomGenerator() ;
   }
 
+  @Deprecated
   public static JMetalRandom getInstance() {
     if (instance == null) {
       instance = new JMetalRandom() ;

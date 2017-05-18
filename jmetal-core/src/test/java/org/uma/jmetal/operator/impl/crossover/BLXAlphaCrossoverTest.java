@@ -46,6 +46,7 @@ import static org.mockito.Mockito.*;
 public class BLXAlphaCrossoverTest {
   private static final double EPSILON = 0.00000000000001 ;
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectProbabilityValue() {
     double crossoverProbability = 0.1 ;
@@ -55,6 +56,7 @@ public class BLXAlphaCrossoverTest {
         .getField(crossover, "crossoverProbability"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectDistributionIndex() {
     double alpha = 0.5 ;
@@ -63,24 +65,28 @@ public class BLXAlphaCrossoverTest {
         .getField(crossover, "alpha"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeProbabilityValue() {
     double crossoverProbability = -0.1 ;
     new BLXAlphaCrossover(crossoverProbability, 2.0) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeAlphaValue() {
     double alpha = -0.1 ;
     new BLXAlphaCrossover(0.1, alpha) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetProbabilityReturnTheRightValue() {
     BLXAlphaCrossover crossover = new BLXAlphaCrossover(0.1, 0.5) ;
     assertEquals(0.1, crossover.getCrossoverProbability(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetAlphaReturnTheRightValue() {
     double alpha = 0.75 ;
@@ -88,6 +94,7 @@ public class BLXAlphaCrossoverTest {
     assertEquals(alpha, crossover.getAlpha(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteWithNullParameterThrowAnException() {
     BLXAlphaCrossover crossover = new BLXAlphaCrossover(0.1, 20.0) ;
@@ -95,6 +102,7 @@ public class BLXAlphaCrossoverTest {
     crossover.execute(null) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteWithInvalidSolutionListSizeThrowAnException() {
     DoubleProblem problem = new MockDoubleProblem(1) ;
@@ -105,6 +113,7 @@ public class BLXAlphaCrossoverTest {
         Arrays.asList(problem.createSolution(), problem.createSolution(), problem.createSolution())) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldCrossingTwoSingleVariableSolutionsReturnTheSameSolutionsIfProbabilityIsZero() {
     double crossoverProbability = 0.0;
@@ -120,6 +129,7 @@ public class BLXAlphaCrossoverTest {
     assertEquals(solutions.get(1), newSolutions.get(1)) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldCrossingTwoSingleVariableSolutionsReturnTheSameSolutionsIfNotCrossoverIsApplied() {
     @SuppressWarnings("unchecked")
@@ -142,6 +152,7 @@ public class BLXAlphaCrossoverTest {
     verify(randomGenerator).getRandomValue() ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldCrossingTwoSingleVariableSolutionsReturnValidSolutions() {
     @SuppressWarnings("unchecked")
@@ -171,6 +182,7 @@ public class BLXAlphaCrossoverTest {
     verify(randomGenerator, times(3)).getRandomValue();
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldCrossingTwoSingleVariableSolutionsWithSimilarValueReturnTheSameVariables() {
     @SuppressWarnings("unchecked")
@@ -196,6 +208,7 @@ public class BLXAlphaCrossoverTest {
     verify(randomGenerator, times(3)).getRandomValue();
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldCrossingTwoDoubleVariableSolutionsReturnValidSolutions() {
     @SuppressWarnings("unchecked")
@@ -269,6 +282,7 @@ public class BLXAlphaCrossoverTest {
     }
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

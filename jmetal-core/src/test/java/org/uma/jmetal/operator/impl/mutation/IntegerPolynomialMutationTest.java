@@ -26,6 +26,7 @@ import static org.mockito.Mockito.*;
 public class IntegerPolynomialMutationTest {
   private static final double EPSILON = 0.00000000000001 ;
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorWithoutParameterAssignTheDefaultValues() {
     IntegerPolynomialMutation mutation = new IntegerPolynomialMutation() ;
@@ -35,6 +36,7 @@ public class IntegerPolynomialMutationTest {
         .getField(mutation, "distributionIndex"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorWithProblemAndDistributionIndexParametersAssignTheCorrectValues() {
     IntegerProblem problem = new MockIntegerProblem(4) ;
@@ -45,6 +47,7 @@ public class IntegerPolynomialMutationTest {
         .getField(mutation, "distributionIndex"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectProbabilityValue() {
     double mutationProbability = 0.1 ;
@@ -53,6 +56,7 @@ public class IntegerPolynomialMutationTest {
         .getField(mutation, "mutationProbability"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectDistributionIndex() {
     double distributionIndex = 15.0 ;
@@ -61,30 +65,35 @@ public class IntegerPolynomialMutationTest {
         .getField(mutation, "distributionIndex"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeProbabilityValue() {
     double mutationProbability = -0.1 ;
     new IntegerPolynomialMutation(mutationProbability, 2.0) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeDistributionIndex() {
     double distributionIndex = -0.1 ;
     new IntegerPolynomialMutation(0.1, distributionIndex) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetMutationProbabilityReturnTheRightValue() {
     IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(0.1, 20.0) ;
     assertEquals(0.1, mutation.getMutationProbability(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetDistributionIndexReturnTheRightValue() {
     IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(0.1, 30.0) ;
     assertEquals(30.0, mutation.getDistributionIndex(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteWithNullParameterThrowAnException() {
     IntegerPolynomialMutation mutation = new IntegerPolynomialMutation(0.1, 20.0) ;
@@ -92,6 +101,7 @@ public class IntegerPolynomialMutationTest {
     mutation.execute(null) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldMutateASingleVariableSolutionReturnTheSameSolutionIfProbabilityIsZero() {
     double mutationProbability = 0.0;
@@ -216,6 +226,7 @@ public class IntegerPolynomialMutationTest {
       setUpperLimit(upperLimit);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public IntegerSolution createSolution() {
       return new DefaultIntegerSolution(this) ;
@@ -229,6 +240,7 @@ public class IntegerPolynomialMutationTest {
     }
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

@@ -52,6 +52,8 @@ public class BasicLocalSearch<S extends Solution<?>> implements LocalSearchOpera
    * @param problem problem to resolve
 
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public BasicLocalSearch(int improvementRounds, MutationOperator<S> mutationOperator,
       Comparator<S> comparator, Problem<S> problem){
 	  this(improvementRounds, mutationOperator, comparator, problem, () -> JMetalRandom.getInstance().nextDouble());

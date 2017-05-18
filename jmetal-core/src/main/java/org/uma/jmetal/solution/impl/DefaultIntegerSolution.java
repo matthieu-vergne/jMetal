@@ -31,6 +31,8 @@ public class DefaultIntegerSolution
     implements IntegerSolution {
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public DefaultIntegerSolution(IntegerProblem problem) {
     this(problem, (min, max) -> JMetalRandom.getInstance().nextInt(min, max));
   }

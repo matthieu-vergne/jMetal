@@ -34,6 +34,7 @@ public class BitFlipMutationTest {
   private static final double EPSILON = 0.00000000000001 ;
   private static final int NUMBER_OF_BITS_OF_MOCKED_BINARY_PROBLEM = 4 ;
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectProbabilityValue() {
     double mutationProbability = 0.1 ;
@@ -42,12 +43,14 @@ public class BitFlipMutationTest {
         .getField(mutation, "mutationProbability"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeProbabilityValue() {
     double mutationProbability = -0.1 ;
     new BitFlipMutation(mutationProbability) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetMutationProbabilityReturnTheRightValue() {
     double mutationProbability = 0.1 ;
@@ -55,6 +58,7 @@ public class BitFlipMutationTest {
     assertEquals(mutationProbability, mutation.getMutationProbability(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteWithNullParameterThrowAnException() {
     BitFlipMutation mutation = new BitFlipMutation(0.1) ;
@@ -163,6 +167,7 @@ public class BitFlipMutationTest {
       return bitsPerVariable[index] ;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public BinarySolution createSolution() {
       return new DefaultBinarySolution(this) ;
@@ -176,6 +181,7 @@ public class BitFlipMutationTest {
     }
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

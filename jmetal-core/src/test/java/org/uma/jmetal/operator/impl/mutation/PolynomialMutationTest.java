@@ -47,6 +47,7 @@ import static org.mockito.Mockito.*;
 public class PolynomialMutationTest {
   private static final double EPSILON = 0.00000000000001 ;
   
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorWithoutParameterAssignTheDefaultValues() {
     PolynomialMutation mutation = new PolynomialMutation() ;
@@ -56,6 +57,7 @@ public class PolynomialMutationTest {
         .getField(mutation, "distributionIndex"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorWithProblemAndDistributionIndexParametersAssignTheCorrectValues() {
     DoubleProblem problem = new MockDoubleProblem(4) ;
@@ -66,6 +68,7 @@ public class PolynomialMutationTest {
         .getField(mutation, "distributionIndex"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectProbabilityValue() {
     double mutationProbability = 0.1 ;
@@ -74,6 +77,7 @@ public class PolynomialMutationTest {
         .getField(mutation, "mutationProbability"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectDistributionIndex() {
     double distributionIndex = 15.0 ;
@@ -82,30 +86,35 @@ public class PolynomialMutationTest {
         .getField(mutation, "distributionIndex"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeProbabilityValue() {
     double mutationProbability = -0.1 ;
     new PolynomialMutation(mutationProbability, 2.0) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeDistributionIndex() {
     double distributionIndex = -0.1 ;
     new PolynomialMutation(0.1, distributionIndex) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetMutationProbabilityReturnTheRightValue() {
     PolynomialMutation mutation = new PolynomialMutation(0.1, 20.0) ;
     assertEquals(0.1, mutation.getMutationProbability(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetDistributionIndexReturnTheRightValue() {
     PolynomialMutation mutation = new PolynomialMutation(0.1, 30.0) ;
     assertEquals(30.0, mutation.getDistributionIndex(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteWithNullParameterThrowAnException() {
     PolynomialMutation mutation = new PolynomialMutation(0.1, 20.0) ;
@@ -113,6 +122,7 @@ public class PolynomialMutationTest {
     mutation.execute(null) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldMutateASingleVariableSolutionReturnTheSameSolutionIfProbabilityIsZero() {
     double mutationProbability = 0.0;
@@ -220,6 +230,8 @@ public class PolynomialMutationTest {
       private BoundedRandomGenerator<Double> variableRandomGenerator;
       
     /** Constructor */
+    @SuppressWarnings("deprecation")
+    @Deprecated
     public MockDoubleProblem(Integer numberOfVariables) {
       this(numberOfVariables, (min, max) -> JMetalRandom.getInstance().nextDouble(min, max));
     }
@@ -255,6 +267,7 @@ public class PolynomialMutationTest {
     }
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

@@ -314,6 +314,8 @@ public class AdaptiveGrid<S extends Solution<?>> {
    *
    * @return the number of the selected hypercube.
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public int rouletteWheel() {
 	  return rouletteWheel((a, b) -> JMetalRandom.getInstance().nextDouble(a, b));
   }
@@ -390,6 +392,8 @@ public class AdaptiveGrid<S extends Solution<?>> {
    *
    * @return The hypercube.
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public int randomOccupiedHypercube() {
 	  return randomOccupiedHypercube((a, b) -> JMetalRandom.getInstance().nextInt(a, b));
   }

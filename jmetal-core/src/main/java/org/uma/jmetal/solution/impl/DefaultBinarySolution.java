@@ -32,6 +32,8 @@ public class DefaultBinarySolution
     implements BinarySolution {
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public DefaultBinarySolution(BinaryProblem problem) {
     this(problem, () -> JMetalRandom.getInstance().nextDouble() < 0.5 ) ;
   }

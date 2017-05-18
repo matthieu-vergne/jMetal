@@ -31,6 +31,8 @@ public class BitFlipMutation implements MutationOperator<BinarySolution> {
   private RandomGenerator<Double> randomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public BitFlipMutation(double mutationProbability) {
 	  this(mutationProbability, () -> JMetalRandom.getInstance().nextDouble());
   }

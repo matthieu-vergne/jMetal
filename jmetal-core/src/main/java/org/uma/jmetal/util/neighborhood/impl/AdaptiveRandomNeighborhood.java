@@ -40,6 +40,8 @@ public class AdaptiveRandomNeighborhood<S> implements Neighborhood<S> {
    * @param solutionListSize The expected size of the list of solutions
    * @param numberOfRandomNeighbours The number of neighbors per solution
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public AdaptiveRandomNeighborhood(int solutionListSize, int numberOfRandomNeighbours) {
 	  this(solutionListSize, numberOfRandomNeighbours, (a, b) -> JMetalRandom.getInstance().nextInt(a, b));
   }

@@ -32,6 +32,8 @@ public class UniformMutation implements MutationOperator<DoubleSolution> {
   private RandomGenerator<Double> randomGenenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public UniformMutation(double mutationProbability, double perturbation) {
 	  this(mutationProbability, perturbation, () -> JMetalRandom.getInstance().nextDouble());
   }

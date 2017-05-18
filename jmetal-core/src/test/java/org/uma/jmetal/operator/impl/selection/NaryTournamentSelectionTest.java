@@ -44,6 +44,7 @@ public class NaryTournamentSelectionTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldDefaultConstructorSetTheNumberOfSolutionsToBeReturnedEqualsToTwo() {
     NaryTournamentSelection<IntegerSolution> selection = new NaryTournamentSelection<>() ;
@@ -51,6 +52,7 @@ public class NaryTournamentSelectionTest {
     assertEquals(2, ReflectionTestUtils.getField(selection, "numberOfSolutionsToBeReturned"));
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheListOfSolutionsIsNull() {
     exception.expect(JMetalException.class);
@@ -63,6 +65,7 @@ public class NaryTournamentSelectionTest {
     selection.execute(population) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteRaiseAnExceptionIfTheListOfSolutionsIsEmpty() {
     NaryTournamentSelection<IntegerSolution> selection = new NaryTournamentSelection<>() ;
@@ -72,6 +75,7 @@ public class NaryTournamentSelectionTest {
     selection.execute(population) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnAValidSolutionIsWithCorrectParameters() {
     NaryTournamentSelection<BinarySolution> selection = new NaryTournamentSelection<>() ;
@@ -90,6 +94,7 @@ public class NaryTournamentSelectionTest {
     verify(problem, times(POPULATION_SIZE)).createSolution();
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnTheSameSolutionIfTheListContainsOneSolution() {
     @SuppressWarnings("unchecked")
@@ -111,6 +116,7 @@ public class NaryTournamentSelectionTest {
     assertEquals(2, population.size());
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheListSizeIsOneAndTwoSolutionsAreRequested() {
     exception.expect(JMetalException.class);

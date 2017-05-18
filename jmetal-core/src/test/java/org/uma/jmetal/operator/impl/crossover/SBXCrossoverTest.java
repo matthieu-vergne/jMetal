@@ -46,6 +46,7 @@ import static org.mockito.Mockito.*;
 public class SBXCrossoverTest {
   private static final double EPSILON = 0.00000000000001 ;
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectProbabilityValue() {
     double crossoverProbability = 0.1 ;
@@ -54,6 +55,7 @@ public class SBXCrossoverTest {
         .getField(crossover, "crossoverProbability"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorAssignTheCorrectDistributionIndex() {
     double distributionIndex = 15.0 ;
@@ -62,30 +64,35 @@ public class SBXCrossoverTest {
         .getField(crossover, "distributionIndex"), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeProbabilityValue() {
     double crossoverProbability = -0.1 ;
     new SBXCrossover(crossoverProbability, 2.0) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldConstructorFailWhenPassedANegativeDistributionIndex() {
     double distributionIndex = -0.1 ;
     new SBXCrossover(0.1, distributionIndex) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetProbabilityReturnTheRightValue() {
     SBXCrossover crossover = new SBXCrossover(0.1, 20.0) ;
     assertEquals(0.1, crossover.getCrossoverProbability(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetDistributionIndexReturnTheRightValue() {
     SBXCrossover crossover = new SBXCrossover(0.1, 30.0) ;
     assertEquals(30.0, crossover.getDistributionIndex(), EPSILON) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteWithNullParameterThrowAnException() {
     SBXCrossover crossover = new SBXCrossover(0.1, 20.0) ;
@@ -93,6 +100,7 @@ public class SBXCrossoverTest {
     crossover.execute(null) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test (expected = JMetalException.class)
   public void shouldExecuteWithInvalidSolutionListSizeThrowAnException() {
     DoubleProblem problem = new MockDoubleProblem(1) ;
@@ -102,6 +110,7 @@ public class SBXCrossoverTest {
     crossover.execute(Arrays.asList(problem.createSolution(), problem.createSolution(), problem.createSolution())) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldCrossingTwoSingleVariableSolutionsReturnTheSameSolutionsIfProbabilityIsZero() {
     double crossoverProbability = 0.0;
@@ -282,6 +291,7 @@ public class SBXCrossoverTest {
     }
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

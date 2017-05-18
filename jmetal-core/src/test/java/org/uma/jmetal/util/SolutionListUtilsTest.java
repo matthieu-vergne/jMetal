@@ -211,6 +211,7 @@ public class SolutionListUtilsTest {
   }
 
   /***** Unit tests to method selectNRandomDifferentSolutions ****/
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldSelectNRandomDifferentSolutionsRaiseAnExceptionIfTheSolutionListIsNull() {
     exception.expect(JMetalException.class);
@@ -219,6 +220,7 @@ public class SolutionListUtilsTest {
     SolutionListUtils.selectNRandomDifferentSolutions(1, null) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldSelectNRandomDifferentSolutionsRaiseAnExceptionIfTheSolutionListIsEmpty() {
     exception.expect(JMetalException.class);
@@ -237,6 +239,7 @@ public class SolutionListUtilsTest {
     assertEquals(1, list.size()) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldSelectNRandomDifferentSolutionsRaiseAnExceptionIfTheListSizeIsOneAndTwoSolutionsAreRequested() {
     exception.expect(JMetalException.class);
@@ -249,6 +252,7 @@ public class SolutionListUtilsTest {
     SolutionListUtils.selectNRandomDifferentSolutions(2, list) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldelectNRandomDifferentSolutionsRaiseAnExceptionIfTheListSizeIsTwoAndFourSolutionsAreRequested() {
     exception.expect(JMetalException.class);
@@ -262,6 +266,7 @@ public class SolutionListUtilsTest {
     SolutionListUtils.selectNRandomDifferentSolutions(4, list) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnTheSolutionInTheListIfTheListContainsASolution() {
     List<IntegerSolution> list = new ArrayList<>(2) ;
@@ -272,6 +277,7 @@ public class SolutionListUtilsTest {
     assertSame(solution, result.get(0)) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldSelectNRandomDifferentSolutionsReturnTheSolutionSInTheListIfTheListContainsTwoSolutions() {
     List<BinarySolution> list = new ArrayList<>(2) ;
@@ -286,6 +292,7 @@ public class SolutionListUtilsTest {
     assertTrue(result.contains(solution2));
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldSelectNRandomDifferentSolutionsReturnTheCorrectNumberOfSolutions() {
     int listSize = 20 ;
@@ -300,6 +307,7 @@ public class SolutionListUtilsTest {
     assertEquals(solutionsToBeReturned, result.size());
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvidedInSelectNRandomDifferentSolutions() {
 		// Configuration
@@ -335,6 +343,7 @@ public class SolutionListUtilsTest {
   /**
    * If the list contains 4 solutions, the result list must return all of them
    */
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldSelectNRandomDifferentSolutionsReturnTheCorrectListOfSolutions() {
     int listSize = 4 ;

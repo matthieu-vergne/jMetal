@@ -15,6 +15,7 @@ import org.uma.jmetal.util.pseudorandom.impl.AuditableRandomGenerator;
 
 public class DifferentialEvolutionCrossoverTest {
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

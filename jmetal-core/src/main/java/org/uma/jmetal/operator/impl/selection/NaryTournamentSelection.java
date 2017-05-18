@@ -37,6 +37,8 @@ public class NaryTournamentSelection<S extends Solution<?>> implements Selection
   private BoundedRandomGenerator<Integer> randomIndexGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public NaryTournamentSelection() {
     this((min, max) -> JMetalRandom.getInstance().nextInt(min, max)) ;
   }
@@ -47,6 +49,8 @@ public class NaryTournamentSelection<S extends Solution<?>> implements Selection
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public NaryTournamentSelection(int numberOfSolutionsToBeReturned, Comparator<S> comparator) {
     this(numberOfSolutionsToBeReturned, comparator, (min, max) -> JMetalRandom.getInstance().nextInt(min, max));
   }

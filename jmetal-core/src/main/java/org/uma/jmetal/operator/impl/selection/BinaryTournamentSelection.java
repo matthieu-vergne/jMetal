@@ -31,6 +31,8 @@ import java.util.Comparator;
 @SuppressWarnings("serial")
 public class BinaryTournamentSelection<S extends Solution<?>> extends TournamentSelection<S> {
     /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public BinaryTournamentSelection() {
     this(() -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -41,6 +43,8 @@ public class BinaryTournamentSelection<S extends Solution<?>> extends Tournament
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public BinaryTournamentSelection(Comparator<S> comparator) {
     this(comparator, () -> JMetalRandom.getInstance().nextDouble());
   }

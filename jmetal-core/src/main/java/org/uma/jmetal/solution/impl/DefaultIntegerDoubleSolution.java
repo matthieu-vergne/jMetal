@@ -21,6 +21,8 @@ public class DefaultIntegerDoubleSolution
   private int numberOfDoubleVariables ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public DefaultIntegerDoubleSolution(IntegerDoubleProblem<?> problem) {
 	  this(problem, (min, max) -> JMetalRandom.getInstance().nextInt(min, max), (min, max) -> JMetalRandom.getInstance().nextDouble(min, max));
   }

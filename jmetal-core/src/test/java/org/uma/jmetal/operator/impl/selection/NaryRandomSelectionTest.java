@@ -40,6 +40,7 @@ public class NaryRandomSelectionTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheSolutionListIsNull() {
     exception.expect(JMetalException.class);
@@ -49,6 +50,7 @@ public class NaryRandomSelectionTest {
     selection.execute(null) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheSolutionListIsEmpty() {
     exception.expect(JMetalException.class);
@@ -60,6 +62,7 @@ public class NaryRandomSelectionTest {
     selection.execute(list) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldDefaultConstructorReturnASingleSolution() {
     NaryRandomSelection<Solution<?>> selection = new NaryRandomSelection<Solution<?>>() ;
@@ -69,6 +72,7 @@ public class NaryRandomSelectionTest {
     assertEquals(expectedResult, result) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldNonDefaultConstructorReturnTheCorrectNumberOfSolutions() {
     int solutionsToBeReturned = 4 ;
@@ -78,6 +82,7 @@ public class NaryRandomSelectionTest {
     assertEquals(solutionsToBeReturned, result) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheListSizeIsOneAndTwoSolutionsAreRequested() {
     exception.expect(JMetalException.class);
@@ -91,6 +96,7 @@ public class NaryRandomSelectionTest {
     selection.execute(list) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteRaiseAnExceptionIfTheListSizeIsTwoAndFourSolutionsAreRequested() {
     exception.expect(JMetalException.class);
@@ -105,6 +111,7 @@ public class NaryRandomSelectionTest {
     selection.execute(list) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnTheSolutionInTheListIfTheListContainsASolution() {
     NaryRandomSelection<IntegerSolution> selection = new NaryRandomSelection<IntegerSolution>(1) ;
@@ -116,6 +123,7 @@ public class NaryRandomSelectionTest {
     assertSame(solution, result.get(0)) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnTheSolutionSInTheListIfTheListContainsTwoSolutions() {
     NaryRandomSelection<BinarySolution> selection = new NaryRandomSelection<BinarySolution>(2) ;
@@ -132,6 +140,7 @@ public class NaryRandomSelectionTest {
     assertThat(result.get(1), Matchers.either(Matchers.sameInstance(solution1)).or(Matchers.sameInstance(solution2)));
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldExecuteReturnTheCorrectNumberOfSolutions() {
     int listSize = 20 ;
@@ -150,6 +159,7 @@ public class NaryRandomSelectionTest {
   /**
    * If the list contains 4 solutions, the result list must return all of them
    */
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldSelectNRandomDifferentSolutionsReturnTheCorrectListOfSolutions() {
     int listSize = 4 ;

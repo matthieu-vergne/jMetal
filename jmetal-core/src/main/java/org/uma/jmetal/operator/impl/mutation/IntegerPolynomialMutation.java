@@ -45,6 +45,8 @@ public class IntegerPolynomialMutation implements MutationOperator<IntegerSoluti
   private RandomGenerator<Double> randomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public IntegerPolynomialMutation() {
     this(() -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -55,6 +57,8 @@ public class IntegerPolynomialMutation implements MutationOperator<IntegerSoluti
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public IntegerPolynomialMutation(IntegerProblem problem, double distributionIndex) {
     this(problem, distributionIndex, () -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -65,6 +69,8 @@ public class IntegerPolynomialMutation implements MutationOperator<IntegerSoluti
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public IntegerPolynomialMutation(double mutationProbability, double distributionIndex) {
     this(mutationProbability, distributionIndex, new RepairDoubleSolutionAtBounds(), () -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -75,6 +81,8 @@ public class IntegerPolynomialMutation implements MutationOperator<IntegerSoluti
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public IntegerPolynomialMutation(double mutationProbability, double distributionIndex,
       RepairDoubleSolution solutionRepair) {
 	  this(mutationProbability, distributionIndex, solutionRepair, () -> JMetalRandom.getInstance().nextDouble());

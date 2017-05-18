@@ -39,6 +39,8 @@ public class DefaultDoubleBinarySolution
   private int numberOfDoubleVariables ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public DefaultDoubleBinarySolution(DoubleBinaryProblem<?> problem) {
 	  this(problem, (min, max) -> JMetalRandom.getInstance().nextDouble(min, max), () -> JMetalRandom.getInstance().nextDouble() > 0.5);
   }

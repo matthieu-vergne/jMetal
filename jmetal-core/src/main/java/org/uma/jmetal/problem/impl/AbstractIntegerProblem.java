@@ -14,6 +14,7 @@ public abstract class AbstractIntegerProblem extends AbstractGenericProblem<Inte
 
   private List<Integer> lowerLimit ;
   private List<Integer> upperLimit ;
+  @SuppressWarnings("deprecation")
   private BoundedRandomGenerator<Integer> variableRandomGenerator = (min, max) -> JMetalRandom.getInstance().nextInt(min, max) ;
 
   /* Getters */

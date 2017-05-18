@@ -72,6 +72,7 @@ public class WFGHypervolumeTest {
       setUpperLimit(upperLimit);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public DoubleSolution createSolution() {
       return new DefaultDoubleSolution(this) ;

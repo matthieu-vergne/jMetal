@@ -21,6 +21,8 @@ public class SolutionUtils {
    * @param solution2
    * @return The best solution
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public static <S extends Solution<?>> S getBestSolution(S solution1, S solution2, Comparator<S> comparator) {
 	  return getBestSolution(solution1, solution2, comparator, () -> JMetalRandom.getInstance().nextDouble());
   }

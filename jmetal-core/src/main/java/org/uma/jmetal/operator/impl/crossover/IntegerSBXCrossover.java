@@ -46,6 +46,8 @@ public class IntegerSBXCrossover implements CrossoverOperator<IntegerSolution> {
   private RandomGenerator<Double> randomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public IntegerSBXCrossover(double crossoverProbability, double distributionIndex) {
 	  this(crossoverProbability, distributionIndex, () -> JMetalRandom.getInstance().nextDouble());
   }

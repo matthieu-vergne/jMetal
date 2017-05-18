@@ -41,6 +41,8 @@ public class BLXAlphaCrossover implements CrossoverOperator<DoubleSolution> {
   private RandomGenerator<Double> randomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public BLXAlphaCrossover(double crossoverProbability) {
     this (crossoverProbability, () -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -51,6 +53,8 @@ public class BLXAlphaCrossover implements CrossoverOperator<DoubleSolution> {
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public BLXAlphaCrossover(double crossoverProbability, double alpha) {
     this (crossoverProbability, alpha, () -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -61,6 +65,8 @@ public class BLXAlphaCrossover implements CrossoverOperator<DoubleSolution> {
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public BLXAlphaCrossover(double crossoverProbability, double alpha, RepairDoubleSolution solutionRepair) {
 	  this(crossoverProbability, alpha, solutionRepair, () -> JMetalRandom.getInstance().nextDouble());
   }

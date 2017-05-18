@@ -41,6 +41,7 @@ public class AdaptiveRandomNeighborhoodTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorThrowAnExceptionWhenTheNumberOfNeighboursIsNegative() {
     exception.expect(JMetalException.class);
@@ -49,6 +50,7 @@ public class AdaptiveRandomNeighborhoodTest {
     new AdaptiveRandomNeighborhood<DoubleSolution>(4, -1) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorThrowAnExceptionWhenTheNumberOfNeighboursIsEqualThanTheListSize() {
     exception.expect(JMetalException.class);
@@ -58,6 +60,7 @@ public class AdaptiveRandomNeighborhoodTest {
     new AdaptiveRandomNeighborhood<IntegerSolution>(4, 4) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorCreateAnInstanceIfTheParamtersAreValid() {
     AdaptiveRandomNeighborhood<IntegerSolution> neighborhood =
@@ -66,6 +69,7 @@ public class AdaptiveRandomNeighborhoodTest {
     assertNotNull(neighborhood) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldConstructorThrowAnExceptionWhenTheNumberOfNeighboursIsGreaterThanTheListSize() {
     exception.expect(JMetalException.class);
@@ -75,6 +79,7 @@ public class AdaptiveRandomNeighborhoodTest {
     new AdaptiveRandomNeighborhood<IntegerSolution>(4, 6) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetNeighborsWithANullListOfSolutionsThrowAnException() {
     AdaptiveRandomNeighborhood<IntegerSolution> neighborhood =
@@ -86,6 +91,7 @@ public class AdaptiveRandomNeighborhoodTest {
     neighborhood.getNeighbors(null, 1) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetNeighborsWithANegativeSolutionIndexThrowAnException() {
     int solutionListSize = 4 ;
@@ -103,6 +109,7 @@ public class AdaptiveRandomNeighborhoodTest {
     neighborhood.getNeighbors(list, -1) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetNeighborsWithATooBigSolutionIndexThrowAnException() {
     int solutionListSize = 4 ;
@@ -121,6 +128,7 @@ public class AdaptiveRandomNeighborhoodTest {
     neighborhood.getNeighbors(list, 6) ;
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetNeighborsThrowAnExceptionIfTheListSizeIsNotCorrect() {
     int solutionListSize = 4 ;
@@ -146,6 +154,7 @@ public class AdaptiveRandomNeighborhoodTest {
    * Number of neighbors: 2
    *
    */
+  @SuppressWarnings("deprecation")
   @Test
   public void shouldGetNeighborsReturnTwoNeighborsPlusTheCurrentSolution() {
     int solutionListSize = 4 ;
@@ -210,6 +219,7 @@ public class AdaptiveRandomNeighborhoodTest {
     assertEquals(list.get(0), result.get(1));
   }
   
+	@SuppressWarnings("deprecation")
 	@Test
 	public void shouldJMetalRandomGeneratorNotBeUsedWhenCustomRandomGeneratorProvided() {
 		// Configuration

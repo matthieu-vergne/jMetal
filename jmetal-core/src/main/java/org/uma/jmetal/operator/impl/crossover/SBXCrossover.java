@@ -47,6 +47,8 @@ public class SBXCrossover implements CrossoverOperator<DoubleSolution> {
   private RandomGenerator<Double> randomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public SBXCrossover(double crossoverProbability, double distributionIndex) {
     this (crossoverProbability, distributionIndex, new RepairDoubleSolutionAtBounds(), () -> JMetalRandom.getInstance().nextDouble()) ;
   }
@@ -57,6 +59,8 @@ public class SBXCrossover implements CrossoverOperator<DoubleSolution> {
   }
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public SBXCrossover(double crossoverProbability, double distributionIndex, RepairDoubleSolution solutionRepair) {
 	  this(crossoverProbability, distributionIndex, solutionRepair, () -> JMetalRandom.getInstance().nextDouble());
   }

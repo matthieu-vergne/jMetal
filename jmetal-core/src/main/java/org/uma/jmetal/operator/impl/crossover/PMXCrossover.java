@@ -39,6 +39,8 @@ public class PMXCrossover implements
   /**
    * Constructor
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public PMXCrossover(double crossoverProbability) {
 	  this(crossoverProbability, () -> JMetalRandom.getInstance().nextDouble(), (a, b) -> JMetalRandom.getInstance().nextInt(a, b));
   }

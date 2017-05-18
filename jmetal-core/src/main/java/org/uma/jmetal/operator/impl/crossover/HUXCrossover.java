@@ -39,6 +39,8 @@ public class HUXCrossover implements CrossoverOperator<BinarySolution> {
   private RandomGenerator<Double> randomGenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public HUXCrossover(double crossoverProbability) {
 	  this(crossoverProbability, () -> JMetalRandom.getInstance().nextDouble());
   }

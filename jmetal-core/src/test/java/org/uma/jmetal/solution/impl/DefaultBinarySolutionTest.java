@@ -125,6 +125,7 @@ public class DefaultBinarySolutionTest {
       return bitsPerVariable[index] ;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public BinarySolution createSolution() {
       return new DefaultBinarySolution(this) ;

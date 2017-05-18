@@ -213,6 +213,7 @@ public class SolutionListUtils {
    * @param solutionList The front to invert
    * @return The inverted front
    */
+  @Deprecated
   public static <S> List<S> selectNRandomDifferentSolutions(
       int numberOfSolutionsToBeReturned, List<S> solutionList) {
 	  JMetalRandom random = JMetalRandom.getInstance();

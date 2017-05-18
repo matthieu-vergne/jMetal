@@ -14,6 +14,7 @@ public abstract class AbstractDoubleProblem extends AbstractGenericProblem<Doubl
 
   private List<Double> lowerLimit ;
   private List<Double> upperLimit ;
+  @SuppressWarnings("deprecation")
   private BoundedRandomGenerator<Double> variableRandomGenerator = (min, max) -> JMetalRandom.getInstance().nextDouble(min, max) ;
 
   /* Getters */

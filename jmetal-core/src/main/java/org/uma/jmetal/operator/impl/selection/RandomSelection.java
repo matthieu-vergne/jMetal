@@ -32,6 +32,8 @@ public class RandomSelection<S> implements SelectionOperator<List<S>, S> {
 	
     private BoundedRandomGenerator<Integer> randomIndexGenerator;
     
+	@SuppressWarnings("deprecation")
+	@Deprecated
 	public RandomSelection() {
 		this((min, max) -> JMetalRandom.getInstance().nextInt(min, max));
 	}

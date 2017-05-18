@@ -10,6 +10,7 @@ import org.uma.jmetal.util.pseudorandom.RandomGenerator;
 public abstract class AbstractBinaryProblem extends AbstractGenericProblem<BinarySolution>
   implements BinaryProblem {
 
+  @SuppressWarnings("deprecation")
   private RandomGenerator<Boolean> randomBitGenerator = () -> JMetalRandom.getInstance().nextDouble() > 0.5;
 
   protected abstract int getBitsPerVariable(int index) ;

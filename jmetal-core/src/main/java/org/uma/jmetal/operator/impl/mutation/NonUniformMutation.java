@@ -35,6 +35,8 @@ public class NonUniformMutation implements MutationOperator<DoubleSolution> {
   private RandomGenerator<Double> randomGenenerator ;
 
   /** Constructor */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public NonUniformMutation(double mutationProbability, double perturbation, int maxIterations) {
 	  this(mutationProbability, perturbation, maxIterations, () -> JMetalRandom.getInstance().nextDouble());
   }

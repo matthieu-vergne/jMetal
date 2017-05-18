@@ -39,6 +39,7 @@ public class NullCrossoverTest {
 
   @SuppressWarnings("serial")
   private class MockProblem extends AbstractDoubleProblem {
+    @SuppressWarnings("deprecation")
     private JMetalRandom randomGenerator = JMetalRandom.getInstance() ;
 
     public MockProblem() {
@@ -80,6 +81,7 @@ public class NullCrossoverTest {
       solution.setObjective(1, randomGenerator.nextDouble());
     }
 
+    @SuppressWarnings("deprecation")
     @Override public DoubleSolution createSolution() {
       return new DefaultDoubleSolution(this);
     }
