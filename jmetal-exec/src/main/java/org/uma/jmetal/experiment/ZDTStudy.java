@@ -68,6 +68,7 @@ public class ZDTStudy {
 
     List<String> referenceFrontFileNames = Arrays.asList("ZDT1.pf", "ZDT2.pf", "ZDT3.pf", "ZDT4.pf", "ZDT6.pf");
 
+    int numberOfCores = 8;
     Experiment<DoubleSolution, List<DoubleSolution>> experiment =
         new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("ZDTStudy")
             .setAlgorithmList(algorithmList)
@@ -83,10 +84,10 @@ public class ZDTStudy {
                 new InvertedGenerationalDistance<DoubleSolution>(),
                 new InvertedGenerationalDistancePlus<DoubleSolution>()))
             .setIndependentRuns(INDEPENDENT_RUNS)
-            .setNumberOfCores(8)
+            .setNumberOfCores(numberOfCores)
             .build();
 
-    new ExecuteAlgorithms<>(experiment).run();
+    new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     new ComputeQualityIndicators<>(experiment).run() ;
     new GenerateLatexTablesWithStatistics(experiment).run() ;
     new GenerateWilcoxonTestTablesWithR<>(experiment).run() ;

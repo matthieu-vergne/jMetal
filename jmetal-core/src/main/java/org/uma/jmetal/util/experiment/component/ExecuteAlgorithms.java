@@ -4,9 +4,10 @@ import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.experiment.ExperimentComponent;
-import org.uma.jmetal.util.experiment.Experiment;
+import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * This class executes the algorithms the have been configured with a instance of class
@@ -19,11 +20,22 @@ import java.io.File;
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
 public class ExecuteAlgorithms<S extends Solution<?>, Result> implements ExperimentComponent {
-  private Experiment<S, Result> experiment;
+  private final List<ExperimentAlgorithm<S, Result>> algorithmList;
+  private final int independentRuns;
+  private final int numberOfCores;
+  private final String experimentBaseDirectory;
 
   /** Constructor */
-  public ExecuteAlgorithms(Experiment<S, Result> configuration) {
-    this.experiment = configuration ;
+  @Deprecated
+  public ExecuteAlgorithms(org.uma.jmetal.util.experiment.Experiment<S, Result> configuration) {
+    this(configuration.getAlgorithmList(), configuration.getIndependentRuns(), configuration.getNumberOfCores(), configuration.getExperimentBaseDirectory());
+  }
+
+  public ExecuteAlgorithms(List<ExperimentAlgorithm<S, Result>> algorithmList, int independentRuns, int numberOfCores, String experimentBaseDirectory) {
+    this.algorithmList = algorithmList;
+    this.independentRuns = independentRuns;
+    this.numberOfCores = numberOfCores;
+    this.experimentBaseDirectory = experimentBaseDirectory;
   }
 
   @Override
@@ -32,14 +44,13 @@ public class ExecuteAlgorithms<S extends Solution<?>, Result> implements Experim
     prepareOutputDirectory() ;
 
     System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism",
-            "" + this.experiment.getNumberOfCores());
+            "" + numberOfCores);
 
-    for (int i = 0; i < experiment.getIndependentRuns(); i++) {
+    for (int i = 0; i < independentRuns; i++) {
       final int id = i ;
 
-      experiment.getAlgorithmList()
-              .parallelStream()
-              .forEach(algorithm -> algorithm.runAlgorithm(id, experiment.getExperimentBaseDirectory())) ;
+      algorithmList.parallelStream()
+              .forEach(algorithm -> algorithm.runAlgorithm(id, experimentBaseDirectory)) ;
     }
   }
 
@@ -55,7 +66,7 @@ public class ExecuteAlgorithms<S extends Solution<?>, Result> implements Experim
     boolean result;
     File experimentDirectory;
 
-    experimentDirectory = new File(experiment.getExperimentBaseDirectory());
+    experimentDirectory = new File(experimentBaseDirectory);
     if (experimentDirectory.exists() && experimentDirectory.isDirectory()) {
       result = false;
     } else {
@@ -67,17 +78,17 @@ public class ExecuteAlgorithms<S extends Solution<?>, Result> implements Experim
 
   private void createExperimentDirectory() {
     File experimentDirectory;
-    experimentDirectory = new File(experiment.getExperimentBaseDirectory());
+    experimentDirectory = new File(experimentBaseDirectory);
 
     if (experimentDirectory.exists()) {
       experimentDirectory.delete() ;
     }
 
     boolean result ;
-    result = new File(experiment.getExperimentBaseDirectory()).mkdirs() ;
+    result = new File(experimentBaseDirectory).mkdirs() ;
     if (!result) {
       throw new JMetalException("Error creating experiment directory: " +
-          experiment.getExperimentBaseDirectory()) ;
+          experimentBaseDirectory) ;
     }
   }
 }

@@ -89,6 +89,7 @@ public class BinaryProblemsStudy {
     List<ExperimentAlgorithm<BinarySolution, List<BinarySolution>>> algorithmList =
             configureAlgorithmList(problemList);
 
+    int numberOfCores = 8;
     Experiment<BinarySolution, List<BinarySolution>> experiment;
     experiment = new ExperimentBuilder<BinarySolution, List<BinarySolution>>("BinaryProblemsStudy")
             .setAlgorithmList(algorithmList)
@@ -104,10 +105,10 @@ public class BinaryProblemsStudy {
                     new InvertedGenerationalDistancePlus<BinarySolution>())
             )
             .setIndependentRuns(INDEPENDENT_RUNS)
-            .setNumberOfCores(8)
+            .setNumberOfCores(numberOfCores)
             .build();
 
-    new ExecuteAlgorithms<>(experiment).run();
+    new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     new GenerateReferenceParetoFront(experiment).run();
     new ComputeQualityIndicators<>(experiment).run();
     new GenerateLatexTablesWithStatistics(experiment).run();

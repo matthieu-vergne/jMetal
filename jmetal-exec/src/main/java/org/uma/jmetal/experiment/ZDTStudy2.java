@@ -80,6 +80,7 @@ public class ZDTStudy2 {
     List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList =
             configureAlgorithmList(problemList);
 
+    int numberOfCores = 8;
     ExperimentBuilder<DoubleSolution, List<DoubleSolution>> zdt2Study = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("ZDTStudy2");
     zdt2Study.setAlgorithmList(algorithmList);
     zdt2Study.setProblemList(problemList);
@@ -92,10 +93,10 @@ public class ZDTStudy2 {
             new PISAHypervolume<DoubleSolution>(),
             new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()));
     zdt2Study.setIndependentRuns(INDEPENDENT_RUNS);
-    zdt2Study.setNumberOfCores(8);
+    zdt2Study.setNumberOfCores(numberOfCores);
     Experiment<DoubleSolution, List<DoubleSolution>> experiment = zdt2Study.build();
 
-    new ExecuteAlgorithms<>(experiment).run();
+    new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
     new ComputeQualityIndicators<>(experiment).run() ;
     new GenerateLatexTablesWithStatistics(experiment).run() ;

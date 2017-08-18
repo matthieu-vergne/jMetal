@@ -61,6 +61,7 @@ public class NSGAIIStudy2 {
     List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList =
             configureAlgorithmList(problemList);
 
+    int numberOfCores = 8;
     Experiment<DoubleSolution, List<DoubleSolution>> experiment =
         new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("NSGAIIStudy2")
             .setAlgorithmList(algorithmList)
@@ -74,10 +75,10 @@ public class NSGAIIStudy2 {
                 new PISAHypervolume<DoubleSolution>(),
                 new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()))
             .setIndependentRuns(INDEPENDENT_RUNS)
-            .setNumberOfCores(8)
+            .setNumberOfCores(numberOfCores)
             .build();
 
-    new ExecuteAlgorithms<>(experiment).run();
+    new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
     new ComputeQualityIndicators<>(experiment).run() ;
     new GenerateLatexTablesWithStatistics(experiment).run() ;
