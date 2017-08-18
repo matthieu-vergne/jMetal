@@ -24,8 +24,6 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.archive.impl.CrowdingDistanceArchive;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
-import org.uma.jmetal.util.experiment.Experiment;
-import org.uma.jmetal.util.experiment.ExperimentBuilder;
 import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
 import org.uma.jmetal.util.experiment.component.ExecuteAlgorithms;
 import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR;
@@ -91,18 +89,7 @@ public class ZDTStudy2 {
     String outputParetoFrontFileName = "FUN" ;
     String outputParetoSetFileName = "VAR" ;
     String experimentName = "ZDTStudy2" ;
-    ExperimentBuilder<DoubleSolution, List<DoubleSolution>> zdt2Study = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>(experimentName);
-    zdt2Study.setAlgorithmList(algorithmList);
-    zdt2Study.setProblemList(problemList);
-    zdt2Study.setExperimentBaseDirectory(experimentBaseDirectory);
-    zdt2Study.setOutputParetoFrontFileName(outputParetoFrontFileName);
-    zdt2Study.setOutputParetoSetFileName(outputParetoSetFileName);
-    zdt2Study.setReferenceFrontDirectory(referenceFrontDirectory);
-    zdt2Study.setIndicatorList(indicatorList);
-    zdt2Study.setIndependentRuns(INDEPENDENT_RUNS);
-    zdt2Study.setNumberOfCores(numberOfCores);
-    Experiment<DoubleSolution, List<DoubleSolution>> experiment = zdt2Study.build();
-
+    
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     List<String> referenceFrontFileNames = new LinkedList<>();
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(algorithmList, problemList, experimentBaseDirectory, referenceFrontDirectory, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS, referenceFrontFileNames).run();

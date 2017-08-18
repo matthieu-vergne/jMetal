@@ -20,8 +20,6 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.archive.impl.CrowdingDistanceArchive;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
-import org.uma.jmetal.util.experiment.Experiment;
-import org.uma.jmetal.util.experiment.ExperimentBuilder;
 import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
 import org.uma.jmetal.util.experiment.component.ExecuteAlgorithms;
 import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR;
@@ -90,20 +88,7 @@ public class ZDTScalabilityIStudy {
     String outputParetoFrontFileName = "FUN" ;
     String outputParetoSetFileName = "VAR" ;
     String experimentName = "ZDTScalabilityStudy" ;
-    Experiment<DoubleSolution, List<DoubleSolution>> experiment =
-            new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>(experimentName)
-                    .setAlgorithmList(algorithmList)
-                    .setProblemList(problemList)
-                    .setExperimentBaseDirectory(experimentBaseDirectory)
-                    .setOutputParetoFrontFileName(outputParetoFrontFileName)
-                    .setOutputParetoSetFileName(outputParetoSetFileName)
-                    .setReferenceFrontDirectory(referenceFrontDirectory)
-                    .setReferenceFrontFileNames(referenceFrontFileNames)
-                    .setIndicatorList(indicatorList)
-                    .setIndependentRuns(INDEPENDENT_RUNS)
-                    .setNumberOfCores(numberOfCores)
-                    .build();
-
+    
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run();
     new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList, experimentBaseDirectory, experimentName).run();

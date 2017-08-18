@@ -10,8 +10,6 @@ import org.uma.jmetal.qualityindicator.impl.*;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.JMetalException;
-import org.uma.jmetal.util.experiment.Experiment;
-import org.uma.jmetal.util.experiment.ExperimentBuilder;
 import org.uma.jmetal.util.experiment.component.*;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
@@ -71,19 +69,7 @@ public class NSGAIIStudy2 {
     String outputParetoFrontFileName = "FUN" ;
     String outputParetoSetFileName = "VAR" ;
     String experimentName = "NSGAIIStudy2" ;
-    Experiment<DoubleSolution, List<DoubleSolution>> experiment =
-        new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>(experimentName)
-            .setAlgorithmList(algorithmList)
-            .setProblemList(problemList)
-            .setExperimentBaseDirectory(experimentBaseDirectory)
-            .setOutputParetoFrontFileName(outputParetoFrontFileName)
-            .setOutputParetoSetFileName(outputParetoSetFileName)
-            .setReferenceFrontDirectory(referenceFrontDirectory)
-            .setIndicatorList(indicatorList)
-            .setIndependentRuns(INDEPENDENT_RUNS)
-            .setNumberOfCores(numberOfCores)
-            .build();
-
+    
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     List<String> referenceFrontFileNames = new LinkedList<>();
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(algorithmList, problemList, experimentBaseDirectory, referenceFrontDirectory, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS, referenceFrontFileNames).run();

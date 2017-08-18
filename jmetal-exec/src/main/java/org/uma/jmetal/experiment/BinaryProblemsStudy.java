@@ -40,8 +40,6 @@ import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
-import org.uma.jmetal.util.experiment.Experiment;
-import org.uma.jmetal.util.experiment.ExperimentBuilder;
 import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators;
 import org.uma.jmetal.util.experiment.component.ExecuteAlgorithms;
 import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR;
@@ -101,19 +99,7 @@ public class BinaryProblemsStudy {
     String outputParetoFrontFileName = "FUN" ;
     String outputParetoSetFileName = "VAR" ;
     String experimentName = "BinaryProblemsStudy" ;
-    Experiment<BinarySolution, List<BinarySolution>> experiment;
-    experiment = new ExperimentBuilder<BinarySolution, List<BinarySolution>>(experimentName)
-            .setAlgorithmList(algorithmList)
-            .setProblemList(problemList)
-            .setExperimentBaseDirectory(experimentBaseDirectory)
-            .setOutputParetoFrontFileName(outputParetoFrontFileName)
-            .setOutputParetoSetFileName(outputParetoSetFileName)
-            .setReferenceFrontDirectory(referenceFrontDirectory)
-            .setIndicatorList(indicatorList)
-            .setIndependentRuns(INDEPENDENT_RUNS)
-            .setNumberOfCores(numberOfCores)
-            .build();
-
+    
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     List<String> referenceFrontFileNames = new LinkedList<>();
     new GenerateReferenceParetoFront(algorithmList, problemList, experimentBaseDirectory, referenceFrontDirectory, outputParetoFrontFileName, INDEPENDENT_RUNS, referenceFrontFileNames).run();
