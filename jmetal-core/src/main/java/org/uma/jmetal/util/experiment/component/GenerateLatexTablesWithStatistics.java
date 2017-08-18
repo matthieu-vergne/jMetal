@@ -2,9 +2,11 @@ package org.uma.jmetal.util.experiment.component;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.uma.jmetal.qualityindicator.impl.GenericIndicator;
 import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.experiment.ExperimentComponent;
-import org.uma.jmetal.util.experiment.Experiment;
+import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
+import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
 import java.io.*;
 import java.util.*;
@@ -25,7 +27,11 @@ import java.util.*;
 public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
   private static final String DEFAULT_LATEX_DIRECTORY = "latex" ;
 
-  private final Experiment<?, ?> experiment;
+  private final List<? extends ExperimentProblem<?>> problemList;
+  private final List<? extends ExperimentAlgorithm<?, ?>> algorithmList;
+  private final List<? extends GenericIndicator<?>> indicatorList;
+  private final String experimentBaseDirectory;
+  private final String experimentName;
 
   private double[][][] mean;
   private double[][][] median;
@@ -35,10 +41,17 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
   private double[][][] min;
   private double[][][] numberOfValues;
 
-  public GenerateLatexTablesWithStatistics(Experiment<?, ?> configuration) {
-    this.experiment = configuration ;
+  @Deprecated
+  public GenerateLatexTablesWithStatistics(org.uma.jmetal.util.experiment.Experiment<?, ?> configuration) {
+    this(configuration.getAlgorithmList(), configuration.getProblemList(), configuration.getIndicatorList(), configuration.getExperimentBaseDirectory(), configuration.getExperimentName());
+  }
 
-    experiment.removeDuplicatedAlgorithms();
+  public GenerateLatexTablesWithStatistics(List<? extends ExperimentAlgorithm<?, ?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory, String experimentName) {
+    this.algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList);
+    this.problemList = problemList;
+    this.indicatorList = indicatorList;
+    this.experimentBaseDirectory = experimentBaseDirectory;
+    this.experimentName = experimentName;
   }
 
   @Override
@@ -49,22 +62,22 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
   }
 
   private List<List<List<List<Double>>>> readDataFromFiles() throws IOException {
-    List<List<List<List<Double>>>> data = new ArrayList<List<List<List<Double>>>>(experiment.getIndicatorList().size()) ;
+    List<List<List<List<Double>>>> data = new ArrayList<List<List<List<Double>>>>(indicatorList.size()) ;
 
-    for (int indicator = 0; indicator < experiment.getIndicatorList().size(); indicator++ ) {
+    for (int indicator = 0; indicator < indicatorList.size(); indicator++ ) {
       // A data vector per problem
       data.add(indicator, new ArrayList<List<List<Double>>>()) ;
-      for (int problem = 0; problem < experiment.getProblemList().size(); problem++) {
+      for (int problem = 0; problem < problemList.size(); problem++) {
         data.get(indicator).add(problem, new ArrayList<List<Double>>());
 
-        for (int algorithm = 0; algorithm < experiment.getAlgorithmList().size(); algorithm++) {
+        for (int algorithm = 0; algorithm < algorithmList.size(); algorithm++) {
           data.get(indicator).get(problem).add(algorithm, new ArrayList<Double>());
 
-          String directory = experiment.getExperimentBaseDirectory();
+          String directory = experimentBaseDirectory;
           directory += "/data/";
-          directory += "/" + experiment.getAlgorithmList().get(algorithm).getAlgorithmTag();
-          directory += "/" + experiment.getProblemList().get(problem).getTag();
-          directory += "/" + experiment.getIndicatorList().get(indicator).getName();
+          directory += "/" + algorithmList.get(algorithm).getAlgorithmTag();
+          directory += "/" + problemList.get(problem).getTag();
+          directory += "/" + indicatorList.get(indicator).getName();
           // Read values from data files
           FileInputStream fis = new FileInputStream(directory);
           InputStreamReader isr = new InputStreamReader(fis);
@@ -83,7 +96,7 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
   }
 
   private void computeDataStatistics(List<List<List<List<Double>>>> data) {
-    int indicatorListSize = experiment.getIndicatorList().size() ;
+    int indicatorListSize = indicatorList.size() ;
     mean = new double[indicatorListSize][][];
     median = new double[indicatorListSize][][];
     stdDeviation = new double[indicatorListSize][][];
@@ -92,7 +105,7 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
     max = new double[indicatorListSize][][];
     numberOfValues = new double[indicatorListSize][][];
 
-    int problemListSize = experiment.getProblemList().size() ;
+    int problemListSize = problemList.size() ;
     for (int indicator = 0; indicator < indicatorListSize; indicator++) {
       // A data vector per problem
       mean[indicator] = new double[problemListSize][];
@@ -103,7 +116,7 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
       max[indicator] = new double[problemListSize][];
       numberOfValues[indicator] = new double[problemListSize][];
 
-      int algorithmListSize = experiment.getAlgorithmList().size() ;
+      int algorithmListSize = algorithmList.size() ;
       for (int problem = 0; problem < problemListSize; problem++) {
         mean[indicator][problem] = new double[algorithmListSize];
         median[indicator][problem] = new double[algorithmListSize];
@@ -131,7 +144,7 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
   }
 
   private void generateLatexScript(List<List<List<List<Double>>>> data) throws IOException {
-    String latexDirectoryName = experiment.getExperimentBaseDirectory() + "/" + DEFAULT_LATEX_DIRECTORY ;
+    String latexDirectoryName = experimentBaseDirectory + "/" + DEFAULT_LATEX_DIRECTORY ;
     File latexOutput;
     latexOutput = new File(latexDirectoryName);
     if (!latexOutput.exists()) {
@@ -139,9 +152,9 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
       JMetalLogger.logger.info("Creating " + latexDirectoryName + " directory");
     }
     //System.out.println("Experiment name: " + experimentName_);
-    String latexFile = latexDirectoryName + "/" + experiment.getExperimentName() + ".tex";
+    String latexFile = latexDirectoryName + "/" + experimentName + ".tex";
     printHeaderLatexCommands(latexFile);
-    for (int i = 0; i < experiment.getIndicatorList().size(); i++) {
+    for (int i = 0; i < indicatorList.size(); i++) {
       printData(latexFile, i, mean, stdDeviation, "Mean and Standard Deviation");
       printData(latexFile, i, median, iqr, "Median and Interquartile Range");
     }
@@ -175,7 +188,7 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
   void printHeaderLatexCommands(String fileName) throws IOException {
     FileWriter os = new FileWriter(fileName, false);
     os.write("\\documentclass{article}" + "\n");
-    os.write("\\title{" + experiment.getExperimentName() + "}" + "\n");
+    os.write("\\title{" + experimentName + "}" + "\n");
     os.write("\\usepackage{colortbl}" + "\n");
     os.write("\\usepackage[table*]{xcolor}" + "\n");
     os.write("\\xdefinecolor{gray95}{gray}{0.65}" + "\n");
@@ -199,31 +212,31 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
     FileWriter os = new FileWriter(latexFile, true);
     os.write("\n");
     os.write("\\begin{table}" + "\n");
-    os.write("\\caption{" + experiment.getIndicatorList().get(indicatorIndex).getName() + ". " + caption + "}" + "\n");
-    os.write("\\label{table: " + experiment.getIndicatorList().get(indicatorIndex).getName() + "}" + "\n");
+    os.write("\\caption{" + indicatorList.get(indicatorIndex).getName() + ". " + caption + "}" + "\n");
+    os.write("\\label{table: " + indicatorList.get(indicatorIndex).getName() + "}" + "\n");
     os.write("\\centering" + "\n");
     os.write("\\begin{scriptsize}" + "\n");
     os.write("\\begin{tabular}{l");
 
     // calculate the number of columns
-    os.write(StringUtils.repeat("l", experiment.getAlgorithmList().size()));
+    os.write(StringUtils.repeat("l", algorithmList.size()));
     os.write("}\n");
     os.write("\\hline");
 
     // write table head
-    for (int i = -1; i < experiment.getAlgorithmList().size(); i++) {
+    for (int i = -1; i < algorithmList.size(); i++) {
       if (i == -1) {
         os.write(" & ");
-      } else if (i == (experiment.getAlgorithmList().size() - 1)) {
-        os.write(" " + experiment.getAlgorithmList().get(i).getAlgorithmTag() + "\\\\" + "\n");
+      } else if (i == (algorithmList.size() - 1)) {
+        os.write(" " + algorithmList.get(i).getAlgorithmTag() + "\\\\" + "\n");
       } else {
-        os.write("" + experiment.getAlgorithmList().get(i).getAlgorithmTag() + " & ");
+        os.write("" + algorithmList.get(i).getAlgorithmTag() + " & ");
       }
     }
     os.write("\\hline \n");
 
     // write lines
-    for (int i = 0; i < experiment.getProblemList().size(); i++) {
+    for (int i = 0; i < problemList.size(); i++) {
       // find the best value and second best value
       double bestCentralTendencyValue;
       double bestDispersionValue;
@@ -232,12 +245,12 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
       int bestIndex = -1;
       int secondBestIndex = -1;
 
-      if (experiment.getIndicatorList().get(indicatorIndex).isTheLowerTheIndicatorValueTheBetter()) {
+      if (indicatorList.get(indicatorIndex).isTheLowerTheIndicatorValueTheBetter()) {
         bestCentralTendencyValue = Double.MAX_VALUE;
         bestDispersionValue = Double.MAX_VALUE;
         secondBestCentralTendencyValue = Double.MAX_VALUE;
         secondBestDispersionValue = Double.MAX_VALUE;
-        for (int j = 0; j < (experiment.getAlgorithmList().size()); j++) {
+        for (int j = 0; j < (algorithmList.size()); j++) {
           if ((centralTendency[indicatorIndex][i][j] < bestCentralTendencyValue) ||
               ((centralTendency[indicatorIndex][i][j] ==
                   bestCentralTendencyValue) && (dispersion[indicatorIndex][i][j] < bestDispersionValue))) {
@@ -260,7 +273,7 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
         bestDispersionValue = Double.MIN_VALUE;
         secondBestCentralTendencyValue = Double.MIN_VALUE;
         secondBestDispersionValue = Double.MIN_VALUE;
-        for (int j = 0; j < (experiment.getAlgorithmList().size()); j++) {
+        for (int j = 0; j < (algorithmList.size()); j++) {
           if ((centralTendency[indicatorIndex][i][j] > bestCentralTendencyValue) ||
               ((centralTendency[indicatorIndex][i][j] ==
                   bestCentralTendencyValue) && (dispersion[indicatorIndex][i][j] < bestDispersionValue))) {
@@ -280,8 +293,8 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
         }
       }
 
-      os.write(experiment.getProblemList().get(i).getTag().replace("_", "\\_") + " & ");
-      for (int j = 0; j < (experiment.getAlgorithmList().size() - 1); j++) {
+      os.write(problemList.get(i).getTag().replace("_", "\\_") + " & ");
+      for (int j = 0; j < (algorithmList.size() - 1); j++) {
         if (j == bestIndex) {
           os.write("\\cellcolor{gray95}");
         }
@@ -293,16 +306,16 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
         String s = String.format(Locale.ENGLISH, "%8.1e", dispersion[indicatorIndex][i][j]);
         os.write("$" + m + "_{" + s + "}$ & ");
       }
-      if (bestIndex == (experiment.getAlgorithmList().size()- 1)) {
+      if (bestIndex == (algorithmList.size()- 1)) {
         os.write("\\cellcolor{gray95}");
       }
-      if (secondBestIndex == (experiment.getAlgorithmList().size()- 1)) {
+      if (secondBestIndex == (algorithmList.size()- 1)) {
         os.write("\\cellcolor{gray25}");
       }
       String m = String.format(Locale.ENGLISH, "%10.2e",
-          centralTendency[indicatorIndex][i][experiment.getAlgorithmList().size() - 1]);
+          centralTendency[indicatorIndex][i][algorithmList.size() - 1]);
       String s = String.format(Locale.ENGLISH, "%8.1e",
-          dispersion[indicatorIndex][i][experiment.getAlgorithmList().size() - 1]);
+          dispersion[indicatorIndex][i][algorithmList.size() - 1]);
       os.write("$" + m + "_{" + s + "}$ \\\\" + "\n");
     }
 

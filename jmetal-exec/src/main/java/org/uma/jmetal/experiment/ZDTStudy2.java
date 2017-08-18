@@ -89,7 +89,8 @@ public class ZDTStudy2 {
     String referenceFrontDirectory = experimentBaseDirectory + "/referenceFronts" ;
     String outputParetoFrontFileName = "FUN" ;
     String outputParetoSetFileName = "VAR" ;
-    ExperimentBuilder<DoubleSolution, List<DoubleSolution>> zdt2Study = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("ZDTStudy2");
+    String experimentName = "ZDTStudy2" ;
+    ExperimentBuilder<DoubleSolution, List<DoubleSolution>> zdt2Study = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>(experimentName);
     zdt2Study.setAlgorithmList(algorithmList);
     zdt2Study.setProblemList(problemList);
     zdt2Study.setExperimentBaseDirectory(experimentBaseDirectory);
@@ -105,7 +106,7 @@ public class ZDTStudy2 {
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
     List<String> referenceFrontFileNames = experiment.getReferenceFrontFileNames();
     new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run() ;
-    new GenerateLatexTablesWithStatistics(experiment).run() ;
+    new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList, experimentBaseDirectory, experimentName).run() ;
     new GenerateWilcoxonTestTablesWithR<>(experiment).run() ;
     new GenerateFriedmanTestTables<>(experiment).run();
     new GenerateBoxplotsWithR<>(experiment).setRows(3).setColumns(3).setDisplayNotch().run() ;

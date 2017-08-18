@@ -69,8 +69,9 @@ public class NSGAIIStudy2 {
     String referenceFrontDirectory = experimentBaseDirectory+"/referenceFronts" ;
     String outputParetoFrontFileName = "FUN" ;
     String outputParetoSetFileName = "VAR" ;
+    String experimentName = "NSGAIIStudy2" ;
     Experiment<DoubleSolution, List<DoubleSolution>> experiment =
-        new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("NSGAIIStudy2")
+        new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>(experimentName)
             .setAlgorithmList(algorithmList)
             .setProblemList(problemList)
             .setExperimentBaseDirectory(experimentBaseDirectory)
@@ -86,7 +87,7 @@ public class NSGAIIStudy2 {
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
     List<String> referenceFrontFileNames = experiment.getReferenceFrontFileNames();
     new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run() ;
-    new GenerateLatexTablesWithStatistics(experiment).run() ;
+    new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList, experimentBaseDirectory, experimentName).run() ;
     new GenerateWilcoxonTestTablesWithR<>(experiment).run() ;
     new GenerateFriedmanTestTables<>(experiment).run();
     new GenerateBoxplotsWithR<>(experiment).setRows(3).setColumns(3).run() ;

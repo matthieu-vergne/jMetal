@@ -99,8 +99,9 @@ public class BinaryProblemsStudy {
     String referenceFrontDirectory = experimentBaseDirectory+"/referenceFronts" ;
     String outputParetoFrontFileName = "FUN" ;
     String outputParetoSetFileName = "VAR" ;
+    String experimentName = "BinaryProblemsStudy" ;
     Experiment<BinarySolution, List<BinarySolution>> experiment;
-    experiment = new ExperimentBuilder<BinarySolution, List<BinarySolution>>("BinaryProblemsStudy")
+    experiment = new ExperimentBuilder<BinarySolution, List<BinarySolution>>(experimentName)
             .setAlgorithmList(algorithmList)
             .setProblemList(problemList)
             .setExperimentBaseDirectory(experimentBaseDirectory)
@@ -116,7 +117,7 @@ public class BinaryProblemsStudy {
     new GenerateReferenceParetoFront(experiment).run();
     List<String> referenceFrontFileNames = experiment.getReferenceFrontFileNames();
     new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run();
-    new GenerateLatexTablesWithStatistics(experiment).run();
+    new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList, experimentBaseDirectory, experimentName).run();
     new GenerateWilcoxonTestTablesWithR<>(experiment).run();
     new GenerateFriedmanTestTables<>(experiment).run();
     new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(2).setDisplayNotch().run();

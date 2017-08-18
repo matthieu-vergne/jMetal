@@ -89,8 +89,9 @@ public class ZDTScalabilityIStudy {
     String referenceFrontDirectory = "/pareto_fronts" ;
     String outputParetoFrontFileName = "FUN" ;
     String outputParetoSetFileName = "VAR" ;
+    String experimentName = "ZDTScalabilityStudy" ;
     Experiment<DoubleSolution, List<DoubleSolution>> experiment =
-            new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("ZDTScalabilityStudy")
+            new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>(experimentName)
                     .setAlgorithmList(algorithmList)
                     .setProblemList(problemList)
                     .setExperimentBaseDirectory(experimentBaseDirectory)
@@ -105,7 +106,7 @@ public class ZDTScalabilityIStudy {
 
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run();
-    new GenerateLatexTablesWithStatistics(experiment).run();
+    new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList, experimentBaseDirectory, experimentName).run();
     new GenerateWilcoxonTestTablesWithR<>(experiment).run();
     new GenerateFriedmanTestTables<>(experiment).run();
     new GenerateBoxplotsWithR<>(experiment).setRows(3).setColumns(3).run();
