@@ -39,7 +39,7 @@ public class ExecuteAlgorithms<S extends Solution<?>, Result> implements Experim
 
       experiment.getAlgorithmList()
               .parallelStream()
-              .forEach(algorithm -> algorithm.runAlgorithm(id, experiment)) ;
+              .forEach(algorithm -> algorithm.runAlgorithm(id, experiment.getExperimentBaseDirectory())) ;
     }
   }
 

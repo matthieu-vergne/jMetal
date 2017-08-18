@@ -3,7 +3,6 @@ package org.uma.jmetal.util.experiment.util;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalLogger;
-import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.fileoutput.SolutionListOutput;
 import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 
@@ -39,8 +38,13 @@ public class ExperimentAlgorithm<S extends Solution<?>, Result>  {
     this(algorithm, algorithm.getName(), problemTag) ;
   }
 
-  public void runAlgorithm(int id, Experiment<?, ?> experimentData) {
-    String outputDirectoryName = experimentData.getExperimentBaseDirectory()
+  @Deprecated
+  public void runAlgorithm(int id, org.uma.jmetal.util.experiment.Experiment<?, ?> experimentData) {
+    runAlgorithm(id, experimentData.getExperimentBaseDirectory());
+  }
+
+  public void runAlgorithm(int id, String experimentBaseDirectory) {
+    String outputDirectoryName = experimentBaseDirectory
             + "/data/"
             + algorithmTag
             + "/"
