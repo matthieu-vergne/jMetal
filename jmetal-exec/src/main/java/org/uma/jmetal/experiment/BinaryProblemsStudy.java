@@ -120,7 +120,7 @@ public class BinaryProblemsStudy {
     new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList, experimentBaseDirectory, experimentName).run();
     new GenerateWilcoxonTestTablesWithR<>(algorithmList, problemList, indicatorList, experimentBaseDirectory).run();
     new GenerateFriedmanTestTables<>(algorithmList, problemList, indicatorList, experimentBaseDirectory).run();
-    new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(2).setDisplayNotch().run();
+    new GenerateBoxplotsWithR<>(algorithmList, problemList, indicatorList, experimentBaseDirectory).setRows(1).setColumns(2).setDisplayNotch().run();
 
   }
 

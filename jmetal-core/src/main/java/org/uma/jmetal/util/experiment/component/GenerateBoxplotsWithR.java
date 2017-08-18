@@ -1,14 +1,14 @@
 package org.uma.jmetal.util.experiment.component;
 
 import org.uma.jmetal.qualityindicator.impl.GenericIndicator;
-import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.experiment.ExperimentComponent;
-import org.uma.jmetal.util.experiment.Experiment;
+import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * This class generates a R script that generates an eps file containing boxplots
@@ -25,19 +25,28 @@ import java.io.IOException;
 public class GenerateBoxplotsWithR<Result> implements ExperimentComponent {
   private static final String DEFAULT_R_DIRECTORY = "R";
 
-  private final Experiment<?, Result> experiment;
+  private final List<? extends ExperimentAlgorithm<?, ?>> algorithmList;
+  private final List<? extends ExperimentProblem<?>> problemList;
+  private final List<? extends GenericIndicator<?>> indicatorList;
+  private final String experimentBaseDirectory;
   private int numberOfRows ;
   private int numberOfColumns ;
   private boolean displayNotch ;
 
-  public GenerateBoxplotsWithR(Experiment<?, Result> experimentConfiguration) {
-    this.experiment = experimentConfiguration;
+  @Deprecated
+  public GenerateBoxplotsWithR(org.uma.jmetal.util.experiment.Experiment<?, Result> experimentConfiguration) {
+    this(experimentConfiguration.getAlgorithmList(), experimentConfiguration.getProblemList(), experimentConfiguration.getIndicatorList(), experimentConfiguration.getExperimentBaseDirectory());
+  }
 
-    displayNotch = false ;
-    numberOfRows = 3 ;
-    numberOfColumns = 3 ;
+  public GenerateBoxplotsWithR(List<? extends ExperimentAlgorithm<?, ?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory) {
+    this.displayNotch = false ;
+    this.numberOfRows = 3 ;
+    this.numberOfColumns = 3 ;
 
-    experiment.removeDuplicatedAlgorithms();
+    this.algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList);
+    this.problemList = problemList;
+    this.indicatorList = indicatorList;
+    this.experimentBaseDirectory = experimentBaseDirectory;
   }
 
   public GenerateBoxplotsWithR<Result> setRows(int rows) {
@@ -60,14 +69,14 @@ public class GenerateBoxplotsWithR<Result> implements ExperimentComponent {
 
   @Override
   public void run() throws IOException {
-    String rDirectoryName = experiment.getExperimentBaseDirectory() + "/" + DEFAULT_R_DIRECTORY;
+    String rDirectoryName = experimentBaseDirectory + "/" + DEFAULT_R_DIRECTORY;
     File rOutput;
     rOutput = new File(rDirectoryName);
     if (!rOutput.exists()) {
       new File(rDirectoryName).mkdirs();
       System.out.println("Creating " + rDirectoryName + " directory");
     }
-    for (GenericIndicator<? extends Solution<?>> indicator : experiment.getIndicatorList()) {
+    for (GenericIndicator<?> indicator : indicatorList) {
       String rFileName = rDirectoryName + "/" + indicator.getName() + ".Boxplot" + ".R";
 
       FileWriter os = new FileWriter(rFileName, false);
@@ -80,8 +89,8 @@ public class GenerateBoxplotsWithR<Result> implements ExperimentComponent {
       os.write("qIndicator <- function(indicator, problem)" + "\n");
       os.write("{" + "\n");
 
-      for (int i = 0; i <  experiment.getAlgorithmList().size(); i++) {
-        String algorithmName = experiment.getAlgorithmList().get(i).getAlgorithmTag();
+      for (int i = 0; i <  algorithmList.size(); i++) {
+        String algorithmName = algorithmList.get(i).getAlgorithmTag();
         os.write("file" +  algorithmName + "<-paste(resultDirectory, \"" + algorithmName + "\", sep=\"/\")" + "\n");
         os.write("file" +  algorithmName + "<-paste(file" +  algorithmName + ", " +  "problem, sep=\"/\")" + "\n");
         os.write("file" +  algorithmName + "<-paste(file" +  algorithmName + ", " + "indicator, sep=\"/\")" + "\n");
@@ -90,14 +99,14 @@ public class GenerateBoxplotsWithR<Result> implements ExperimentComponent {
       }
 
       os.write("algs<-c(");
-      for (int i = 0; i <  experiment.getAlgorithmList().size() - 1; i++) {
-        os.write("\"" +  experiment.getAlgorithmList().get(i).getAlgorithmTag() + "\",");
+      for (int i = 0; i <  algorithmList.size() - 1; i++) {
+        os.write("\"" +  algorithmList.get(i).getAlgorithmTag() + "\",");
       } // for
-      os.write("\"" +  experiment.getAlgorithmList().get(experiment.getAlgorithmList().size() - 1).getAlgorithmTag() + "\")" + "\n");
+      os.write("\"" +  algorithmList.get(algorithmList.size() - 1).getAlgorithmTag() + "\")" + "\n");
 
       os.write("boxplot(");
-      for (int i = 0; i <  experiment.getAlgorithmList().size(); i++) {
-        os.write(experiment.getAlgorithmList().get(i).getAlgorithmTag() + ",");
+      for (int i = 0; i <  algorithmList.size(); i++) {
+        os.write(algorithmList.get(i).getAlgorithmTag() + ",");
       } // for
       if (displayNotch) {
         os.write("names=algs, notch = TRUE)" + "\n");
@@ -113,7 +122,7 @@ public class GenerateBoxplotsWithR<Result> implements ExperimentComponent {
 
       os.write("indicator<-\"" +  indicator.getName() + "\"" + "\n");
 
-      for (ExperimentProblem<?> problem : experiment.getProblemList()) {
+      for (ExperimentProblem<?> problem : problemList) {
         os.write("qIndicator(indicator, \"" + problem.getTag() + "\")" + "\n");
       }
 
