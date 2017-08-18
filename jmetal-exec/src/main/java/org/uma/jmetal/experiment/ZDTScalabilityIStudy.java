@@ -107,7 +107,7 @@ public class ZDTScalabilityIStudy {
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run();
     new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList, experimentBaseDirectory, experimentName).run();
-    new GenerateWilcoxonTestTablesWithR<>(experiment).run();
+    new GenerateWilcoxonTestTablesWithR<>(algorithmList, problemList, indicatorList, experimentBaseDirectory).run();
     new GenerateFriedmanTestTables<>(experiment).run();
     new GenerateBoxplotsWithR<>(experiment).setRows(3).setColumns(3).run();
   }
