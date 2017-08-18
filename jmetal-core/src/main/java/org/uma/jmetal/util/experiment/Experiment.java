@@ -5,7 +5,6 @@ import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -107,18 +106,10 @@ public class Experiment<S extends Solution<?>, Result> {
    * The list of algorithms contain an algorithm instance per problem. This is not convenient for
    * calculating statistical data, because a same algorithm will appear many times.
    * This method remove duplicated algorithms and leave only an instance of each one.
+   * 
+   * @See Uses {@link ExperimentAlgorithm#filterTagDuplicates(List)}.
    */
   public void removeDuplicatedAlgorithms() {
-    List<ExperimentAlgorithm<S, Result>> algorithmList = new ArrayList<>() ;
-    List<String> algorithmTagList = new ArrayList<>() ;
-
-    for (ExperimentAlgorithm<S, Result> algorithm : getAlgorithmList()) {
-      if (!algorithmTagList.contains(algorithm.getAlgorithmTag())) {
-        algorithmList.add(algorithm) ;
-        algorithmTagList.add(algorithm.getAlgorithmTag()) ;
-      }
-    }
-
-    setAlgorithmList(algorithmList);
+    setAlgorithmList(ExperimentAlgorithm.filterTagDuplicates(getAlgorithmList()));
   }
 }

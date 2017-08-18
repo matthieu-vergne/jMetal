@@ -8,6 +8,7 @@ import org.uma.jmetal.util.fileoutput.SolutionListOutput;
 import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,4 +86,24 @@ public class ExperimentAlgorithm<S extends Solution<?>, Result>  {
   public String getProblemTag() {
     return problemTag;
   }
+  
+  /**
+   * The list of algorithms contain an algorithm instance per problem. This is not convenient for
+   * calculating statistical data, because a same algorithm will appear many times.
+   * This method remove duplicated algorithms and leave only an instance of each one.
+   */
+  public static <E extends ExperimentAlgorithm<?,?>> List<E> filterTagDuplicates(List<E> algorithms) {
+    List<E> algorithmList = new ArrayList<>() ;
+    List<String> algorithmTagList = new ArrayList<>() ;
+
+    for (E algorithm : algorithms) {
+      if (!algorithmTagList.contains(algorithm.getAlgorithmTag())) {
+        algorithmList.add(algorithm) ;
+        algorithmTagList.add(algorithm.getAlgorithmTag()) ;
+      }
+    }
+    
+    return algorithmList;
+  }
+  
 }
