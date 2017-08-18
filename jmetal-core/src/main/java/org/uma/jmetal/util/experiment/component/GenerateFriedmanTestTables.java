@@ -5,8 +5,9 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.uma.jmetal.qualityindicator.impl.GenericIndicator;
 import org.uma.jmetal.util.JMetalException;
-import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentComponent;
+import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
+import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
 import java.io.*;
 import java.util.*;
@@ -31,26 +32,35 @@ import java.util.*;
 public class GenerateFriedmanTestTables<Result> implements ExperimentComponent {
   private static final String DEFAULT_LATEX_DIRECTORY = "latex";
 
-  private final Experiment<?, Result> experiment;
+  private final List<? extends ExperimentAlgorithm<?, ?>> algorithmList;
+  private final List<? extends ExperimentProblem<?>> problemList;
+  private final List<? extends GenericIndicator<?>> indicatorList;
+  private final String experimentBaseDirectory;
 
   private String latexDirectoryName ;
   private int numberOfAlgorithms ;
   private int numberOfProblems ;
 
-  public GenerateFriedmanTestTables(Experiment<?, Result> experimentConfiguration) {
-    this.experiment = experimentConfiguration ;
+  @Deprecated
+  public GenerateFriedmanTestTables(org.uma.jmetal.util.experiment.Experiment<?, Result> experimentConfiguration) {
+    this(experimentConfiguration.getAlgorithmList(), experimentConfiguration.getProblemList(), experimentConfiguration.getIndicatorList(), experimentConfiguration.getExperimentBaseDirectory());
+  }
 
-    numberOfAlgorithms = experiment.getAlgorithmList().size() ;
-    numberOfProblems = experiment.getProblemList().size() ;
-
-    experiment.removeDuplicatedAlgorithms();
+  public GenerateFriedmanTestTables(List<? extends ExperimentAlgorithm<?, ?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory) {
+    this.algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList);
+    this.problemList = problemList;
+    this.indicatorList = indicatorList;
+    this.experimentBaseDirectory = experimentBaseDirectory;
+    
+    this.numberOfAlgorithms = this.algorithmList.size() ;
+    this.numberOfProblems = this.problemList.size() ;
   }
 
   @Override
   public void run() throws IOException {
-    latexDirectoryName = experiment.getExperimentBaseDirectory() + "/" + DEFAULT_LATEX_DIRECTORY;
+    latexDirectoryName = experimentBaseDirectory + "/" + DEFAULT_LATEX_DIRECTORY;
 
-    for (GenericIndicator<?> indicator : experiment.getIndicatorList()) {
+    for (GenericIndicator<?> indicator : indicatorList) {
       Vector<Vector<Double>> data = readData(indicator);
       double []averageRanking = computeAverageRanking(data) ;
       String fileContents = prepareFileOutputContents(averageRanking) ;
@@ -61,15 +71,15 @@ public class GenerateFriedmanTestTables<Result> implements ExperimentComponent {
   private Vector<Vector<Double>> readData(GenericIndicator<?> indicator) {
     Vector<Vector<Double>> data = new Vector<Vector<Double>>() ;
 
-    for (int algorithm = 0; algorithm < experiment.getAlgorithmList().size(); algorithm++) {
-      String algorithmName = experiment.getAlgorithmList().get(algorithm).getAlgorithmTag();
+    for (int algorithm = 0; algorithm < algorithmList.size(); algorithm++) {
+      String algorithmName = algorithmList.get(algorithm).getAlgorithmTag();
 
       data.add(new Vector<Double>());
-      String algorithmPath = experiment.getExperimentBaseDirectory() + "/data/"
+      String algorithmPath = experimentBaseDirectory + "/data/"
           + algorithmName + "/";
 
-      for (int problem = 0; problem < experiment.getProblemList().size(); problem++) {
-        String path = algorithmPath + experiment.getProblemList().get(problem).getTag() +
+      for (int problem = 0; problem < problemList.size(); problem++) {
+        String path = algorithmPath + problemList.get(problem).getTag() +
             "/" + indicator.getName();
 
         readDataFromFile(path, data, algorithm) ;
@@ -261,8 +271,8 @@ public class GenerateFriedmanTestTables<Result> implements ExperimentComponent {
 
   private String printTableLines(String fileContents, double[] averageRanking) {
     String output = fileContents ;
-    for (int i = 0; i< experiment.getAlgorithmList().size(); i++) {
-      output += "\n" + experiment.getAlgorithmList().get(i).getAlgorithmTag()+"&"+averageRanking[i]+"\\\\";
+    for (int i = 0; i< algorithmList.size(); i++) {
+      output += "\n" + algorithmList.get(i).getAlgorithmTag()+"&"+averageRanking[i]+"\\\\";
     }
 
     return output ;

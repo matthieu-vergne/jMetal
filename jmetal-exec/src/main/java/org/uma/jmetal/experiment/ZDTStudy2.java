@@ -108,7 +108,7 @@ public class ZDTStudy2 {
     new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run() ;
     new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList, experimentBaseDirectory, experimentName).run() ;
     new GenerateWilcoxonTestTablesWithR<>(algorithmList, problemList, indicatorList, experimentBaseDirectory).run() ;
-    new GenerateFriedmanTestTables<>(experiment).run();
+    new GenerateFriedmanTestTables<>(algorithmList, problemList, indicatorList, experimentBaseDirectory).run();
     new GenerateBoxplotsWithR<>(experiment).setRows(3).setColumns(3).setDisplayNotch().run() ;
   }
 
