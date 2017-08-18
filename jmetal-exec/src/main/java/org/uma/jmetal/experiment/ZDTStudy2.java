@@ -15,6 +15,7 @@ import org.uma.jmetal.problem.multiobjective.zdt.ZDT4;
 import org.uma.jmetal.problem.multiobjective.zdt.ZDT6;
 import org.uma.jmetal.qualityindicator.impl.Epsilon;
 import org.uma.jmetal.qualityindicator.impl.GenerationalDistance;
+import org.uma.jmetal.qualityindicator.impl.GenericIndicator ;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistance;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistancePlus;
 import org.uma.jmetal.qualityindicator.impl.Spread;
@@ -81,24 +82,29 @@ public class ZDTStudy2 {
             configureAlgorithmList(problemList);
 
     int numberOfCores = 8;
+    List<GenericIndicator<DoubleSolution>> indicatorList = Arrays.asList(
+        new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(),
+        new PISAHypervolume<DoubleSolution>(),
+        new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()) ;
+    String referenceFrontDirectory = experimentBaseDirectory + "/referenceFronts" ;
+    String outputParetoFrontFileName = "FUN" ;
+    String outputParetoSetFileName = "VAR" ;
     ExperimentBuilder<DoubleSolution, List<DoubleSolution>> zdt2Study = new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("ZDTStudy2");
     zdt2Study.setAlgorithmList(algorithmList);
     zdt2Study.setProblemList(problemList);
     zdt2Study.setExperimentBaseDirectory(experimentBaseDirectory);
-    zdt2Study.setOutputParetoFrontFileName("FUN");
-    zdt2Study.setOutputParetoSetFileName("VAR");
-    zdt2Study.setReferenceFrontDirectory(experimentBaseDirectory + "/referenceFronts");
-    zdt2Study.setIndicatorList(Arrays.asList(
-            new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(),
-            new PISAHypervolume<DoubleSolution>(),
-            new InvertedGenerationalDistance<DoubleSolution>(), new InvertedGenerationalDistancePlus<DoubleSolution>()));
+    zdt2Study.setOutputParetoFrontFileName(outputParetoFrontFileName);
+    zdt2Study.setOutputParetoSetFileName(outputParetoSetFileName);
+    zdt2Study.setReferenceFrontDirectory(referenceFrontDirectory);
+    zdt2Study.setIndicatorList(indicatorList);
     zdt2Study.setIndependentRuns(INDEPENDENT_RUNS);
     zdt2Study.setNumberOfCores(numberOfCores);
     Experiment<DoubleSolution, List<DoubleSolution>> experiment = zdt2Study.build();
 
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
-    new ComputeQualityIndicators<>(experiment).run() ;
+    List<String> referenceFrontFileNames = experiment.getReferenceFrontFileNames();
+    new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run() ;
     new GenerateLatexTablesWithStatistics(experiment).run() ;
     new GenerateWilcoxonTestTablesWithR<>(experiment).run() ;
     new GenerateFriedmanTestTables<>(experiment).run();

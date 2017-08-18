@@ -32,6 +32,7 @@ import org.uma.jmetal.problem.multiobjective.OneZeroMax;
 import org.uma.jmetal.problem.multiobjective.zdt.ZDT5;
 import org.uma.jmetal.qualityindicator.impl.Epsilon;
 import org.uma.jmetal.qualityindicator.impl.GenerationalDistance;
+import org.uma.jmetal.qualityindicator.impl.GenericIndicator ;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistance;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistancePlus;
 import org.uma.jmetal.qualityindicator.impl.Spread;
@@ -90,27 +91,31 @@ public class BinaryProblemsStudy {
             configureAlgorithmList(problemList);
 
     int numberOfCores = 8;
+    List<GenericIndicator<BinarySolution>> indicatorList = Arrays.asList(
+            new Epsilon<BinarySolution>(), new Spread<BinarySolution>(), new GenerationalDistance<BinarySolution>(),
+            new PISAHypervolume<BinarySolution>(),
+            new InvertedGenerationalDistance<BinarySolution>(),
+            new InvertedGenerationalDistancePlus<BinarySolution>()) ;
+    String referenceFrontDirectory = experimentBaseDirectory+"/referenceFronts" ;
+    String outputParetoFrontFileName = "FUN" ;
+    String outputParetoSetFileName = "VAR" ;
     Experiment<BinarySolution, List<BinarySolution>> experiment;
     experiment = new ExperimentBuilder<BinarySolution, List<BinarySolution>>("BinaryProblemsStudy")
             .setAlgorithmList(algorithmList)
             .setProblemList(problemList)
             .setExperimentBaseDirectory(experimentBaseDirectory)
-            .setOutputParetoFrontFileName("FUN")
-            .setOutputParetoSetFileName("VAR")
-            .setReferenceFrontDirectory(experimentBaseDirectory+"/referenceFronts")
-            .setIndicatorList(Arrays.asList(
-                    new Epsilon<BinarySolution>(), new Spread<BinarySolution>(), new GenerationalDistance<BinarySolution>(),
-                    new PISAHypervolume<BinarySolution>(),
-                    new InvertedGenerationalDistance<BinarySolution>(),
-                    new InvertedGenerationalDistancePlus<BinarySolution>())
-            )
+            .setOutputParetoFrontFileName(outputParetoFrontFileName)
+            .setOutputParetoSetFileName(outputParetoSetFileName)
+            .setReferenceFrontDirectory(referenceFrontDirectory)
+            .setIndicatorList(indicatorList)
             .setIndependentRuns(INDEPENDENT_RUNS)
             .setNumberOfCores(numberOfCores)
             .build();
 
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
     new GenerateReferenceParetoFront(experiment).run();
-    new ComputeQualityIndicators<>(experiment).run();
+    List<String> referenceFrontFileNames = experiment.getReferenceFrontFileNames();
+    new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run();
     new GenerateLatexTablesWithStatistics(experiment).run();
     new GenerateWilcoxonTestTablesWithR<>(experiment).run();
     new GenerateFriedmanTestTables<>(experiment).run();

@@ -8,7 +8,6 @@ import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.JMetalException;
 import org.uma.jmetal.util.JMetalLogger;
 import org.uma.jmetal.util.experiment.ExperimentComponent;
-import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 import org.uma.jmetal.util.front.Front;
@@ -38,28 +37,48 @@ import java.util.*;
  */
 public class ComputeQualityIndicators<S extends Solution<?>, Result> implements ExperimentComponent {
 
-  private final Experiment<S, Result> experiment;
+  private final List<ExperimentAlgorithm<S, Result>> algorithmList;
+  private final List<ExperimentProblem<S>> problemList;
+  private final List<GenericIndicator<S>> indicatorList;
+  private final String experimentBaseDirectory;
+  private final String referenceFrontDirectory;
+  private final List<String> referenceFrontFileNames;
+  private final String outputParetoFrontFileName;
+  private final String outputParetoSetFileName;
+  private final int independentRuns;
 
-  public ComputeQualityIndicators(Experiment<S, Result> experiment) {
-    this.experiment = experiment ;
+  @Deprecated
+  public ComputeQualityIndicators(org.uma.jmetal.util.experiment.Experiment<S, Result> experiment) {
+    this(experiment.getAlgorithmList(), experiment.getProblemList(), experiment.getIndicatorList(), experiment.getExperimentBaseDirectory(), experiment.getReferenceFrontDirectory(), experiment.getReferenceFrontFileNames(), experiment.getOutputParetoFrontFileName(), experiment.getOutputParetoSetFileName(), experiment.getIndependentRuns());
+  }
+
+  public ComputeQualityIndicators(List<ExperimentAlgorithm<S, Result>> algorithmList, List<ExperimentProblem<S>> problemList, List<GenericIndicator<S>> indicatorList, String experimentBaseDirectory, String referenceFrontDirectory, List<String> referenceFrontFileNames, String outputParetoFrontFileName, String outputParetoSetFileName, int independentRuns) {
+    this.algorithmList = algorithmList;
+    this.problemList = problemList;
+    this.indicatorList = indicatorList;
+    this.experimentBaseDirectory = experimentBaseDirectory;
+    this.referenceFrontDirectory = referenceFrontDirectory;
+    this.referenceFrontFileNames = referenceFrontFileNames;
+    this.independentRuns = independentRuns;
+    this.outputParetoFrontFileName = outputParetoFrontFileName;
+    this.outputParetoSetFileName = outputParetoSetFileName;
   }
 
   @Override
   public void run() throws IOException {
-    for (GenericIndicator<S> indicator : experiment.getIndicatorList()) {
+    for (GenericIndicator<S> indicator : indicatorList) {
       JMetalLogger.logger.info("Computing indicator: " + indicator.getName()); ;
 
-      for (ExperimentAlgorithm<?,Result> algorithm : experiment.getAlgorithmList()) {
+      for (ExperimentAlgorithm<?,Result> algorithm : algorithmList) {
         String algorithmDirectory ;
-        algorithmDirectory = experiment.getExperimentBaseDirectory() + "/data/" +
+        algorithmDirectory = experimentBaseDirectory + "/data/" +
             algorithm.getAlgorithmTag() ;
 
-        for (int problemId = 0; problemId < experiment.getProblemList().size(); problemId++) {
-          String problemDirectory = algorithmDirectory + "/" + experiment.getProblemList().get(problemId).getTag() ;
+        for (int problemId = 0; problemId < problemList.size(); problemId++) {
+          String problemDirectory = algorithmDirectory + "/" + problemList.get(problemId).getTag() ;
 
-          String referenceFrontDirectory = experiment.getReferenceFrontDirectory() ;
           String referenceFrontName = referenceFrontDirectory +
-              "/" + experiment.getReferenceFrontFileNames().get(problemId) ;
+              "/" + referenceFrontFileNames.get(problemId) ;
 
           JMetalLogger.logger.info("RF: " + referenceFrontName); ;
           Front referenceFront = new ArrayFront(referenceFrontName) ;
@@ -71,9 +90,9 @@ public class ComputeQualityIndicators<S extends Solution<?>, Result> implements 
           resetFile(qualityIndicatorFile);
 
           indicator.setReferenceParetoFront(normalizedReferenceFront);
-          for (int i = 0; i < experiment.getIndependentRuns(); i++) {
+          for (int i = 0; i < independentRuns; i++) {
             String frontFileName = problemDirectory + "/" +
-                experiment.getOutputParetoFrontFileName() + i + ".tsv";
+                outputParetoFrontFileName + i + ".tsv";
 
             Front front = new ArrayFront(frontFileName) ;
             Front normalizedFront = frontNormalizer.normalize(front) ;
@@ -86,7 +105,7 @@ public class ComputeQualityIndicators<S extends Solution<?>, Result> implements 
         }
       }
     }
-    findBestIndicatorFronts(experiment) ;
+    findBestIndicatorFronts(algorithmList, problemList, indicatorList, experimentBaseDirectory, outputParetoFrontFileName, outputParetoSetFileName);
   }
 
   private void writeQualityIndicatorValueToFile(Double indicatorValue, String qualityIndicatorFile) {
@@ -129,14 +148,19 @@ public class ComputeQualityIndicators<S extends Solution<?>, Result> implements 
     }
   }
 
-  public void findBestIndicatorFronts(Experiment<?, Result> experiment) throws IOException {
-    for (GenericIndicator<?> indicator : experiment.getIndicatorList()) {
-      for (ExperimentAlgorithm<?, Result> algorithm : experiment.getAlgorithmList()) {
+  @Deprecated
+  public <S2 extends Solution<?>> void findBestIndicatorFronts(org.uma.jmetal.util.experiment.Experiment<S2, Result> experiment) throws IOException {
+    findBestIndicatorFronts(experiment.getAlgorithmList(), experiment.getProblemList(), experiment.getIndicatorList(), experiment.getExperimentBaseDirectory(), experiment.getOutputParetoFrontFileName(), experiment.getOutputParetoSetFileName());
+  }
+
+  public <S2 extends Solution<?>> void findBestIndicatorFronts(List<ExperimentAlgorithm<S2, Result>> algorithmList, List<ExperimentProblem<S2>> problemList, List<GenericIndicator<S2>> indicatorList, String experimentBaseDirectory, String outputParetoFrontFileName, String outputParetoSetFileName) throws IOException {
+	for (GenericIndicator<?> indicator : indicatorList) {
+	for (ExperimentAlgorithm<?, Result> algorithm : algorithmList) {
         String algorithmDirectory;
-        algorithmDirectory = experiment.getExperimentBaseDirectory() + "/data/" +
+		algorithmDirectory = experimentBaseDirectory + "/data/" +
             algorithm.getAlgorithmTag();
 
-        for (ExperimentProblem<?> problem :experiment.getProblemList()) {
+		for (ExperimentProblem<?> problem :problemList) {
           String indicatorFileName =
               algorithmDirectory + "/" + problem.getTag() + "/" + indicator.getName();
           Path indicatorFile = Paths.get(indicatorFileName) ;
@@ -180,17 +204,17 @@ public class ComputeQualityIndicators<S extends Solution<?>, Result> implements 
           medianVarFileName = outputDirectory + "/MEDIAN_" + indicator.getName() + "_VAR.tsv" ;
           if (indicator.isTheLowerTheIndicatorValueTheBetter()) {
             String bestFunFile = outputDirectory + "/" +
-                experiment.getOutputParetoFrontFileName() + list.get(0).getRight() + ".tsv";
+                outputParetoFrontFileName + list.get(0).getRight() + ".tsv";
             String bestVarFile = outputDirectory + "/" +
-                experiment.getOutputParetoSetFileName() + list.get(0).getRight() + ".tsv";
+                outputParetoSetFileName + list.get(0).getRight() + ".tsv";
 
             Files.copy(Paths.get(bestFunFile), Paths.get(bestFunFileName), REPLACE_EXISTING) ;
             Files.copy(Paths.get(bestVarFile), Paths.get(bestVarFileName), REPLACE_EXISTING) ;
           } else {
             String bestFunFile = outputDirectory + "/" +
-                experiment.getOutputParetoFrontFileName() + list.get(list.size()-1).getRight() + ".tsv";
+                outputParetoFrontFileName + list.get(list.size()-1).getRight() + ".tsv";
             String bestVarFile = outputDirectory + "/" +
-                experiment.getOutputParetoSetFileName() + list.get(list.size()-1).getRight() + ".tsv";
+                outputParetoSetFileName + list.get(list.size()-1).getRight() + ".tsv";
 
             Files.copy(Paths.get(bestFunFile), Paths.get(bestFunFileName), REPLACE_EXISTING) ;
             Files.copy(Paths.get(bestVarFile), Paths.get(bestVarFileName), REPLACE_EXISTING) ;
@@ -198,9 +222,9 @@ public class ComputeQualityIndicators<S extends Solution<?>, Result> implements 
 
           int medianIndex = list.size() / 2 ;
           String medianFunFile = outputDirectory + "/" +
-              experiment.getOutputParetoFrontFileName() + list.get(medianIndex).getRight() + ".tsv";
+              outputParetoFrontFileName + list.get(medianIndex).getRight() + ".tsv";
           String medianVarFile = outputDirectory + "/" +
-              experiment.getOutputParetoSetFileName() + list.get(medianIndex).getRight() + ".tsv";
+              outputParetoSetFileName + list.get(medianIndex).getRight() + ".tsv";
 
           Files.copy(Paths.get(medianFunFile), Paths.get(medianFunFileName), REPLACE_EXISTING) ;
           Files.copy(Paths.get(medianVarFile), Paths.get(medianVarFileName), REPLACE_EXISTING) ;

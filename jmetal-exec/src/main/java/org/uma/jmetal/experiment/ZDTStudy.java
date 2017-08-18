@@ -69,26 +69,30 @@ public class ZDTStudy {
     List<String> referenceFrontFileNames = Arrays.asList("ZDT1.pf", "ZDT2.pf", "ZDT3.pf", "ZDT4.pf", "ZDT6.pf");
 
     int numberOfCores = 8;
+    List<GenericIndicator<DoubleSolution>> indicatorList = Arrays.asList(
+        new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(),
+        new PISAHypervolume<DoubleSolution>(),
+        new InvertedGenerationalDistance<DoubleSolution>(),
+        new InvertedGenerationalDistancePlus<DoubleSolution>()) ;
+    String referenceFrontDirectory = "/pareto_fronts" ;
+    String outputParetoFrontFileName = "FUN" ;
+    String outputParetoSetFileName = "VAR" ;
     Experiment<DoubleSolution, List<DoubleSolution>> experiment =
         new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("ZDTStudy")
             .setAlgorithmList(algorithmList)
             .setProblemList(problemList)
-            .setReferenceFrontDirectory("/pareto_fronts")
+            .setReferenceFrontDirectory(referenceFrontDirectory)
             .setReferenceFrontFileNames(referenceFrontFileNames)
             .setExperimentBaseDirectory(experimentBaseDirectory)
-            .setOutputParetoFrontFileName("FUN")
-            .setOutputParetoSetFileName("VAR")
-            .setIndicatorList(Arrays.asList(
-                new Epsilon<DoubleSolution>(), new Spread<DoubleSolution>(), new GenerationalDistance<DoubleSolution>(),
-                new PISAHypervolume<DoubleSolution>(),
-                new InvertedGenerationalDistance<DoubleSolution>(),
-                new InvertedGenerationalDistancePlus<DoubleSolution>()))
+            .setOutputParetoFrontFileName(outputParetoFrontFileName)
+            .setOutputParetoSetFileName(outputParetoSetFileName)
+            .setIndicatorList(indicatorList)
             .setIndependentRuns(INDEPENDENT_RUNS)
             .setNumberOfCores(numberOfCores)
             .build();
 
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
-    new ComputeQualityIndicators<>(experiment).run() ;
+    new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run() ;
     new GenerateLatexTablesWithStatistics(experiment).run() ;
     new GenerateWilcoxonTestTablesWithR<>(experiment).run() ;
     new GenerateFriedmanTestTables<>(experiment).run();

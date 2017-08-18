@@ -11,6 +11,7 @@ import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.problem.multiobjective.zdt.ZDT1;
 import org.uma.jmetal.qualityindicator.impl.Epsilon;
 import org.uma.jmetal.qualityindicator.impl.GenerationalDistance;
+import org.uma.jmetal.qualityindicator.impl.GenericIndicator ;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistance;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistancePlus;
 import org.uma.jmetal.qualityindicator.impl.Spread;
@@ -78,28 +79,32 @@ public class ZDTScalabilityIStudy {
     List<String> referenceFrontFileNames = Arrays.asList("ZDT1.pf", "ZDT1.pf", "ZDT1.pf", "ZDT1.pf", "ZDT1.pf");
 
     int numberOfCores = 8;
+    List<GenericIndicator<DoubleSolution>> indicatorList = Arrays.asList(
+            new Epsilon<DoubleSolution>(),
+            new Spread<DoubleSolution>(),
+            new GenerationalDistance<DoubleSolution>(),
+            new PISAHypervolume<DoubleSolution>(),
+            new InvertedGenerationalDistance<DoubleSolution>(),
+            new InvertedGenerationalDistancePlus<DoubleSolution>()) ;
+    String referenceFrontDirectory = "/pareto_fronts" ;
+    String outputParetoFrontFileName = "FUN" ;
+    String outputParetoSetFileName = "VAR" ;
     Experiment<DoubleSolution, List<DoubleSolution>> experiment =
             new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("ZDTScalabilityStudy")
                     .setAlgorithmList(algorithmList)
                     .setProblemList(problemList)
                     .setExperimentBaseDirectory(experimentBaseDirectory)
-                    .setOutputParetoFrontFileName("FUN")
-                    .setOutputParetoSetFileName("VAR")
-                    .setReferenceFrontDirectory("/pareto_fronts")
+                    .setOutputParetoFrontFileName(outputParetoFrontFileName)
+                    .setOutputParetoSetFileName(outputParetoSetFileName)
+                    .setReferenceFrontDirectory(referenceFrontDirectory)
                     .setReferenceFrontFileNames(referenceFrontFileNames)
-                    .setIndicatorList(Arrays.asList(
-                            new Epsilon<DoubleSolution>(),
-                            new Spread<DoubleSolution>(),
-                            new GenerationalDistance<DoubleSolution>(),
-                            new PISAHypervolume<DoubleSolution>(),
-                            new InvertedGenerationalDistance<DoubleSolution>(),
-                            new InvertedGenerationalDistancePlus<DoubleSolution>()))
+                    .setIndicatorList(indicatorList)
                     .setIndependentRuns(INDEPENDENT_RUNS)
                     .setNumberOfCores(numberOfCores)
                     .build();
 
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
-    new ComputeQualityIndicators<>(experiment).run();
+    new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run();
     new GenerateLatexTablesWithStatistics(experiment).run();
     new GenerateWilcoxonTestTablesWithR<>(experiment).run();
     new GenerateFriedmanTestTables<>(experiment).run();
