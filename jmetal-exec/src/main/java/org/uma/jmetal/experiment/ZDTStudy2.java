@@ -39,6 +39,7 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList ;
 import java.util.List;
 
 /**
@@ -103,8 +104,8 @@ public class ZDTStudy2 {
     Experiment<DoubleSolution, List<DoubleSolution>> experiment = zdt2Study.build();
 
     new ExecuteAlgorithms<>(algorithmList, INDEPENDENT_RUNS, numberOfCores, experimentBaseDirectory).run();
-    new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
-    List<String> referenceFrontFileNames = experiment.getReferenceFrontFileNames();
+    List<String> referenceFrontFileNames = new LinkedList<>();
+    new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(algorithmList, problemList, experimentBaseDirectory, referenceFrontDirectory, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS, referenceFrontFileNames).run();
     new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList, experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames, outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run() ;
     new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList, experimentBaseDirectory, experimentName).run() ;
     new GenerateWilcoxonTestTablesWithR<>(algorithmList, problemList, indicatorList, experimentBaseDirectory).run() ;
