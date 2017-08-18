@@ -12,6 +12,7 @@ import java.util.List;
  *
  * Created by Antonio J. Nebro on 17/07/14.
  */
+@Deprecated
 public class Experiment<S extends Solution<?>, Result> {
 	private String experimentName;
 	private List<ExperimentAlgorithm<S, Result>> algorithmList;

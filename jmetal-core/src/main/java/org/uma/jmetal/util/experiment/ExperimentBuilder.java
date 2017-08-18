@@ -13,6 +13,7 @@ import java.util.List;
  *
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
+@Deprecated
 public class ExperimentBuilder<S extends Solution<?>, Result> {
   private final String experimentName ;
   private List<ExperimentAlgorithm<S, Result>> algorithmList;
