@@ -28,7 +28,7 @@ import java.util.List;
 public class GenerateWilcoxonTestTablesWithR<Result> implements ExperimentComponent {
   private static final String DEFAULT_R_DIRECTORY = "R";
 
-  private final List<? extends ExperimentAlgorithm<?, ?>> algorithms;
+  private final List<? extends ExperimentAlgorithm<?>> algorithms;
   private final List<? extends ExperimentProblem<?>> problems;
   private final List<? extends GenericIndicator<?>> indicatorList;
   private final String experimentBaseDirectory;
@@ -38,7 +38,7 @@ public class GenerateWilcoxonTestTablesWithR<Result> implements ExperimentCompon
     this(experimentConfiguration.getAlgorithmList(), experimentConfiguration.getProblemList(), experimentConfiguration.getIndicatorList(), experimentConfiguration.getExperimentBaseDirectory());
   }
 
-  public GenerateWilcoxonTestTablesWithR(List<? extends ExperimentAlgorithm<?, ?>> algorithms, List<? extends ExperimentProblem<?>> problems, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory) {
+  public GenerateWilcoxonTestTablesWithR(List<? extends ExperimentAlgorithm<?>> algorithms, List<? extends ExperimentProblem<?>> problems, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory) {
     this.algorithms = ExperimentAlgorithm.filterTagDuplicates(algorithms);
     this.problems = problems;
     this.indicatorList = indicatorList;

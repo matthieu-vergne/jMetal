@@ -25,7 +25,7 @@ import java.util.List;
 public class GenerateBoxplotsWithR<Result> implements ExperimentComponent {
   private static final String DEFAULT_R_DIRECTORY = "R";
 
-  private final List<? extends ExperimentAlgorithm<?, ?>> algorithmList;
+  private final List<? extends ExperimentAlgorithm<?>> algorithmList;
   private final List<? extends ExperimentProblem<?>> problemList;
   private final List<? extends GenericIndicator<?>> indicatorList;
   private final String experimentBaseDirectory;
@@ -38,7 +38,7 @@ public class GenerateBoxplotsWithR<Result> implements ExperimentComponent {
     this(experimentConfiguration.getAlgorithmList(), experimentConfiguration.getProblemList(), experimentConfiguration.getIndicatorList(), experimentConfiguration.getExperimentBaseDirectory());
   }
 
-  public GenerateBoxplotsWithR(List<? extends ExperimentAlgorithm<?, ?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory) {
+  public GenerateBoxplotsWithR(List<? extends ExperimentAlgorithm<?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory) {
     this.displayNotch = false ;
     this.numberOfRows = 3 ;
     this.numberOfColumns = 3 ;

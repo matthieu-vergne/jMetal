@@ -32,7 +32,7 @@ import java.util.*;
 public class GenerateFriedmanTestTables<Result> implements ExperimentComponent {
   private static final String DEFAULT_LATEX_DIRECTORY = "latex";
 
-  private final List<? extends ExperimentAlgorithm<?, ?>> algorithmList;
+  private final List<? extends ExperimentAlgorithm<?>> algorithmList;
   private final List<? extends ExperimentProblem<?>> problemList;
   private final List<? extends GenericIndicator<?>> indicatorList;
   private final String experimentBaseDirectory;
@@ -46,7 +46,7 @@ public class GenerateFriedmanTestTables<Result> implements ExperimentComponent {
     this(experimentConfiguration.getAlgorithmList(), experimentConfiguration.getProblemList(), experimentConfiguration.getIndicatorList(), experimentConfiguration.getExperimentBaseDirectory());
   }
 
-  public GenerateFriedmanTestTables(List<? extends ExperimentAlgorithm<?, ?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory) {
+  public GenerateFriedmanTestTables(List<? extends ExperimentAlgorithm<?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory) {
     this.algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList);
     this.problemList = problemList;
     this.indicatorList = indicatorList;

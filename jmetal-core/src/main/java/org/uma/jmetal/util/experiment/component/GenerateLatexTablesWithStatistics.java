@@ -28,7 +28,7 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
   private static final String DEFAULT_LATEX_DIRECTORY = "latex" ;
 
   private final List<? extends ExperimentProblem<?>> problemList;
-  private final List<? extends ExperimentAlgorithm<?, ?>> algorithmList;
+  private final List<? extends ExperimentAlgorithm<?>> algorithmList;
   private final List<? extends GenericIndicator<?>> indicatorList;
   private final String experimentBaseDirectory;
   private final String experimentName;
@@ -46,7 +46,7 @@ public class GenerateLatexTablesWithStatistics implements ExperimentComponent {
     this(configuration.getAlgorithmList(), configuration.getProblemList(), configuration.getIndicatorList(), configuration.getExperimentBaseDirectory(), configuration.getExperimentName());
   }
 
-  public GenerateLatexTablesWithStatistics(List<? extends ExperimentAlgorithm<?, ?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory, String experimentName) {
+  public GenerateLatexTablesWithStatistics(List<? extends ExperimentAlgorithm<?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory, String experimentName) {
     this.algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList);
     this.problemList = problemList;
     this.indicatorList = indicatorList;

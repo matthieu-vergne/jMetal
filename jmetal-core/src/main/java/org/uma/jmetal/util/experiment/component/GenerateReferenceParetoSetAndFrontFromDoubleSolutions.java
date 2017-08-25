@@ -48,7 +48,7 @@ import java.util.List;
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
 public class GenerateReferenceParetoSetAndFrontFromDoubleSolutions implements ExperimentComponent{
-  private final List<? extends ExperimentAlgorithm<?, ?>> algorithmList;
+  private final List<? extends ExperimentAlgorithm<?>> algorithmList;
   private final List<? extends ExperimentProblem<?>> problemList;
   private final String experimentBaseDirectory;
   private final String referenceFrontDirectory;
@@ -68,7 +68,7 @@ public class GenerateReferenceParetoSetAndFrontFromDoubleSolutions implements Ex
     return experimentConfiguration.getReferenceFrontFileNames();
   }
 
-  public GenerateReferenceParetoSetAndFrontFromDoubleSolutions(List<? extends ExperimentAlgorithm<?, ?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, String experimentBaseDirectory, String referenceFrontDirectory, String outputParetoFrontFileName, String outputParetoSetFileName, int independentRuns, List<String> referenceFrontFileNames) {
+  public GenerateReferenceParetoSetAndFrontFromDoubleSolutions(List<? extends ExperimentAlgorithm<?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, String experimentBaseDirectory, String referenceFrontDirectory, String outputParetoFrontFileName, String outputParetoSetFileName, int independentRuns, List<String> referenceFrontFileNames) {
     this.algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList);
     this.problemList = problemList;
     this.experimentBaseDirectory = experimentBaseDirectory;
@@ -104,7 +104,7 @@ public class GenerateReferenceParetoSetAndFrontFromDoubleSolutions implements Ex
       List<DoubleSolution> nonDominatedSolutions) throws IOException {
     GenericSolutionAttribute<DoubleSolution, String> solutionAttribute = new GenericSolutionAttribute<DoubleSolution, String>()  ;
 
-    for (ExperimentAlgorithm<?,?> algorithm : algorithmList) {
+    for (ExperimentAlgorithm<?> algorithm : algorithmList) {
       List<DoubleSolution> solutionsPerAlgorithm = new ArrayList<>() ;
       for (DoubleSolution solution : nonDominatedSolutions) {
         if (algorithm.getAlgorithmTag().equals(solutionAttribute.getAttribute(solution))) {
@@ -150,7 +150,7 @@ public class GenerateReferenceParetoSetAndFrontFromDoubleSolutions implements Ex
     NonDominatedSolutionListArchive<DoubleSolution> nonDominatedSolutionArchive =
         new NonDominatedSolutionListArchive<DoubleSolution>() ;
 
-    for (ExperimentAlgorithm<?,?> algorithm : algorithmList) {
+    for (ExperimentAlgorithm<?> algorithm : algorithmList) {
       String problemDirectory = experimentBaseDirectory + "/data/" +
           algorithm.getAlgorithmTag() + "/" + problem.getName() ;
 

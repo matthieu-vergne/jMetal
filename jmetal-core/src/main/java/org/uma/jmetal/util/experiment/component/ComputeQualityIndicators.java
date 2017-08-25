@@ -37,7 +37,7 @@ import java.util.*;
  */
 public class ComputeQualityIndicators<S extends Solution<?>, Result> implements ExperimentComponent {
 
-  private final List<ExperimentAlgorithm<S, Result>> algorithmList;
+  private final List<ExperimentAlgorithm<S>> algorithmList;
   private final List<ExperimentProblem<S>> problemList;
   private final List<GenericIndicator<S>> indicatorList;
   private final String experimentBaseDirectory;
@@ -52,7 +52,7 @@ public class ComputeQualityIndicators<S extends Solution<?>, Result> implements 
     this(experiment.getAlgorithmList(), experiment.getProblemList(), experiment.getIndicatorList(), experiment.getExperimentBaseDirectory(), experiment.getReferenceFrontDirectory(), experiment.getReferenceFrontFileNames(), experiment.getOutputParetoFrontFileName(), experiment.getOutputParetoSetFileName(), experiment.getIndependentRuns());
   }
 
-  public ComputeQualityIndicators(List<ExperimentAlgorithm<S, Result>> algorithmList, List<ExperimentProblem<S>> problemList, List<GenericIndicator<S>> indicatorList, String experimentBaseDirectory, String referenceFrontDirectory, List<String> referenceFrontFileNames, String outputParetoFrontFileName, String outputParetoSetFileName, int independentRuns) {
+  public ComputeQualityIndicators(List<ExperimentAlgorithm<S>> algorithmList, List<ExperimentProblem<S>> problemList, List<GenericIndicator<S>> indicatorList, String experimentBaseDirectory, String referenceFrontDirectory, List<String> referenceFrontFileNames, String outputParetoFrontFileName, String outputParetoSetFileName, int independentRuns) {
     this.algorithmList = algorithmList;
     this.problemList = problemList;
     this.indicatorList = indicatorList;
@@ -69,7 +69,7 @@ public class ComputeQualityIndicators<S extends Solution<?>, Result> implements 
     for (GenericIndicator<S> indicator : indicatorList) {
       JMetalLogger.logger.info("Computing indicator: " + indicator.getName()); ;
 
-      for (ExperimentAlgorithm<?,Result> algorithm : algorithmList) {
+      for (ExperimentAlgorithm<S> algorithm : algorithmList) {
         String algorithmDirectory ;
         algorithmDirectory = experimentBaseDirectory + "/data/" +
             algorithm.getAlgorithmTag() ;
@@ -153,9 +153,9 @@ public class ComputeQualityIndicators<S extends Solution<?>, Result> implements 
     findBestIndicatorFronts(experiment.getAlgorithmList(), experiment.getProblemList(), experiment.getIndicatorList(), experiment.getExperimentBaseDirectory(), experiment.getOutputParetoFrontFileName(), experiment.getOutputParetoSetFileName());
   }
 
-  public <S2 extends Solution<?>> void findBestIndicatorFronts(List<ExperimentAlgorithm<S2, Result>> algorithmList, List<ExperimentProblem<S2>> problemList, List<GenericIndicator<S2>> indicatorList, String experimentBaseDirectory, String outputParetoFrontFileName, String outputParetoSetFileName) throws IOException {
+  public <S2 extends Solution<?>> void findBestIndicatorFronts(List<ExperimentAlgorithm<S2>> algorithmList, List<ExperimentProblem<S2>> problemList, List<GenericIndicator<S2>> indicatorList, String experimentBaseDirectory, String outputParetoFrontFileName, String outputParetoSetFileName) throws IOException {
 	for (GenericIndicator<?> indicator : indicatorList) {
-	for (ExperimentAlgorithm<?, Result> algorithm : algorithmList) {
+	for (ExperimentAlgorithm<?> algorithm : algorithmList) {
         String algorithmDirectory;
 		algorithmDirectory = experimentBaseDirectory + "/data/" +
             algorithm.getAlgorithmTag();

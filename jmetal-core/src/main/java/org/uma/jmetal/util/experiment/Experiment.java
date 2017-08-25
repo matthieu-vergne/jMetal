@@ -15,7 +15,7 @@ import java.util.List;
 @Deprecated
 public class Experiment<S extends Solution<?>, Result> {
 	private String experimentName;
-	private List<ExperimentAlgorithm<S, Result>> algorithmList;
+	private List<ExperimentAlgorithm<S>> algorithmList;
 	private List<ExperimentProblem<S>> problemList;
 	private String experimentBaseDirectory;
 
@@ -50,7 +50,7 @@ public class Experiment<S extends Solution<?>, Result> {
     return experimentName;
   }
 
-  public List<ExperimentAlgorithm<S, Result>> getAlgorithmList() {
+  public List<ExperimentAlgorithm<S>> getAlgorithmList() {
     return algorithmList;
   }
 
@@ -99,7 +99,7 @@ public class Experiment<S extends Solution<?>, Result> {
     this.referenceFrontFileNames = referenceFrontFileNames ;
   }
 
-  public void setAlgorithmList(List<ExperimentAlgorithm<S, Result>> algorithmList) {
+  public void setAlgorithmList(List<ExperimentAlgorithm<S>> algorithmList) {
     this.algorithmList = algorithmList ;
   }
 

@@ -16,7 +16,7 @@ import java.util.List;
 @Deprecated
 public class ExperimentBuilder<S extends Solution<?>, Result> {
   private final String experimentName ;
-  private List<ExperimentAlgorithm<S, Result>> algorithmList;
+  private List<ExperimentAlgorithm<S>> algorithmList;
   private List<ExperimentProblem<S>> problemList;
   private List<String> referenceFrontFileNames ;
   private String referenceFrontDirectory;
@@ -37,7 +37,7 @@ public class ExperimentBuilder<S extends Solution<?>, Result> {
     this.referenceFrontDirectory = null ;
   }
 
-  public ExperimentBuilder<S, Result> setAlgorithmList(List<ExperimentAlgorithm<S, Result>> algorithmList) {
+  public ExperimentBuilder<S, Result> setAlgorithmList(List<ExperimentAlgorithm<S>> algorithmList) {
     this.algorithmList = new ArrayList<>(algorithmList) ;
 
     return this ;
@@ -107,7 +107,7 @@ public class ExperimentBuilder<S extends Solution<?>, Result> {
     return experimentName;
   }
 
-  public List<ExperimentAlgorithm<S, Result>> getAlgorithmList() {
+  public List<ExperimentAlgorithm<S>> getAlgorithmList() {
     return algorithmList;
   }
 

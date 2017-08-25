@@ -15,8 +15,8 @@ import java.util.List;
  *
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
-public class ExperimentAlgorithm<S extends Solution<?>, Result>  {
-  private Algorithm<Result> algorithm;
+public class ExperimentAlgorithm<S extends Solution<?>>  {
+  private Algorithm<? extends List<? extends S>> algorithm;
   private String algorithmTag;
   private String problemTag;
 
@@ -24,7 +24,7 @@ public class ExperimentAlgorithm<S extends Solution<?>, Result>  {
    * Constructor
    */
   public ExperimentAlgorithm(
-          Algorithm<Result> algorithm,
+          Algorithm<? extends List<? extends S>> algorithm,
           String algorithmTag,
           String problemTag) {
     this.algorithm = algorithm;
@@ -33,7 +33,7 @@ public class ExperimentAlgorithm<S extends Solution<?>, Result>  {
   }
 
   public ExperimentAlgorithm(
-          Algorithm<Result> algorithm,
+          Algorithm<? extends List<? extends S>> algorithm,
           String problemTag) {
     this(algorithm, algorithm.getName(), problemTag) ;
   }
@@ -70,16 +70,16 @@ public class ExperimentAlgorithm<S extends Solution<?>, Result>  {
 
 
     algorithm.run();
-    Result population = algorithm.getResult();
+    List<? extends S> population = algorithm.getResult();
 
-    new SolutionListOutput((List<S>) population)
+    new SolutionListOutput(population)
             .setSeparator("\t")
             .setVarFileOutputContext(new DefaultFileOutputContext(varFile))
             .setFunFileOutputContext(new DefaultFileOutputContext(funFile))
             .print();
   }
 
-  public Algorithm<Result> getAlgorithm() {
+  public Algorithm<? extends List<? extends S>> getAlgorithm() {
     return algorithm;
   }
 
@@ -96,7 +96,7 @@ public class ExperimentAlgorithm<S extends Solution<?>, Result>  {
    * calculating statistical data, because a same algorithm will appear many times.
    * This method remove duplicated algorithms and leave only an instance of each one.
    */
-  public static <E extends ExperimentAlgorithm<?,?>> List<E> filterTagDuplicates(List<E> algorithms) {
+  public static <E extends ExperimentAlgorithm<?>> List<E> filterTagDuplicates(List<E> algorithms) {
     List<E> algorithmList = new ArrayList<>() ;
     List<String> algorithmTagList = new ArrayList<>() ;
 

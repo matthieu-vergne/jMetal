@@ -86,7 +86,7 @@ public class BinaryProblemsStudy {
     problemList.add(new ExperimentProblem<>(new ZDT5()));
     problemList.add(new ExperimentProblem<>(new OneZeroMax(512)));
 
-    List<ExperimentAlgorithm<BinarySolution, List<BinarySolution>>> algorithmList =
+    List<ExperimentAlgorithm<BinarySolution>> algorithmList =
             configureAlgorithmList(problemList);
 
     int numberOfCores = 8;
@@ -116,9 +116,9 @@ public class BinaryProblemsStudy {
    * a {@link ExperimentAlgorithm}, which is a decorator for class {@link Algorithm}.
    */
 
-  static List<ExperimentAlgorithm<BinarySolution, List<BinarySolution>>> configureAlgorithmList(
+  static List<ExperimentAlgorithm<BinarySolution>> configureAlgorithmList(
           List<ExperimentProblem<BinarySolution>> problemList) {
-    List<ExperimentAlgorithm<BinarySolution, List<BinarySolution>>> algorithms = new ArrayList<>();
+    List<ExperimentAlgorithm<BinarySolution>> algorithms = new ArrayList<>();
 
     for (int i = 0; i < problemList.size(); i++) {
       Algorithm<List<BinarySolution>> algorithm = new NSGAIIBuilder<BinarySolution>(

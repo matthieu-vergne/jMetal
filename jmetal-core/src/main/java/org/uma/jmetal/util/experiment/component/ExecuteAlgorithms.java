@@ -20,7 +20,7 @@ import java.util.List;
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
 public class ExecuteAlgorithms<S extends Solution<?>, Result> implements ExperimentComponent {
-  private final List<ExperimentAlgorithm<S, Result>> algorithmList;
+  private final List<ExperimentAlgorithm<S>> algorithmList;
   private final int independentRuns;
   private final int numberOfCores;
   private final String experimentBaseDirectory;
@@ -31,7 +31,7 @@ public class ExecuteAlgorithms<S extends Solution<?>, Result> implements Experim
     this(configuration.getAlgorithmList(), configuration.getIndependentRuns(), configuration.getNumberOfCores(), configuration.getExperimentBaseDirectory());
   }
 
-  public ExecuteAlgorithms(List<ExperimentAlgorithm<S, Result>> algorithmList, int independentRuns, int numberOfCores, String experimentBaseDirectory) {
+  public ExecuteAlgorithms(List<ExperimentAlgorithm<S>> algorithmList, int independentRuns, int numberOfCores, String experimentBaseDirectory) {
     this.algorithmList = algorithmList;
     this.independentRuns = independentRuns;
     this.numberOfCores = numberOfCores;

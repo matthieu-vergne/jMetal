@@ -31,7 +31,7 @@ import java.util.List;
  * @author Antonio J. Nebro <antonio@lcc.uma.es>
  */
 public class GenerateReferenceParetoFront implements ExperimentComponent{
-  private final List<? extends ExperimentAlgorithm<?, ?>> algorithmList;
+  private final List<? extends ExperimentAlgorithm<?>> algorithmList;
   private final List<? extends ExperimentProblem<?>> problemList;
   private final String experimentBaseDirectory;
   private final String outputDirectoryName;
@@ -50,7 +50,7 @@ public class GenerateReferenceParetoFront implements ExperimentComponent{
     return experimentConfiguration.getReferenceFrontFileNames();
   }
 
-  public GenerateReferenceParetoFront(List<? extends ExperimentAlgorithm<?, ?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, String experimentBaseDirectory, String referenceFrontDirectory, String outputParetoFrontFileName, int independentRuns, List<String> referenceFrontFileNames) {
+  public GenerateReferenceParetoFront(List<? extends ExperimentAlgorithm<?>> algorithmList, List<? extends ExperimentProblem<?>> problemList, String experimentBaseDirectory, String referenceFrontDirectory, String outputParetoFrontFileName, int independentRuns, List<String> referenceFrontFileNames) {
     this.algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList);
     this.problemList = problemList;
     this.experimentBaseDirectory = experimentBaseDirectory;
@@ -71,7 +71,7 @@ public class GenerateReferenceParetoFront implements ExperimentComponent{
       NonDominatedSolutionListArchive<PointSolution> nonDominatedSolutionArchive =
           new NonDominatedSolutionListArchive<PointSolution>() ;
 
-      for (ExperimentAlgorithm<?,?> algorithm : algorithmList) {
+      for (ExperimentAlgorithm<?> algorithm : algorithmList) {
         String problemDirectory = experimentBaseDirectory + "/data/" +
             algorithm.getAlgorithmTag() + "/" + problem.getTag() ;
 
@@ -114,7 +114,7 @@ public class GenerateReferenceParetoFront implements ExperimentComponent{
       List<PointSolution> nonDominatedSolutions) throws IOException {
     GenericSolutionAttribute<PointSolution, String> solutionAttribute = new GenericSolutionAttribute<PointSolution, String>()  ;
 
-    for (ExperimentAlgorithm<?, ?> algorithm : algorithmList) {
+    for (ExperimentAlgorithm<?> algorithm : algorithmList) {
       List<PointSolution> solutionsPerAlgorithm = new ArrayList<>() ;
       for (PointSolution solution : nonDominatedSolutions) {
         if (algorithm.getAlgorithmTag().equals(solutionAttribute.getAttribute(solution))) {

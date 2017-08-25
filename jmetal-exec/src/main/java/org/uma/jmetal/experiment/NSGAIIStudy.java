@@ -52,7 +52,7 @@ public class NSGAIIStudy {
     problemList.add(new ExperimentProblem<>(new ZDT4()));
     problemList.add(new ExperimentProblem<>(new ZDT6()));
 
-    List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList =
+    List<ExperimentAlgorithm<DoubleSolution>> algorithmList =
             configureAlgorithmList(problemList);
 
     List<String> referenceFrontFileNames = Arrays.asList("ZDT1.pf", "ZDT2.pf", "ZDT3.pf", "ZDT4.pf", "ZDT6.pf");
@@ -84,9 +84,9 @@ public class NSGAIIStudy {
    * ExperimentAlgorithm} has an optional tag component, that can be set as it is shown in this example,
    * where four variants of a same algorithm are defined.
    */
-  static List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> configureAlgorithmList(
+  static List<ExperimentAlgorithm<DoubleSolution>> configureAlgorithmList(
           List<ExperimentProblem<DoubleSolution>> problemList) {
-    List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithms = new ArrayList<>();
+    List<ExperimentAlgorithm<DoubleSolution>> algorithms = new ArrayList<>();
 
       for (int i = 0; i < problemList.size(); i++) {
         Algorithm<List<DoubleSolution>> algorithm = new NSGAIIBuilder<>(

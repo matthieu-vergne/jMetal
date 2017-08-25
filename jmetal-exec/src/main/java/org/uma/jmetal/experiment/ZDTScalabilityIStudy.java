@@ -71,7 +71,7 @@ public class ZDTScalabilityIStudy {
     problemList.add(new ExperimentProblem<>(new ZDT1(40), "ZDT140"));
     problemList.add(new ExperimentProblem<>(new ZDT1(50), "ZDT150"));
 
-    List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList =
+    List<ExperimentAlgorithm<DoubleSolution>> algorithmList =
             configureAlgorithmList(problemList);
 
     List<String> referenceFrontFileNames = Arrays.asList("ZDT1.pf", "ZDT1.pf", "ZDT1.pf", "ZDT1.pf", "ZDT1.pf");
@@ -103,9 +103,9 @@ public class ZDTScalabilityIStudy {
    * ExperimentAlgorithm} has an optional tag component, that can be set as it is shown in this example,
    * where four variants of a same algorithm are defined.
    */
-  static List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> configureAlgorithmList(
+  static List<ExperimentAlgorithm<DoubleSolution>> configureAlgorithmList(
           List<ExperimentProblem<DoubleSolution>> problemList) {
-    List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithms = new ArrayList<>();
+    List<ExperimentAlgorithm<DoubleSolution>> algorithms = new ArrayList<>();
 
     for (int i = 0; i < problemList.size(); i++) {
       double mutationProbability = 1.0 / problemList.get(i).getProblem().getNumberOfVariables();

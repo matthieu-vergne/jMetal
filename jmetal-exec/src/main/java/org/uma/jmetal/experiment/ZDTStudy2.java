@@ -77,7 +77,7 @@ public class ZDTStudy2 {
     problemList.add(new ExperimentProblem<>(new ZDT4()));
     problemList.add(new ExperimentProblem<>(new ZDT6()));
 
-    List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList =
+    List<ExperimentAlgorithm<DoubleSolution>> algorithmList =
             configureAlgorithmList(problemList);
 
     int numberOfCores = 8;
@@ -114,9 +114,9 @@ public class ZDTStudy2 {
    * @param problemList
    * @return
    */
-  static List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> configureAlgorithmList(
+  static List<ExperimentAlgorithm<DoubleSolution>> configureAlgorithmList(
           List<ExperimentProblem<DoubleSolution>> problemList) {
-    List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithms = new ArrayList<>();
+    List<ExperimentAlgorithm<DoubleSolution>> algorithms = new ArrayList<>();
 
     for (int i = 0; i < problemList.size(); i++) {
       double mutationProbability = 1.0 / problemList.get(i).getProblem().getNumberOfVariables();
