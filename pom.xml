@@ -51,6 +51,7 @@
         <module>jmetal-algorithm</module>
         <module>jmetal-problem</module>
         <module>jmetal-exec</module>
+        <module>jmetal-experiment</module>
     </modules>
 
     <properties>
@@ -252,6 +253,11 @@
             <dependency>
                 <groupId>org.uma.jmetal</groupId>
                 <artifactId>jmetal-algorithm</artifactId>
+                <version>5.4-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.uma.jmetal</groupId>
+                <artifactId>jmetal-experiment</artifactId>
                 <version>5.4-SNAPSHOT</version>
             </dependency>
             <dependency>
