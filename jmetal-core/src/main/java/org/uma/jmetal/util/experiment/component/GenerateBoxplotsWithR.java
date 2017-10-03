@@ -44,7 +44,7 @@ public class GenerateBoxplotsWithR<Result> implements ExperimentComponent {
     this.numberOfColumns = 3 ;
 
     this.algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList);
-    this.problemList = problemList;
+    this.problemList = ExperimentProblem.filterTagDuplicates(problemList);
     this.indicatorList = indicatorList;
     this.experimentBaseDirectory = experimentBaseDirectory;
   }

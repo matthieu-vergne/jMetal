@@ -1,0 +1,81 @@
+# Summary
+
+## Goal
+
+Compare algorithms to assess their performance.
+?Set of independent evaluations -so comparison made by the user- or actual comparison within the experiment protocol?
+?Is running a single algorithm on a single problem a case to cover too?
+
+## Why?
+
+- Useful when we design a new algorithm and we want to compare it with others of the state-of-the-art.
+- When designing a component (e.g., an operator) and want to compare a number of versions of a same algorithms with differente component variants.
+
+## How?
+
+1. Execute several independent runs of each combination of algorithm-problem
+?Actually combinations of configured algorithms with configured problems?
+2. Generate reference fronts if they are not provided
+?Several reference fronts?
+3. Measure some properties (convergence and diversity) of the produced fronts by computing quality indicators. 
+4. Generate Latex tables to help in including the results in the papers
+  a. Tables with mean/median and standard deviation/IQR values
+  b. Tables with the results of applying statistical tests (Wilcoxon, Friedman, etc).
+  c. Generate boxplots 
+
+## Parameters
+
+- List of problems
+- List of algorithms
+- Number of runs
+?per combination?
+- List of quality indicators
+?Common to all algorithm-problem comnbinations or variance possible?
+?Extend `Measure` for homogeneity?
+- Various directories
+- Various file names
+- Number of cores
+?Number of threads?
+
+## Constraints
+
+- As the number of tasks can be very large, support for parallelism is required.
+- We should be able differentiate each combination of (configured algorithm, configured problem, run), currently done via `TaggedAlgorithm`
+
+## Notes
+
+- Generation of reference fronts usually for real-world problems
+- Most of the quality indicators (hypervolume, epsilon, spread, IGD, etc) require the reference fronts
+- Considering variants of problems (different settings) would be interesting
+
+# Proposal
+
+- Distinguish selection, execution, and representation:
+  * `ExperimentFeeder`: select combinations of algorithms and problems (i.e. which algorithms, which problems, with which settings, and which valid combinations)
+  * `ExperimentExecution`: run algorithms on problems (e.g. parallelism, execution status and notifications)
+  * `ExperimentRenderer`: render the data (e.g. logging, results storage, console output, graphical output, LaTeX output)
+  * `Experiment` = `ExperimentFeeder` + `ExperimentExecution` + one or more `ExperimentRenderer`
+- `ExperimentFeeder`:
+  * Dedicated implementations can be made, like we have now with `NSGAIIStudy` which focuses on NSGAII algorithm with ZDT problems
+  * Generic implementations can be made, like give an algorithm class, a problem class, a set of configurations, and let it generate all the combinations
+  * The IDs can be simply algorithmClass + algorithmSetting + problemClass + problemSetting
+- `ExperimentCombination`:
+  * Instances can be generated upon first call to save memory
+- `ExperimentExecution` design:
+  * Read the combinations from the `ExperimentFeeder`
+  * Manage their executions
+  * Parameters to tell how much runs, cores/threads, etc.
+- Distinguish several levels of execution:
+  1. `ExperimentRun`: configured `Algorithm` + configured `Problem` (`ExperimentCombination` instance) run once
+  2. `ExperimentRunSuite`: N independent `ExperimentRun` (all the runs of a single combination)
+  3. `ExperimentExecution`: set of `ExperimentRunSuite` (all the runs for all the combinations)
+- Assign measures to each execution level:
+  1. `ExperimentRun`: measures over the single run (e.g. time elapsed, solutions generated, etc.)
+  2. `ExperimentRunSuite`: measures over the set of runs (e.g. average and other statistics on previous measures)
+  3. `ExperimentExecution`: measures over the set of combinations (e.g. average and other statistics on previous measures)
+- `ExperimentRenderer` design:
+  * Read the results obtained from the measures of `ExperimentExecution` and its sub-levels
+  * Take care of current status (e.g. graphical output can display current runs, while LaTeX tables can only print terminated ones)
+  * Parameters to tell where/how to generate the output (directories, file names, tags, etc.)
+  * File names or other tags can be based on `ExperimentCombination.getId()` to identify the runs of a `ExperimentRunSuite`
+  * They can be enriched with a local ID assigned to each `ExperimentRun`

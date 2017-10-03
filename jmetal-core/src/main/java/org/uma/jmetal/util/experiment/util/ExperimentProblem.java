@@ -1,5 +1,8 @@
 package org.uma.jmetal.util.experiment.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 
@@ -28,5 +31,24 @@ public class ExperimentProblem<S extends Solution<?>> {
 
   public String getTag() {
     return tag ;
+  }
+
+  /**
+   * The list of problems contain a problem instance per algorithm. This is not convenient for
+   * calculating statistical data, because a same problem will appear many times.
+   * This method remove duplicated problems and leave only an instance of each one.
+   */
+  public static <E extends ExperimentProblem<?>> List<E> filterTagDuplicates(List<E> problems) {
+    List<E> problemList = new ArrayList<>() ;
+    List<String> problemTagList = new ArrayList<>() ;
+
+    for (E problem : problems) {
+      if (!problemTagList.contains(problem.getTag())) {
+        problemList.add(problem) ;
+        problemTagList.add(problem.getTag()) ;
+      }
+    }
+    
+    return problemList;
   }
 }

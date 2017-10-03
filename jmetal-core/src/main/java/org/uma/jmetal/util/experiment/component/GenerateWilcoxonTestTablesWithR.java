@@ -40,7 +40,7 @@ public class GenerateWilcoxonTestTablesWithR<Result> implements ExperimentCompon
 
   public GenerateWilcoxonTestTablesWithR(List<? extends ExperimentAlgorithm<?>> algorithms, List<? extends ExperimentProblem<?>> problems, List<? extends GenericIndicator<?>> indicatorList, String experimentBaseDirectory) {
     this.algorithms = ExperimentAlgorithm.filterTagDuplicates(algorithms);
-    this.problems = problems;
+    this.problems = ExperimentProblem.filterTagDuplicates(problems);
     this.indicatorList = indicatorList;
     this.experimentBaseDirectory = experimentBaseDirectory;
   }

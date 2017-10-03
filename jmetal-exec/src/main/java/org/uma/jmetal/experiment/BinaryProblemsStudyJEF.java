@@ -18,6 +18,7 @@ import java.io.IOException ;
 import java.util.Arrays ;
 import java.util.LinkedList ;
 import java.util.List ;
+import java.util.stream.Collectors ;
 
 import org.uma.jmetal.algorithm.Algorithm ;
 import org.uma.jmetal.algorithm.multiobjective.mocell.MOCellBuilder ;
@@ -32,6 +33,7 @@ import org.uma.jmetal.experiment.p3.PreparePerformProduceExperimentBuilder.Probl
 import org.uma.jmetal.experiment.p3.PreparePerformProduceExperimentBuilder.RunContext ;
 import org.uma.jmetal.experiment.p3.PreparePerformProduceExperimentBuilder.When ;
 import org.uma.jmetal.experiment.p3.ThreadPerformer ;
+import org.uma.jmetal.experiment.util.RToolBox ;
 import org.uma.jmetal.operator.CrossoverOperator ;
 import org.uma.jmetal.operator.MutationOperator ;
 import org.uma.jmetal.operator.SelectionOperator ;
@@ -55,7 +57,6 @@ import org.uma.jmetal.util.JMetalException ;
 import org.uma.jmetal.util.JMetalLogger ;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator ;
 import org.uma.jmetal.util.experiment.component.ComputeQualityIndicators ;
-import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR ;
 import org.uma.jmetal.util.experiment.component.GenerateFriedmanTestTables ;
 import org.uma.jmetal.util.experiment.component.GenerateLatexTablesWithStatistics ;
 import org.uma.jmetal.util.experiment.component.GenerateReferenceParetoFront ;
@@ -94,6 +95,7 @@ public class BinaryProblemsStudyJEF {
     PreparePerformProduceExperimentBuilder<Algorithm<List<BinarySolution>>, BinaryProblem> experimentBuilder =
         new PreparePerformProduceExperimentBuilder<>() ;
 
+    // PREPARE
     List<ProblemID<? extends BinaryProblem>> problemIDs = new LinkedList<>() ;
     problemIDs.add(experimentBuilder.prepareProblem(() -> new ZDT5())) ;
     problemIDs.add(experimentBuilder.prepareProblem(() -> new OneZeroMax(512))) ;
@@ -130,9 +132,9 @@ public class BinaryProblemsStudyJEF {
 
     experimentBuilder.prepareIndependentRuns(INDEPENDENT_RUNS) ; // Default: 1
 
+    // PERFORM
     experimentBuilder.performWith(() -> new ThreadPerformer(8)) ; // Default: SequentialPerformer
 
-    // ExecuteAlgorithms
     DataID<String> problemTag = experimentBuilder.defineRunData(Generation.ONCE_AND_BACKUP,
         (context) -> context.getProblem().getName()) ;
     DataID<String> algorithmTag = experimentBuilder.defineRunData(Generation.ONCE_AND_BACKUP,
@@ -144,11 +146,13 @@ public class BinaryProblemsStudyJEF {
         (context) -> context.getData(outputDirectoryName) + "/FUN" + context.getRun() + ".tsv") ;
     DataID<String> varFile = experimentBuilder.defineRunData(Generation.ONCE_AND_BACKUP,
         (context) -> context.getData(outputDirectoryName) + "/VAR" + context.getRun() + ".tsv") ;
+
     experimentBuilder.createRunEvent(When.BEFORE_RUN,
         (context) -> JMetalLogger.logger
             .info("Running algorithm: " + context.getAlgorithm().getName() + ", problem: "
                 + context.getProblem().getName() + ", run: " + context.getRun() + ", funFile: "
                 + context.getData(funFile) + ", varFile: " + context.getData(varFile))) ;
+
     experimentBuilder.createRunEvent(When.AFTER_RUN, (context) -> {
       JMetalLogger.logger.info("Finished algorithm: " + context.getAlgorithm().getName()
           + ", problem: " + context.getProblem().getName() + ", run: " + context.getRun()) ;
@@ -162,12 +166,13 @@ public class BinaryProblemsStudyJEF {
           + context.getData(varFile)) ;
     }) ;
 
+    // PRODUCE
     experimentBuilder.produceWith((dataset) -> {
       try {
         List<ExperimentProblem<BinarySolution>> problemList = new LinkedList<>() ;
         List<ExperimentAlgorithm<BinarySolution>> algorithmList = new LinkedList<>() ;
-        for (AlgorithmID<? extends Algorithm<List<BinarySolution>>> algorithmID : algorithmIDs) {
-          for (ProblemID<? extends BinaryProblem> problemID : problemIDs) {
+        for (ProblemID<? extends BinaryProblem> problemID : problemIDs) {
+          for (AlgorithmID<? extends Algorithm<List<BinarySolution>>> algorithmID : algorithmIDs) {
             RunContext<? extends Algorithm<List<BinarySolution>>, ? extends BinaryProblem> context =
                 dataset.getRunContext(algorithmID, problemID, 0) ;
             problemList
@@ -177,12 +182,16 @@ public class BinaryProblemsStudyJEF {
           }
         }
 
+        // TODO Reimplement each step below as isolated features
         String referenceFrontDirectory = experimentBaseDirectory + "/referenceFronts" ;
         String outputParetoFrontFileName = "FUN" ;
         List<String> referenceFrontFileNames = new LinkedList<>() ;
-        new GenerateReferenceParetoFront(algorithmList, problemList, experimentBaseDirectory,
-            referenceFrontDirectory, outputParetoFrontFileName, INDEPENDENT_RUNS,
-            referenceFrontFileNames).run() ;
+        // GenerateReferenceParetoFront
+        {
+          new GenerateReferenceParetoFront(algorithmList, problemList, experimentBaseDirectory,
+              referenceFrontDirectory, outputParetoFrontFileName, INDEPENDENT_RUNS,
+              referenceFrontFileNames).run() ;
+        }
 
         List<GenericIndicator<BinarySolution>> indicatorList =
             Arrays.asList(new Epsilon<BinarySolution>(), new Spread<BinarySolution>(),
@@ -190,24 +199,87 @@ public class BinaryProblemsStudyJEF {
                 new InvertedGenerationalDistance<BinarySolution>(),
                 new InvertedGenerationalDistancePlus<BinarySolution>()) ;
         String outputParetoSetFileName = "VAR" ;
-        new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList,
-            experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames,
-            outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run() ;
+        // ComputeQualityIndicators
+        {
+          new ComputeQualityIndicators<>(algorithmList, problemList, indicatorList,
+              experimentBaseDirectory, referenceFrontDirectory, referenceFrontFileNames,
+              outputParetoFrontFileName, outputParetoSetFileName, INDEPENDENT_RUNS).run() ;
+        }
 
         String experimentName = "BinaryProblemsStudy" ;
-        new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList,
-            experimentBaseDirectory, experimentName).run() ;
-        new GenerateWilcoxonTestTablesWithR<>(algorithmList, problemList, indicatorList,
-            experimentBaseDirectory).run() ;
-        new GenerateFriedmanTestTables<>(algorithmList, problemList, indicatorList,
-            experimentBaseDirectory).run() ;
-        new GenerateBoxplotsWithR<>(algorithmList, problemList, indicatorList,
-            experimentBaseDirectory).setRows(1).setColumns(2).setDisplayNotch().run() ;
+        // GenerateLatexTablesWithStatistics
+        {
+          new GenerateLatexTablesWithStatistics(algorithmList, problemList, indicatorList,
+              experimentBaseDirectory, experimentName).run() ;
+        }
+        // GenerateWilcoxonTestTablesWithR
+        {
+          algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList) ;
+          problemList = ExperimentProblem.filterTagDuplicates(problemList) ;
+
+          List<String> algorithmNames = algorithmList.stream()
+              .map((algorithm) -> algorithm.getAlgorithmTag()).collect(Collectors.toList()) ;
+          List<String> problemNames =
+              problemList.stream().map((problem) -> problem.getTag()).collect(Collectors.toList()) ;
+
+          String rDirectoryName = experimentBaseDirectory + "/" + RToolBox.DEFAULT_R_DIRECTORY ;
+          File rOutput ;
+          rOutput = new File(rDirectoryName) ;
+          if (!rOutput.exists()) {
+            new File(rDirectoryName).mkdirs() ;
+            System.out.println("Creating " + rDirectoryName + " directory") ;
+          }
+          for (GenericIndicator<?> indicator : indicatorList) {
+            String rFileName = rDirectoryName + "/" + indicator.getName() + ".Wilcoxon" + ".R" ;
+            String latexFileName =
+                rDirectoryName + "/" + indicator.getName() + ".Wilcoxon" + ".tex" ;
+
+            String dataDirectory = experimentBaseDirectory + "/data" ;
+            new RToolBox().writeWilcoxonTestTables(problemNames, algorithmNames, indicator,
+                dataDirectory, rFileName, latexFileName) ;
+          }
+          new GenerateWilcoxonTestTablesWithR<>(algorithmList, problemList, indicatorList,
+              experimentBaseDirectory).run() ;
+        }
+        // GenerateFriedmanTestTables
+        {
+          new GenerateFriedmanTestTables<>(algorithmList, problemList, indicatorList,
+              experimentBaseDirectory).run() ;
+        }
+
+        // GenerateBoxplotsWithR
+        {
+          algorithmList = ExperimentAlgorithm.filterTagDuplicates(algorithmList) ;
+          problemList = ExperimentProblem.filterTagDuplicates(problemList) ;
+
+          List<String> algorithmNames = algorithmList.stream()
+              .map((algorithm) -> algorithm.getAlgorithmTag()).collect(Collectors.toList()) ;
+          List<String> problemNames =
+              problemList.stream().map((problem) -> problem.getTag()).collect(Collectors.toList()) ;
+
+          int numberOfRows = 1 ;
+          int numberOfColumns = 2 ;
+          boolean displayNotch = true ;
+          String rDirectoryName = experimentBaseDirectory + "/" + RToolBox.DEFAULT_R_DIRECTORY ;
+          File rOutput ;
+          rOutput = new File(rDirectoryName) ;
+          if (!rOutput.exists()) {
+            new File(rDirectoryName).mkdirs() ;
+            System.out.println("Creating " + rDirectoryName + " directory") ;
+          }
+          for (GenericIndicator<?> indicator : indicatorList) {
+            String fileName = rDirectoryName + "/" + indicator.getName() + ".Boxplot" + ".R" ;
+            new RToolBox().writeBoxplotsScripts(problemNames, algorithmNames, indicator.getName(),
+                fileName, numberOfRows, numberOfColumns, displayNotch) ;
+          }
+        }
+
       } catch (IOException cause) {
         throw new RuntimeException(cause) ;
       }
     }) ;
 
+    // BUILD & RUN
     Experiment experiment = experimentBuilder.build() ;
 
     experiment.run() ;
