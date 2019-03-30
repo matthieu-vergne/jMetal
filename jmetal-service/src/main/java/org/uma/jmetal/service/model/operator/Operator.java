@@ -13,7 +13,7 @@ public class Operator extends ResourceSupport {
 	public Operator(String id) {
 		this.description = "Here you should find a general description of " + id + ".";
 		OperatorController controller = methodOn(OperatorController.class);
-		add(linkTo(controller.getOperator(id)).withSelfRel());
+		add(linkTo(controller.get(id)).withSelfRel());
 		add(linkTo(controller.getParamsDefinition(id)).withRel(Link.REL_PARAMS_DEFINITION));
 		add(linkTo(controller.getParamsExample(id)).withRel(Link.REL_PARAMS_EXAMPLE));
 		add(linkTo(controller.getResultDefinition(id)).withRel(Link.REL_RESULT_DEFINITION));
