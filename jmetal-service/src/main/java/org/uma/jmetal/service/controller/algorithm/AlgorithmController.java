@@ -4,24 +4,28 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.uma.jmetal.service.Link;
 import org.uma.jmetal.service.controller.runnable.RunnableTemplateController;
 import org.uma.jmetal.service.model.algorithm.Algorithm;
+import org.uma.jmetal.service.register.algorithm.AlgorithmRegister;
 
 @RestController
 @RequestMapping("/algorithms")
 public class AlgorithmController extends RunnableTemplateController<Algorithm> {
 
-	public AlgorithmController() {
+	private final AlgorithmRegister register;
+
+	public AlgorithmController(@Autowired AlgorithmRegister register) {
 		super("algorithm", Link.REL_ALGORITHM);
+		this.register = register;
 	}
 
 	@Override
 	protected Collection<String> getAllIds() {
-		// TODO retrieve actual algorithms
-		return Arrays.asList("ABYSS", "NSGA-2", "NSGA-3");
+		return register.getIds();
 	}
 
 	@Override
