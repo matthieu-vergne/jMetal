@@ -4,6 +4,7 @@ public class Link {
 	public static final String REL_SELF = org.springframework.hateoas.Link.REL_SELF;
 	
 	public static final String REL_ALGORITHM = "algorithm";
+	public static final String REL_OPERATOR = "operator";
 	
 	public static final String REL_PARAMS_DEFINITION = "params definition";
 	public static final String REL_PARAMS_EXAMPLE = "params example";
