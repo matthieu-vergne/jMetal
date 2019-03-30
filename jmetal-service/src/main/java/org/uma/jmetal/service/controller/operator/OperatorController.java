@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.uma.jmetal.service.Link;
-import org.uma.jmetal.service.controller.runnable.RunnableTemplateController;
+import org.uma.jmetal.service.controller.runnable.RunnableControllerTemplate;
 import org.uma.jmetal.service.model.operator.Operator;
 import org.uma.jmetal.service.register.operator.OperatorRegister;
 
 @RestController
 @RequestMapping("/operators")
-public class OperatorController extends RunnableTemplateController<Operator> {
+public class OperatorController extends RunnableControllerTemplate<Operator> {
 
 	private final OperatorRegister register;
 

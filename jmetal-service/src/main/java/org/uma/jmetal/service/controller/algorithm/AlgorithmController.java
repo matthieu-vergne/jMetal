@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.uma.jmetal.service.Link;
-import org.uma.jmetal.service.controller.runnable.RunnableTemplateController;
+import org.uma.jmetal.service.controller.runnable.RunnableControllerTemplate;
 import org.uma.jmetal.service.model.algorithm.Algorithm;
 import org.uma.jmetal.service.register.algorithm.AlgorithmRegister;
 
 @RestController
 @RequestMapping("/algorithms")
-public class AlgorithmController extends RunnableTemplateController<Algorithm> {
+public class AlgorithmController extends RunnableControllerTemplate<Algorithm> {
 
 	private final AlgorithmRegister register;
 
