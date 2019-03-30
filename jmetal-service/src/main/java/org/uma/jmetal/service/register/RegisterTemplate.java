@@ -6,15 +6,15 @@ import java.util.LinkedList;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public abstract class RegisterTemplate {
+public abstract class RegisterTemplate<ID> {
 
-	private final Collection<String> ids = new LinkedList<>();
+	private final Collection<ID> ids = new LinkedList<>();
 
-	public Collection<String> getIds() {
+	public Collection<ID> getIds() {
 		return ids;
 	}
 
-	public void add(String id) {
+	public void add(ID id) {
 		ids.add(id);
 	}
 

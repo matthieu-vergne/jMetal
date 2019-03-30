@@ -4,6 +4,6 @@ import org.springframework.stereotype.Repository;
 import org.uma.jmetal.service.register.RegisterTemplate;
 
 @Repository
-public class AlgorithmRegister extends RegisterTemplate {
+public class AlgorithmRegister extends RegisterTemplate<String> {
 
 }
