@@ -1,4 +1,4 @@
-package org.uma.jmetal.service.controller;
+package org.uma.jmetal.service.controller.algorithms;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -6,26 +6,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.uma.jmetal.service.model.Algorithm;
-import org.uma.jmetal.service.model.ParamsDefinition;
-import org.uma.jmetal.service.model.ParamsExample;
-import org.uma.jmetal.service.model.ResultDefinition;
-import org.uma.jmetal.service.model.ResultExample;
-import org.uma.jmetal.service.model.Run;
-import org.uma.jmetal.service.model.RunParams;
-import org.uma.jmetal.service.model.RunResult;
-import org.uma.jmetal.service.model.RunStatus;
+import org.uma.jmetal.service.Link;
+import org.uma.jmetal.service.controller.runnable.NoRunException;
+import org.uma.jmetal.service.controller.runnable.RunnableController;
+import org.uma.jmetal.service.controller.runnable.UnknownRunException;
+import org.uma.jmetal.service.model.algorithm.Algorithm;
+import org.uma.jmetal.service.model.runnable.ParamsDefinition;
+import org.uma.jmetal.service.model.runnable.ParamsExample;
+import org.uma.jmetal.service.model.runnable.ResultDefinition;
+import org.uma.jmetal.service.model.runnable.ResultExample;
+import org.uma.jmetal.service.model.runnable.Run;
+import org.uma.jmetal.service.model.runnable.RunParams;
+import org.uma.jmetal.service.model.runnable.RunResult;
+import org.uma.jmetal.service.model.runnable.RunStatus;
 
 @RestController
 @RequestMapping("/algorithms")
-public class AlgorithmController {
+public class AlgorithmController implements RunnableController {
 
 	@GetMapping("")
 	public @ResponseBody Map<String, ResourceSupport> getAlgorithms() {
@@ -43,35 +46,36 @@ public class AlgorithmController {
 	}
 
 	@GetMapping("/{algorithmId}/params/definition")
-	public ParamsDefinition getAlgorithmParamsDefinition(@PathVariable String algorithmId) {
+	public ParamsDefinition getParamsDefinition(@PathVariable String algorithmId) {
 		checkIsKnownAlgorithm(algorithmId);
-		return new ParamsDefinition(algorithmId);
+		return new ParamsDefinition(new Algorithm(algorithmId), algorithmId, Link.REL_ALGORITHM);
 	}
 
 	@GetMapping("/{algorithmId}/params/example")
-	public ParamsExample getAlgorithmParamsExample(@PathVariable String algorithmId) {
+	public ParamsExample getParamsExample(@PathVariable String algorithmId) {
 		checkIsKnownAlgorithm(algorithmId);
-		return new ParamsExample(algorithmId);
+		return new ParamsExample(new Algorithm(algorithmId), algorithmId, Link.REL_ALGORITHM);
 	}
 
 	@GetMapping("/{algorithmId}/result/definition")
-	public ResultDefinition getAlgorithmResultDefinition(@PathVariable String algorithmId) {
+	public ResultDefinition getResultDefinition(@PathVariable String algorithmId) {
 		checkIsKnownAlgorithm(algorithmId);
-		return new ResultDefinition(algorithmId);
+		return new ResultDefinition(new Algorithm(algorithmId), algorithmId, Link.REL_ALGORITHM);
 	}
 
 	@GetMapping("/{algorithmId}/result/example")
-	public ResultExample getAlgorithmResultExample(@PathVariable String algorithmId) {
+	public ResultExample getResultExample(@PathVariable String algorithmId) {
 		checkIsKnownAlgorithm(algorithmId);
-		return new ResultExample(algorithmId);
+		return new ResultExample(new Algorithm(algorithmId), algorithmId, Link.REL_OPERATOR);
 	}
 
 	@GetMapping("/{algorithmId}/runs")
-	public @ResponseBody Map<Long, ResourceSupport> getAlgorithmRuns(@PathVariable String algorithmId) {
+	@Override
+	public @ResponseBody Map<Long, ResourceSupport> getRuns(@PathVariable String algorithmId) {
 		checkIsKnownAlgorithm(algorithmId);
 		Map<Long, ResourceSupport> runs = allRuns(algorithmId).stream().collect(Collectors.toMap(id -> id, id -> {
 			ResourceSupport resource = new ResourceSupport();
-			resource.add(new Run(algorithmId, id).getLink(Link.REL_SELF));
+			resource.add(newRun(algorithmId, id).getLink(Link.REL_SELF));
 			return resource;
 		}));
 		if (runs.isEmpty()) {
@@ -82,27 +86,31 @@ public class AlgorithmController {
 	}
 
 	@GetMapping("/{algorithmId}/runs/{runId}")
-	public @ResponseBody Run getAlgorithmRun(@PathVariable String algorithmId, @PathVariable long runId) {
+	@Override
+	public @ResponseBody Run getRun(@PathVariable String algorithmId, @PathVariable long runId) {
 		checkIsKnownRun(algorithmId, runId);
-		return new Run(algorithmId, runId);
+		return newRun(algorithmId, runId);
 	}
 
 	@GetMapping("/{algorithmId}/runs/{runId}/params")
-	public @ResponseBody RunParams getAlgorithmRunParams(@PathVariable String algorithmId, @PathVariable long runId) {
+	@Override
+	public @ResponseBody RunParams getRunParams(@PathVariable String algorithmId, @PathVariable long runId) {
 		checkIsKnownRun(algorithmId, runId);
-		return new RunParams(algorithmId, runId);
+		return new RunParams(newRun(algorithmId, runId), algorithmId, runId);
 	}
 
 	@GetMapping("/{algorithmId}/runs/{runId}/result")
-	public @ResponseBody RunResult getAlgorithmRunResult(@PathVariable String algorithmId, @PathVariable long runId) {
+	@Override
+	public @ResponseBody RunResult getRunResult(@PathVariable String algorithmId, @PathVariable long runId) {
 		checkIsKnownRun(algorithmId, runId);
-		return new RunResult(algorithmId, runId);
+		return new RunResult(newRun(algorithmId, runId), algorithmId, runId);
 	}
 
 	@GetMapping("/{algorithmId}/runs/{runId}/status")
-	public @ResponseBody RunStatus getAlgorithmRunStatus(@PathVariable String algorithmId, @PathVariable long runId) {
+	@Override
+	public @ResponseBody RunStatus getRunStatus(@PathVariable String algorithmId, @PathVariable long runId) {
 		checkIsKnownRun(algorithmId, runId);
-		return new RunStatus(algorithmId, runId);
+		return new RunStatus(newRun(algorithmId, runId), algorithmId, runId);
 	}
 
 	private List<String> allAlgorithms() {
@@ -128,8 +136,12 @@ public class AlgorithmController {
 	private void checkIsKnownRun(String algorithmId, long runId) {
 		checkIsKnownAlgorithm(algorithmId);
 		if (!allRuns(algorithmId).contains(runId)) {
-			throw new UnknownAlgorithmRunException(algorithmId, runId);
+			throw new UnknownRunException(algorithmId, runId);
 		}
+	}
+
+	private Run newRun(String algorithmId, long runId) {
+		return new Run(new Algorithm(algorithmId), algorithmId, Link.REL_ALGORITHM, AlgorithmController.class, runId);
 	}
 
 }

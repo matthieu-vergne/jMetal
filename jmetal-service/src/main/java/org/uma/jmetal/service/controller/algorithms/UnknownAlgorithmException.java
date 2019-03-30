@@ -1,4 +1,4 @@
-package org.uma.jmetal.service.controller;
+package org.uma.jmetal.service.controller.algorithms;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class UnknownAlgorithmException extends IllegalArgumentException {
 
 	public UnknownAlgorithmException(String algorithmId) {
-		super("Unknown algorithm: " + algorithmId);
+		super("Unknown algorithm " + algorithmId);
 	}
 
 }

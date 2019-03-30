@@ -1,4 +1,4 @@
-package org.uma.jmetal.service.controller;
+package org.uma.jmetal.service.controller.runnable;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
 public class NoRunException extends IllegalStateException {
 
-	public NoRunException(String algorithmId) {
-		super("No run found for " + algorithmId);
+	public NoRunException(String runnableId) {
+		super("No run found for " + runnableId);
 	}
 
 }
