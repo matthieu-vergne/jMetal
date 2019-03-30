@@ -1,4 +1,4 @@
-package org.uma.jmetal.service.controller.operators;
+package org.uma.jmetal.service.controller.algorithm;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,25 +8,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.uma.jmetal.service.Link;
 import org.uma.jmetal.service.controller.runnable.RunnableTemplateController;
-import org.uma.jmetal.service.model.operator.Operator;
+import org.uma.jmetal.service.model.algorithm.Algorithm;
 
 @RestController
-@RequestMapping("/operators")
-public class OperatorController extends RunnableTemplateController<Operator> {
-
-	public OperatorController() {
-		super("operator", Link.REL_OPERATOR, OperatorController.class);
+@RequestMapping("/algorithms")
+public class AlgorithmController extends RunnableTemplateController<Algorithm> {
+	
+	public AlgorithmController() {
+		super("algorithm", Link.REL_ALGORITHM, AlgorithmController.class);
 	}
 
 	@Override
 	protected List<String> getAllIds() {
-		// TODO retrieve actual operators
-		return Arrays.asList("OP1", "OP2", "OP3");
+		// TODO retrieve actual algorithms
+		return Arrays.asList("ABYSS", "NSGA-2", "NSGA-3");
 	}
 
 	@Override
-	protected Operator createRunnable(String runnableId) {
-		return new Operator(runnableId);
+	protected Algorithm createRunnable(String runnableId) {
+		return new Algorithm(runnableId);
 	}
 
 	@Override

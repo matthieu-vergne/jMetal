@@ -4,7 +4,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.uma.jmetal.service.Link;
-import org.uma.jmetal.service.controller.algorithms.AlgorithmController;
+import org.uma.jmetal.service.controller.algorithm.AlgorithmController;
 
 public class Algorithm extends ResourceSupport {
 

@@ -4,7 +4,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.uma.jmetal.service.Link;
-import org.uma.jmetal.service.controller.operators.OperatorController;
+import org.uma.jmetal.service.controller.operator.OperatorController;
 
 public class Operator extends ResourceSupport {
 
