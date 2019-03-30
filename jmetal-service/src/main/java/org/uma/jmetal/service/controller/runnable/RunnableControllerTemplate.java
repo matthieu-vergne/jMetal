@@ -19,22 +19,24 @@ import org.uma.jmetal.service.model.runnable.Run;
 import org.uma.jmetal.service.model.runnable.RunParams;
 import org.uma.jmetal.service.model.runnable.RunResult;
 import org.uma.jmetal.service.model.runnable.RunStatus;
+import org.uma.jmetal.service.register.run.RunRegisterSupplier;
 
 public abstract class RunnableControllerTemplate<T extends ResourceSupport> extends ControllerTemplate<T> implements RunnableController {
 
 	private final String runnableRel;
 	private final String runnableType;
+	private final RunRegisterSupplier runRegisterSupplier;
 
-	public RunnableControllerTemplate(String runnableType, String runnableRel) {
+	public RunnableControllerTemplate(String runnableType, String runnableRel,
+			RunRegisterSupplier runRegisterSupplier) {
 		super(runnableType);
 		this.runnableRel = runnableRel;
 		this.runnableType = runnableType;
+		this.runRegisterSupplier = runRegisterSupplier;
 	}
 
 	protected abstract T createRunnable(String runnableId);
 
-	protected abstract Collection<Long> getAllRuns(String runnableId);
-	
 	@Override
 	protected T createResource(String resourceId) {
 		return createRunnable(resourceId);
@@ -68,7 +70,7 @@ public abstract class RunnableControllerTemplate<T extends ResourceSupport> exte
 	@Override
 	public @ResponseBody Map<Long, ResourceSupport> getRuns(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		Map<Long, ResourceSupport> runs = getAllRuns(runnableId).stream().collect(Collectors.toMap(id -> id, id -> {
+		Map<Long, ResourceSupport> runs = getRunIds(runnableId).stream().collect(Collectors.toMap(id -> id, id -> {
 			ResourceSupport resource = new ResourceSupport();
 			resource.add(newRun(runnableId, id).getLink(Link.REL_SELF));
 			return resource;
@@ -116,13 +118,17 @@ public abstract class RunnableControllerTemplate<T extends ResourceSupport> exte
 
 	private void checkIsKnownRun(String runnableId, long runId) {
 		checkIsKnownRunnable(runnableId);
-		if (!getAllRuns(runnableId).contains(runId)) {
+		if (!getRunIds(runnableId).contains(runId)) {
 			throw new UnknownRunException(runnableId, runId);
 		}
 	}
 
 	private Run newRun(String runnableId, long runId) {
 		return new Run(createRunnable(runnableId), runnableId, runnableRel, getClass(), runId);
+	}
+
+	private Collection<Long> getRunIds(String runnableId) {
+		return runRegisterSupplier.get(runnableType, runnableId).getIds();
 	}
 
 }
