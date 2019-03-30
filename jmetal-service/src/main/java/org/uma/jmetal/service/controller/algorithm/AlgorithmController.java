@@ -13,9 +13,9 @@ import org.uma.jmetal.service.model.algorithm.Algorithm;
 @RestController
 @RequestMapping("/algorithms")
 public class AlgorithmController extends RunnableTemplateController<Algorithm> {
-	
+
 	public AlgorithmController() {
-		super("algorithm", Link.REL_ALGORITHM, AlgorithmController.class);
+		super("algorithm", Link.REL_ALGORITHM);
 	}
 
 	@Override

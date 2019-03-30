@@ -22,13 +22,10 @@ public abstract class RunnableTemplateController<T extends ResourceSupport> impl
 
 	private final String runnableRel;
 	private final String runnableType;
-	private final Class<? extends RunnableController> runnableControllerClass;
 
-	public RunnableTemplateController(String runnableType, String runnableRel,
-			Class<? extends RunnableController> runnableControllerClass) {
+	public RunnableTemplateController(String runnableType, String runnableRel) {
 		this.runnableRel = runnableRel;
 		this.runnableType = runnableType;
-		this.runnableControllerClass = runnableControllerClass;
 	}
 
 	protected abstract List<String> getAllIds();
@@ -134,7 +131,7 @@ public abstract class RunnableTemplateController<T extends ResourceSupport> impl
 	}
 
 	private Run newRun(String runnableId, long runId) {
-		return new Run(createRunnable(runnableId), runnableId, runnableRel, runnableControllerClass, runId);
+		return new Run(createRunnable(runnableId), runnableId, runnableRel, getClass(), runId);
 	}
 
 }

@@ -15,7 +15,7 @@ import org.uma.jmetal.service.model.operator.Operator;
 public class OperatorController extends RunnableTemplateController<Operator> {
 
 	public OperatorController() {
-		super("operator", Link.REL_OPERATOR, OperatorController.class);
+		super("operator", Link.REL_OPERATOR);
 	}
 
 	@Override
