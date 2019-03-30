@@ -21,7 +21,8 @@ import org.uma.jmetal.service.model.runnable.RunResult;
 import org.uma.jmetal.service.model.runnable.RunStatus;
 import org.uma.jmetal.service.register.run.RunRegisterSupplier;
 
-public abstract class RunnableControllerTemplate<T extends ResourceSupport> extends ControllerTemplate<T> implements RunnableController {
+public abstract class RunnableControllerTemplate<T extends ResourceSupport> extends ControllerTemplate<T>
+		implements RunnableController {
 
 	private final String runnableRel;
 	private final String runnableType;
