@@ -1,8 +1,8 @@
 package org.uma.jmetal.service.controller.operator;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +19,7 @@ public class OperatorController extends RunnableTemplateController<Operator> {
 	}
 
 	@Override
-	protected List<String> getAllIds() {
+	protected Collection<String> getAllIds() {
 		// TODO retrieve actual operators
 		return Arrays.asList("OP1", "OP2", "OP3");
 	}
@@ -30,9 +30,9 @@ public class OperatorController extends RunnableTemplateController<Operator> {
 	}
 
 	@Override
-	protected List<Long> getAllRuns(String runnableId) {
+	protected Collection<Long> getAllRuns(String runnableId) {
 		// TODO retrieve actual runs
-		if (runnableId.equals(getAllIds().get(1))) {
+		if (runnableId.equals("OP2")) {
 			return Arrays.asList(123L, 124L, 125L);
 		} else {
 			return Collections.emptyList();

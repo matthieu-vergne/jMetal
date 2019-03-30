@@ -1,6 +1,6 @@
 package org.uma.jmetal.service.controller.runnable;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,11 +28,11 @@ public abstract class RunnableTemplateController<T extends ResourceSupport> impl
 		this.runnableType = runnableType;
 	}
 
-	protected abstract List<String> getAllIds();
+	protected abstract Collection<String> getAllIds();
 
 	protected abstract T createRunnable(String runnableId);
 
-	protected abstract List<Long> getAllRuns(String runnableId);
+	protected abstract Collection<Long> getAllRuns(String runnableId);
 
 	@GetMapping("")
 	public @ResponseBody Map<String, ResourceSupport> getAll() {
