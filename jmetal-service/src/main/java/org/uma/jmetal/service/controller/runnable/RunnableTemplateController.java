@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.uma.jmetal.service.Link;
+import org.uma.jmetal.service.controller.ControllerTemplate;
+import org.uma.jmetal.service.controller.UnknownResourceException;
 import org.uma.jmetal.service.model.runnable.ParamsDefinition;
 import org.uma.jmetal.service.model.runnable.ParamsExample;
 import org.uma.jmetal.service.model.runnable.ResultDefinition;
@@ -18,35 +20,24 @@ import org.uma.jmetal.service.model.runnable.RunParams;
 import org.uma.jmetal.service.model.runnable.RunResult;
 import org.uma.jmetal.service.model.runnable.RunStatus;
 
-public abstract class RunnableTemplateController<T extends ResourceSupport> implements RunnableController {
+public abstract class RunnableTemplateController<T extends ResourceSupport> extends ControllerTemplate<T> implements RunnableController {
 
 	private final String runnableRel;
 	private final String runnableType;
 
 	public RunnableTemplateController(String runnableType, String runnableRel) {
+		super(runnableType);
 		this.runnableRel = runnableRel;
 		this.runnableType = runnableType;
 	}
 
-	protected abstract Collection<String> getAllIds();
-
 	protected abstract T createRunnable(String runnableId);
 
 	protected abstract Collection<Long> getAllRuns(String runnableId);
-
-	@GetMapping("")
-	public @ResponseBody Map<String, ResourceSupport> getAll() {
-		return getAllIds().stream().collect(Collectors.toMap(id -> id, id -> {
-			ResourceSupport resource = new ResourceSupport();
-			resource.add(createRunnable(id).getLink(Link.REL_SELF));
-			return resource;
-		}));
-	}
-
-	@GetMapping("/{runnableId}")
-	public T get(@PathVariable String runnableId) {
-		checkIsKnownRunnable(runnableId);
-		return createRunnable(runnableId);
+	
+	@Override
+	protected T createResource(String resourceId) {
+		return createRunnable(resourceId);
 	}
 
 	@GetMapping("/{runnableId}/params/definition")
@@ -119,7 +110,7 @@ public abstract class RunnableTemplateController<T extends ResourceSupport> impl
 
 	private void checkIsKnownRunnable(String runnableId) {
 		if (!getAllIds().contains(runnableId)) {
-			throw new UnknownRunnableException(runnableType, runnableId);
+			throw new UnknownResourceException(runnableType, runnableId);
 		}
 	}
 
