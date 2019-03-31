@@ -182,7 +182,8 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 
 	private Run.Response newRunResponse(String runnableId, long runId) {
 		Run run = getRunRegister(runnableId).retrieve(runId);
-		return new Run.Response(createRunnableResponse(runnableId), run, runnableId, runnableRel, getClass(), runId);
+		RunnableResponse parentResponse = createRunnableResponse(runnableId);
+		return new Run.Response(parentResponse, run, runnableId, runnableRel, getClass(), runId);
 	}
 
 	private RunRegister getRunRegister(String runnableId) {
