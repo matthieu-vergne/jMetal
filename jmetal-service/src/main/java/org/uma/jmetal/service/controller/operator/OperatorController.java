@@ -1,13 +1,16 @@
 package org.uma.jmetal.service.controller.operator;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.uma.jmetal.service.Rel;
 import org.uma.jmetal.service.controller.runnable.RunnableControllerTemplate;
+import org.uma.jmetal.service.executor.RunExecutor;
 import org.uma.jmetal.service.model.operator.Operator;
+import org.uma.jmetal.service.model.runnable.Run;
 import org.uma.jmetal.service.register.operator.OperatorRegister;
 import org.uma.jmetal.service.register.run.RunRegisterSupplier;
 
@@ -18,8 +21,9 @@ public class OperatorController extends RunnableControllerTemplate<Operator.Resp
 	private final OperatorRegister register;
 
 	@Autowired
-	public OperatorController(OperatorRegister register, RunRegisterSupplier runRegisterSupplier) {
-		super("operator", Rel.OPERATOR, runRegisterSupplier);
+	public OperatorController(OperatorRegister register, RunRegisterSupplier runRegisterSupplier,
+			RunExecutor executor) {
+		super("operator", Rel.OPERATOR, runRegisterSupplier, executor);
 		this.register = register;
 	}
 
@@ -31,6 +35,11 @@ public class OperatorController extends RunnableControllerTemplate<Operator.Resp
 	@Override
 	protected Operator.Response createRunnableResponse(String runnableId) {
 		return new Operator.Response(runnableId);
+	}
+
+	@Override
+	protected Function<Run.Params, Object> getRunnableFunction(String runnableId) {
+		return register.retrieve(runnableId);
 	}
 
 }
