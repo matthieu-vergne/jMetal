@@ -2,26 +2,19 @@ package org.uma.jmetal.service.model.algorithm;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
-import org.springframework.hateoas.ResourceSupport;
-import org.uma.jmetal.service.Rel;
 import org.uma.jmetal.service.controller.algorithm.AlgorithmController;
+import org.uma.jmetal.service.model.runnable.RunnableTemplate;
 
 public class Algorithm {
 
-	public static class Response extends ResourceSupport {
+	public static class Response extends RunnableTemplate.Response {
 
 		public final String description;
 
 		public Response(String id) {
+			super(id, methodOn(AlgorithmController.class));
 			this.description = "Here you should find a general description of " + id + ".";
-			AlgorithmController controller = methodOn(AlgorithmController.class);
-			add(linkTo(controller.get(id)).withSelfRel());
-			add(linkTo(controller.getParamsDefinition(id)).withRel(Rel.PARAMS_DEFINITION));
-			add(linkTo(controller.getParamsExample(id)).withRel(Rel.PARAMS_EXAMPLE));
-			add(linkTo(controller.getResultDefinition(id)).withRel(Rel.RESULT_DEFINITION));
-			add(linkTo(controller.getResultExample(id)).withRel(Rel.RESULT_EXAMPLE));
-			add(linkTo(controller.getRuns(id)).withRel(Rel.RUNS));
-			add(linkTo(controller.getRunsStats(id)).withRel(Rel.RUNS_STATS));
+			add(linkTo(methodOn(AlgorithmController.class).get(id)).withSelfRel());
 		}
 
 	}
