@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.uma.jmetal.service.Link;
+import org.uma.jmetal.service.Rel;
 import org.uma.jmetal.service.controller.runnable.RunnableControllerTemplate;
 import org.uma.jmetal.service.model.operator.Operator;
 import org.uma.jmetal.service.register.operator.OperatorRegister;
@@ -19,7 +19,7 @@ public class OperatorController extends RunnableControllerTemplate<Operator> {
 
 	@Autowired
 	public OperatorController(OperatorRegister register, RunRegisterSupplier runRegisterSupplier) {
-		super("operator", Link.REL_OPERATOR, runRegisterSupplier);
+		super("operator", Rel.OPERATOR, runRegisterSupplier);
 		this.register = register;
 	}
 

@@ -8,7 +8,7 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.uma.jmetal.service.Link;
+import org.uma.jmetal.service.Rel;
 
 public abstract class ControllerTemplate<T extends ResourceSupport> {
 
@@ -26,7 +26,7 @@ public abstract class ControllerTemplate<T extends ResourceSupport> {
 	public @ResponseBody Map<String, ResourceSupport> getAll() {
 		return getAllIds().stream().collect(Collectors.toMap(id -> id, id -> {
 			ResourceSupport resource = new ResourceSupport();
-			resource.add(createResource(id).getLink(Link.REL_SELF));
+			resource.add(createResource(id).getLink(Rel.SELF));
 			return resource;
 		}));
 	}

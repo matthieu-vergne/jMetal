@@ -8,7 +8,7 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.uma.jmetal.service.Link;
+import org.uma.jmetal.service.Rel;
 import org.uma.jmetal.service.controller.ControllerTemplate;
 import org.uma.jmetal.service.controller.UnknownResourceException;
 import org.uma.jmetal.service.model.runnable.ParamsDefinition;
@@ -73,7 +73,7 @@ public abstract class RunnableControllerTemplate<T extends ResourceSupport> exte
 		checkIsKnownRunnable(runnableId);
 		Map<Long, ResourceSupport> runs = getRunIds(runnableId).stream().collect(Collectors.toMap(id -> id, id -> {
 			ResourceSupport resource = new ResourceSupport();
-			resource.add(newRun(runnableId, id).getLink(Link.REL_SELF));
+			resource.add(newRun(runnableId, id).getLink(Rel.SELF));
 			return resource;
 		}));
 		if (runs.isEmpty()) {

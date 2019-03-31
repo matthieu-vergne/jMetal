@@ -1,7 +1,7 @@
 package org.uma.jmetal.service.model.runnable;
 
 import org.springframework.hateoas.ResourceSupport;
-import org.uma.jmetal.service.Link;
+import org.uma.jmetal.service.Rel;
 
 public class RunResult extends ResourceSupport {
 
@@ -9,8 +9,8 @@ public class RunResult extends ResourceSupport {
 
 	public RunResult(Run run, String algoId, long runId) {
 		this.description = "Here should appear the result of run " + runId + " of " + algoId + ".";
-		add(run.getLink(Link.REL_RUN_RESULT).withRel(Link.REL_SELF));
-		add(run.getLink(Link.REL_SELF).withRel(Link.REL_RUN));
+		add(run.getLink(Rel.RUN_RESULT).withRel(Rel.SELF));
+		add(run.getLink(Rel.SELF).withRel(Rel.RUN));
 	}
 
 }

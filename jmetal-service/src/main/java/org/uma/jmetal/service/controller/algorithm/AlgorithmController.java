@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.uma.jmetal.service.Link;
+import org.uma.jmetal.service.Rel;
 import org.uma.jmetal.service.controller.runnable.RunnableControllerTemplate;
 import org.uma.jmetal.service.model.algorithm.Algorithm;
 import org.uma.jmetal.service.register.algorithm.AlgorithmRegister;
@@ -19,7 +19,7 @@ public class AlgorithmController extends RunnableControllerTemplate<Algorithm> {
 
 	@Autowired
 	public AlgorithmController(AlgorithmRegister register, RunRegisterSupplier runRegisterSupplier) {
-		super("algorithm", Link.REL_ALGORITHM, runRegisterSupplier);
+		super("algorithm", Rel.ALGORITHM, runRegisterSupplier);
 		this.register = register;
 	}
 
