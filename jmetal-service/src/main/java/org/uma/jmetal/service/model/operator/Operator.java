@@ -21,6 +21,7 @@ public class Operator {
 			add(linkTo(controller.getResultDefinition(id)).withRel(Rel.RESULT_DEFINITION));
 			add(linkTo(controller.getResultExample(id)).withRel(Rel.RESULT_EXAMPLE));
 			add(linkTo(controller.getRuns(id)).withRel(Rel.RUNS));
+			add(linkTo(controller.getRunsStats(id)).withRel(Rel.RUNS_STATS));
 		}
 
 	}

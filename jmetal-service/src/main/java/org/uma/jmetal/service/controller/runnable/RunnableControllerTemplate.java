@@ -1,7 +1,10 @@
 package org.uma.jmetal.service.controller.runnable;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,6 +24,8 @@ import org.uma.jmetal.service.model.runnable.ParamsExample;
 import org.uma.jmetal.service.model.runnable.ResultDefinition;
 import org.uma.jmetal.service.model.runnable.ResultExample;
 import org.uma.jmetal.service.model.runnable.Run;
+import org.uma.jmetal.service.model.runnable.Run.Status;
+import org.uma.jmetal.service.model.runnable.RunsStats;
 import org.uma.jmetal.service.register.run.RunRegister;
 import org.uma.jmetal.service.register.run.RunRegisterSupplier;
 
@@ -82,6 +87,7 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 		Map<Long, ResourceSupport> runs = getRunIds(runnableId).stream().collect(Collectors.toMap(id -> id, id -> {
 			ResourceSupport resource = new ResourceSupport();
 			resource.add(newRunResponse(runnableId, id).getLink(Rel.SELF));
+			resource.add(linkTo(methodOn(getClass()).getRunsStats(runnableId)).withRel(Rel.RUNS_STATS));
 			return resource;
 		}));
 		if (runs.isEmpty()) {
@@ -102,6 +108,20 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 		executor.submit(runRegister.retrieve(runId));
 
 		return newRunResponse(runnableId, runId);
+	}
+
+	@GetMapping("/{runnableId}/runs/stats")
+	@Override
+	public @ResponseBody RunsStats.Response getRunsStats(@PathVariable String runnableId) {
+		checkIsKnownRunnable(runnableId);
+		RunRegister register = getRunRegister(runnableId);
+		Map<Status, Long> statuses = new LinkedHashMap<>();
+		statuses.put(Status.PENDING, 0L);
+		statuses.put(Status.RUNNING, 0L);
+		statuses.put(Status.DONE, 0L);
+		getRunIds(runnableId).stream().map(id -> register.retrieve(id).getStatus())
+				.forEach(status -> statuses.put(status, statuses.get(status) + 1));
+		return new RunsStats.Response(statuses, createRunnableResponse(runnableId), runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/runs/{runId}")

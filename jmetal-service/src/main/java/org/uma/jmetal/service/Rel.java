@@ -13,8 +13,10 @@ public class Rel {
 	public static final String RESULT_EXAMPLE = "result example";
 	
 	public static final String RUNS = "runs";
+	public static final String RUNS_STATS = "runs stats";
 	public static final String RUN = "run";
 	public static final String RUN_PARAMS = "run params";
 	public static final String RUN_RESULT = "run result";
 	public static final String RUN_STATUS = "run status";
+
 }
