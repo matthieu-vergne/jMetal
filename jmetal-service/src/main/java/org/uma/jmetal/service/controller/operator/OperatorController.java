@@ -13,7 +13,7 @@ import org.uma.jmetal.service.register.run.RunRegisterSupplier;
 
 @RestController
 @RequestMapping("/operators")
-public class OperatorController extends RunnableControllerTemplate<Operator> {
+public class OperatorController extends RunnableControllerTemplate<Operator.Response> {
 
 	private final OperatorRegister register;
 
@@ -29,8 +29,8 @@ public class OperatorController extends RunnableControllerTemplate<Operator> {
 	}
 
 	@Override
-	protected Operator createRunnable(String runnableId) {
-		return new Operator(runnableId);
+	protected Operator.Response createRunnableResponse(String runnableId) {
+		return new Operator.Response(runnableId);
 	}
 
 }

@@ -13,7 +13,7 @@ import org.uma.jmetal.service.register.run.RunRegisterSupplier;
 
 @RestController
 @RequestMapping("/algorithms")
-public class AlgorithmController extends RunnableControllerTemplate<Algorithm> {
+public class AlgorithmController extends RunnableControllerTemplate<Algorithm.Response> {
 
 	private final AlgorithmRegister register;
 
@@ -29,8 +29,8 @@ public class AlgorithmController extends RunnableControllerTemplate<Algorithm> {
 	}
 
 	@Override
-	protected Algorithm createRunnable(String runnableId) {
-		return new Algorithm(runnableId);
+	protected Algorithm.Response createRunnableResponse(String runnableId) {
+		return new Algorithm.Response(runnableId);
 	}
 
 }

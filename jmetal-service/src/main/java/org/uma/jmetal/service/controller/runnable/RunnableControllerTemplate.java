@@ -21,8 +21,8 @@ import org.uma.jmetal.service.model.runnable.RunResult;
 import org.uma.jmetal.service.model.runnable.RunStatus;
 import org.uma.jmetal.service.register.run.RunRegisterSupplier;
 
-public abstract class RunnableControllerTemplate<T extends ResourceSupport> extends ControllerTemplate<T>
-		implements RunnableController {
+public abstract class RunnableControllerTemplate<RunnableResponse extends ResourceSupport>
+		extends ControllerTemplate<RunnableResponse> implements RunnableController {
 
 	private final String runnableRel;
 	private final String runnableType;
@@ -36,35 +36,35 @@ public abstract class RunnableControllerTemplate<T extends ResourceSupport> exte
 		this.runRegisterSupplier = runRegisterSupplier;
 	}
 
-	protected abstract T createRunnable(String runnableId);
+	protected abstract RunnableResponse createRunnableResponse(String runnableId);
 
 	@Override
-	protected T createResource(String resourceId) {
-		return createRunnable(resourceId);
+	protected RunnableResponse createResourceResponse(String resourceId) {
+		return createRunnableResponse(resourceId);
 	}
 
 	@GetMapping("/{runnableId}/params/definition")
-	public ParamsDefinition getParamsDefinition(@PathVariable String runnableId) {
+	public ParamsDefinition.Response getParamsDefinition(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ParamsDefinition(createRunnable(runnableId), runnableId, runnableRel);
+		return new ParamsDefinition.Response(createRunnableResponse(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/params/example")
-	public ParamsExample getParamsExample(@PathVariable String runnableId) {
+	public ParamsExample.Response getParamsExample(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ParamsExample(createRunnable(runnableId), runnableId, runnableRel);
+		return new ParamsExample.Response(createRunnableResponse(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/result/definition")
-	public ResultDefinition getResultDefinition(@PathVariable String runnableId) {
+	public ResultDefinition.Response getResultDefinition(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ResultDefinition(createRunnable(runnableId), runnableId, runnableRel);
+		return new ResultDefinition.Response(createRunnableResponse(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/result/example")
-	public ResultExample getResultExample(@PathVariable String runnableId) {
+	public ResultExample.Response getResultExample(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ResultExample(createRunnable(runnableId), runnableId, runnableRel);
+		return new ResultExample.Response(createRunnableResponse(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/runs")
@@ -73,7 +73,7 @@ public abstract class RunnableControllerTemplate<T extends ResourceSupport> exte
 		checkIsKnownRunnable(runnableId);
 		Map<Long, ResourceSupport> runs = getRunIds(runnableId).stream().collect(Collectors.toMap(id -> id, id -> {
 			ResourceSupport resource = new ResourceSupport();
-			resource.add(newRun(runnableId, id).getLink(Rel.SELF));
+			resource.add(newRunResponse(runnableId, id).getLink(Rel.SELF));
 			return resource;
 		}));
 		if (runs.isEmpty()) {
@@ -85,30 +85,30 @@ public abstract class RunnableControllerTemplate<T extends ResourceSupport> exte
 
 	@GetMapping("/{runnableId}/runs/{runId}")
 	@Override
-	public @ResponseBody Run getRun(@PathVariable String runnableId, @PathVariable long runId) {
+	public @ResponseBody Run.Response getRun(@PathVariable String runnableId, @PathVariable long runId) {
 		checkIsKnownRun(runnableId, runId);
-		return newRun(runnableId, runId);
+		return newRunResponse(runnableId, runId);
 	}
 
 	@GetMapping("/{runnableId}/runs/{runId}/params")
 	@Override
-	public @ResponseBody RunParams getRunParams(@PathVariable String runnableId, @PathVariable long runId) {
+	public @ResponseBody RunParams.Response getRunParams(@PathVariable String runnableId, @PathVariable long runId) {
 		checkIsKnownRun(runnableId, runId);
-		return new RunParams(newRun(runnableId, runId), runnableId, runId);
+		return new RunParams.Response(newRunResponse(runnableId, runId), runnableId, runId);
 	}
 
 	@GetMapping("/{runnableId}/runs/{runId}/result")
 	@Override
-	public @ResponseBody RunResult getRunResult(@PathVariable String runnableId, @PathVariable long runId) {
+	public @ResponseBody RunResult.Response getRunResult(@PathVariable String runnableId, @PathVariable long runId) {
 		checkIsKnownRun(runnableId, runId);
-		return new RunResult(newRun(runnableId, runId), runnableId, runId);
+		return new RunResult.Response(newRunResponse(runnableId, runId), runnableId, runId);
 	}
 
 	@GetMapping("/{runnableId}/runs/{runId}/status")
 	@Override
-	public @ResponseBody RunStatus getRunStatus(@PathVariable String runnableId, @PathVariable long runId) {
+	public @ResponseBody RunStatus.Response getRunStatus(@PathVariable String runnableId, @PathVariable long runId) {
 		checkIsKnownRun(runnableId, runId);
-		return new RunStatus(newRun(runnableId, runId), runnableId, runId);
+		return new RunStatus.Response(newRunResponse(runnableId, runId), runnableId, runId);
 	}
 
 	private void checkIsKnownRunnable(String runnableId) {
@@ -124,8 +124,8 @@ public abstract class RunnableControllerTemplate<T extends ResourceSupport> exte
 		}
 	}
 
-	private Run newRun(String runnableId, long runId) {
-		return new Run(createRunnable(runnableId), runnableId, runnableRel, getClass(), runId);
+	private Run.Response newRunResponse(String runnableId, long runId) {
+		return new Run.Response(createRunnableResponse(runnableId), runnableId, runnableRel, getClass(), runId);
 	}
 
 	private Collection<Long> getRunIds(String runnableId) {

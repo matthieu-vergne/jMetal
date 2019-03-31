@@ -6,17 +6,22 @@ import org.springframework.hateoas.ResourceSupport;
 import org.uma.jmetal.service.Rel;
 import org.uma.jmetal.service.controller.runnable.RunnableController;
 
-public class Run extends ResourceSupport {
+public class Run {
 
-	public final String description;
+	public static class Response extends ResourceSupport {
 
-	public Run(ResourceSupport parent, String parentId, String parentRel, Class<? extends RunnableController> parentController, long runId) {
-		this.description = "Here may appear a summary of the run " + runId + " of " + parentId + ".";
-		add(linkTo(methodOn(parentController).getRun(parentId, runId)).withSelfRel());
-		add(linkTo(methodOn(parentController).getRunParams(parentId, runId)).withRel(Rel.RUN_PARAMS));
-		add(linkTo(methodOn(parentController).getRunResult(parentId, runId)).withRel(Rel.RUN_RESULT));
-		add(linkTo(methodOn(parentController).getRunStatus(parentId, runId)).withRel(Rel.RUN_STATUS));
-		add(parent.getLink(Rel.SELF).withRel(parentRel));
+		public final String description;
+
+		public Response(ResourceSupport parent, String parentId, String parentRel,
+				Class<? extends RunnableController> parentController, long runId) {
+			this.description = "Here may appear a summary of the run " + runId + " of " + parentId + ".";
+			add(linkTo(methodOn(parentController).getRun(parentId, runId)).withSelfRel());
+			add(linkTo(methodOn(parentController).getRunParams(parentId, runId)).withRel(Rel.RUN_PARAMS));
+			add(linkTo(methodOn(parentController).getRunResult(parentId, runId)).withRel(Rel.RUN_RESULT));
+			add(linkTo(methodOn(parentController).getRunStatus(parentId, runId)).withRel(Rel.RUN_STATUS));
+			add(parent.getLink(Rel.SELF).withRel(parentRel));
+		}
+
 	}
 
 }

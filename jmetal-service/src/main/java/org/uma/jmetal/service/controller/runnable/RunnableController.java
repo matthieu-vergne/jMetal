@@ -12,12 +12,12 @@ public interface RunnableController {
 
 	Map<Long, ResourceSupport> getRuns(String runnableId);
 
-	Run getRun(String runnableId, long runId);
+	Run.Response getRun(String runnableId, long runId);
 
-	RunParams getRunParams(String runnableId, long runId);
+	RunParams.Response getRunParams(String runnableId, long runId);
 
-	RunResult getRunResult(String runnableId, long runId);
+	RunResult.Response getRunResult(String runnableId, long runId);
 
-	RunStatus getRunStatus(String runnableId, long runId);
+	RunStatus.Response getRunStatus(String runnableId, long runId);
 
 }

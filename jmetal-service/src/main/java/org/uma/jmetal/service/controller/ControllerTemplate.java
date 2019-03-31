@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.uma.jmetal.service.Rel;
 
-public abstract class ControllerTemplate<T extends ResourceSupport> {
+public abstract class ControllerTemplate<ResourceResponse extends ResourceSupport> {
 
 	private final String resourceType;
 
@@ -20,21 +20,21 @@ public abstract class ControllerTemplate<T extends ResourceSupport> {
 
 	protected abstract Collection<String> getAllIds();
 
-	protected abstract T createResource(String resourceId);
+	protected abstract ResourceResponse createResourceResponse(String resourceId);
 
 	@GetMapping("")
 	public @ResponseBody Map<String, ResourceSupport> getAll() {
 		return getAllIds().stream().collect(Collectors.toMap(id -> id, id -> {
 			ResourceSupport resource = new ResourceSupport();
-			resource.add(createResource(id).getLink(Rel.SELF));
+			resource.add(createResourceResponse(id).getLink(Rel.SELF));
 			return resource;
 		}));
 	}
 
 	@GetMapping("/{resourceId}")
-	public T get(@PathVariable String resourceId) {
+	public ResourceResponse get(@PathVariable String resourceId) {
 		checkIsKnownResource(resourceId);
-		return createResource(resourceId);
+		return createResourceResponse(resourceId);
 	}
 
 	private void checkIsKnownResource(String resourceId) {
