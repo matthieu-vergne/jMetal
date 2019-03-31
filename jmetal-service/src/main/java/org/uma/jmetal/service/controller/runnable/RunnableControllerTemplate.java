@@ -46,25 +46,25 @@ public abstract class RunnableControllerTemplate<T extends ResourceSupport> exte
 	@GetMapping("/{runnableId}/params/definition")
 	public ParamsDefinition getParamsDefinition(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ParamsDefinition(createRunnable(runnableId), runnableId, Link.REL_OPERATOR);
+		return new ParamsDefinition(createRunnable(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/params/example")
 	public ParamsExample getParamsExample(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ParamsExample(createRunnable(runnableId), runnableId, Link.REL_OPERATOR);
+		return new ParamsExample(createRunnable(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/result/definition")
 	public ResultDefinition getResultDefinition(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ResultDefinition(createRunnable(runnableId), runnableId, Link.REL_OPERATOR);
+		return new ResultDefinition(createRunnable(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/result/example")
 	public ResultExample getResultExample(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ResultExample(createRunnable(runnableId), runnableId, Link.REL_OPERATOR);
+		return new ResultExample(createRunnable(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/runs")
