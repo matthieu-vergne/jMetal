@@ -32,9 +32,9 @@ public class RunTask implements Runnable {
 		status = Run.Status.RUNNING;
 		Result result;
 		try {
-			result = Result.of(function.apply(params));
+			result = Result.withValue(function.apply(params));
 		} catch (Exception cause) {
-			result = Result.ofError(cause);
+			result = Result.withError(cause);
 		}
 		resultSetter.accept(result);
 		status = Run.Status.DONE;

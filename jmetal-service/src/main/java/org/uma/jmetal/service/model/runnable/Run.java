@@ -91,11 +91,11 @@ public class Run implements Runnable {
 			this.error = error;
 		}
 
-		public static Result of(Object result) {
+		public static Result withValue(Object result) {
 			return new Result(result, null);
 		}
 
-		public static Result ofError(Exception error) {
+		public static Result withError(Exception error) {
 			Exception refException = new Exception();
 			hideFrameworkStack(error, refException);
 			return new Result(null, error);
