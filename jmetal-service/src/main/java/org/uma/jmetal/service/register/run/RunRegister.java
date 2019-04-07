@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.uma.jmetal.service.model.runnable.Run;
 import org.uma.jmetal.service.model.runnable.Run.Params;
 import org.uma.jmetal.service.model.runnable.Run.Request;
-import org.uma.jmetal.service.register.RegisterTemplate;
+import org.uma.jmetal.service.register.MapRegister;
 
 @Repository
-public class RunRegister extends RegisterTemplate<Long, Run> {
+public class RunRegister extends MapRegister<Long, Run> {
 
 	public synchronized Long store(Request request, Function<Params, Object> function) {
 		Long id = newId(getIds());
