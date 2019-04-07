@@ -49,6 +49,8 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 
 	protected abstract RunnableResponse createRunnableResponse(String runnableId);
 
+	protected abstract ParamsDefinition getRunnableParamsDefinition(String runnableId);
+
 	protected abstract Function<Run.Params, Object> getRunnableFunction(String runnableId);
 
 	@Override
@@ -60,14 +62,16 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 	@Override
 	public ParamsDefinition.Response getParamsDefinition(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ParamsDefinition.Response(createRunnableResponse(runnableId), runnableId, runnableRel);
+		ParamsDefinition def = getRunnableParamsDefinition(runnableId);
+		return new ParamsDefinition.Response(def, createRunnableResponse(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/params/example")
 	@Override
 	public ParamsExample.Response getParamsExample(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		return new ParamsExample.Response(createRunnableResponse(runnableId), runnableId, runnableRel);
+		ParamsExample example = getRunnableParamsDefinition(runnableId).createExample();
+		return new ParamsExample.Response(example, createRunnableResponse(runnableId), runnableId, runnableRel);
 	}
 
 	@GetMapping("/{runnableId}/result/definition")

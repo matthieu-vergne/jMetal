@@ -10,6 +10,7 @@ import org.uma.jmetal.service.Rel;
 import org.uma.jmetal.service.controller.runnable.RunnableControllerTemplate;
 import org.uma.jmetal.service.executor.RunExecutor;
 import org.uma.jmetal.service.model.operator.Operator;
+import org.uma.jmetal.service.model.runnable.ParamsDefinition;
 import org.uma.jmetal.service.model.runnable.Run;
 import org.uma.jmetal.service.register.operator.OperatorRegister;
 import org.uma.jmetal.service.register.run.RunRegisterSupplier;
@@ -39,7 +40,12 @@ public class OperatorController extends RunnableControllerTemplate<Operator.Resp
 
 	@Override
 	protected Function<Run.Params, Object> getRunnableFunction(String runnableId) {
-		return register.retrieve(runnableId);
+		return register.retrieve(runnableId).getFunction();
+	}
+	
+	@Override
+	protected ParamsDefinition getRunnableParamsDefinition(String runnableId) {
+		return register.retrieve(runnableId).getParamsDefinition();
 	}
 
 }
