@@ -7,10 +7,10 @@ public class ResultExample {
 
 	public static class Response extends ResourceSupport {
 
-		public final String description;
+		public final Object example;
 
-		public Response(ResourceSupport parent, String parentId, String parentRel) {
-			this.description = "Here should appear an example of result for " + parentId + ", based on its definition.";
+		public Response(Object example, ResourceSupport parent, String parentId, String parentRel) {
+			this.example = example;
 			add(parent.getLink(Rel.RESULT_EXAMPLE).withRel(Rel.SELF));
 			add(parent.getLink(Rel.SELF).withRel(parentRel));
 			add(parent.getLink(Rel.RESULT_DEFINITION));

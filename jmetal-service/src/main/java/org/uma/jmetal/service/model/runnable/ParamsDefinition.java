@@ -2,34 +2,35 @@ package org.uma.jmetal.service.model.runnable;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.uma.jmetal.service.Rel;
 
-public class ParamsDefinition {
-
-	private final Collection<ParamDefinition<?>> params;
+@SuppressWarnings("serial")
+public class ParamsDefinition extends LinkedHashMap<String, ParamDefinition<?>>
+		implements Map<String, ParamDefinition<?>> {
 
 	public ParamsDefinition(Collection<ParamDefinition<?>> params) {
-		this.params = params;
+		params.forEach(p -> put(p.getName(), p));
 	}
 
-	public Collection<ParamDefinition<?>> getParams() {
-		return params;
+	public ParamsDefinition(ParamDefinition<?>... params) {
+		this(Arrays.<ParamDefinition<?>>asList(params));
 	}
 
 	public ParamsExample createExample() {
-		return new ParamsExample(params.stream().collect(Collectors.toMap(p -> p.getName(), p -> p.createExample())));
+		return new ParamsExample(values().stream().collect(Collectors.toMap(p -> p.getName(), p -> p.createExample())));
 	}
 
 	public static class Response extends ResourceSupport {
 
-		public final Map<String, Object> params;
+		public final ParamsDefinition definition;
 
-		public Response(ParamsDefinition definition, ResourceSupport parent, String parentId, String parentRel) {
-			this.params = definition.getParams().stream().collect(Collectors.toMap(p -> p.getName(), p -> p));
+		public Response(ParamsDefinition def, ResourceSupport parent, String parentId, String parentRel) {
+			this.definition = def;
 			add(parent.getLink(Rel.PARAMS_DEFINITION).withRel(Rel.SELF));
 			add(parent.getLink(Rel.SELF).withRel(parentRel));
 			add(parent.getLink(Rel.PARAMS_EXAMPLE));
@@ -38,7 +39,7 @@ public class ParamsDefinition {
 	}
 
 	public static ParamsDefinition empty() {
-		return new ParamsDefinition(Arrays.asList());
+		return new ParamsDefinition();
 	}
 
 }

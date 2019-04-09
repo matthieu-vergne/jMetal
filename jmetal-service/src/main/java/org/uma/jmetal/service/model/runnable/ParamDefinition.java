@@ -11,56 +11,49 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ParamDefinition<T> {
 
-	private final String exposedName;
-	private final String type;
-	private final Class<?> clazz;
-	private final List<T> examples;
+	private final String name;
+	private final ExposedType<T> type;
+	private final List<Object> examples;
 
-	private ParamDefinition(String exposedName, String type, Class<?> clazz, List<T> examples) {
-		this.exposedName = exposedName;
+	private ParamDefinition(String name, ExposedType<T> type, List<Object> examples) {
+		this.name = name;
 		this.type = type;
-		this.clazz = clazz;
 		this.examples = examples;
 	}
 
 	@JsonIgnore
 	public String getName() {
-		return exposedName;
+		return name;
 	}
 
-	public String getType() {
+	public ExposedType<T> getType() {
 		return type;
 	}
 
-	@SuppressWarnings("unchecked")
-	public T getValue(Params params) {
-		Object value = params.get(exposedName);
+	public T from(Params params) {
+		Object value = params.get(name);
 		if (value == null) {
 			throw new MissingParamException(this);
 		}
-		return (T) clazz.cast(value);
+		return type.toInternType(value);
 	}
 
-	public List<T> getExamples() {
+	public List<Object> getExamples() {
 		return examples;
 	}
 
-	public T createExample() {
-		if (examples.isEmpty()) {
-			return null;
-		} else {
-			return examples.get(0);
-		}
+	public Object createExample() {
+		return examples.isEmpty() ? null : examples.get(0);
 	}
 
-	public static ParamDefinition<String> string(String name) {
-		return new ParamDefinition<>(name, "string", String.class, Arrays.asList());
+	public static <T> ParamDefinition<T> of(ExposedType<T> type, String name) {
+		return new ParamDefinition<>(name, type, Arrays.asList());
 	}
 
 	public ParamDefinition<T> withExample(T example) {
-		List<T> examples = new ArrayList<>(this.examples);
-		examples.add(example);
-		return new ParamDefinition<>(exposedName, type, clazz, examples);
+		List<Object> examples = new ArrayList<>(this.examples);
+		examples.add(type.toExposedType(example));
+		return new ParamDefinition<>(name, type, examples);
 	}
 
 	@SuppressWarnings("serial")
