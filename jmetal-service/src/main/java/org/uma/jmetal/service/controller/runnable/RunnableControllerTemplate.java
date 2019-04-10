@@ -25,6 +25,7 @@ import org.uma.jmetal.service.model.runnable.ResultDefinition;
 import org.uma.jmetal.service.model.runnable.ResultExample;
 import org.uma.jmetal.service.model.runnable.Run;
 import org.uma.jmetal.service.model.runnable.Run.Status;
+import org.uma.jmetal.service.model.runnable.RunSet;
 import org.uma.jmetal.service.model.runnable.RunsStats;
 import org.uma.jmetal.service.register.run.RunRegister;
 import org.uma.jmetal.service.register.run.RunRegisterSupplier;
@@ -94,7 +95,7 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 
 	@GetMapping("/{runnableId}/runs")
 	@Override
-	public @ResponseBody Map<Long, ResourceSupport> getRuns(@PathVariable String runnableId) {
+	public @ResponseBody RunSet.Response getRuns(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
 		Map<Long, ResourceSupport> runs = getRunIds(runnableId).stream().collect(Collectors.toMap(id -> id, id -> {
 			ResourceSupport resource = new ResourceSupport();
@@ -102,11 +103,7 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 			resource.add(linkTo(methodOn(getClass()).getRunsStats(runnableId)).withRel(Rel.RUNS_STATS));
 			return resource;
 		}));
-		if (runs.isEmpty()) {
-			throw new NoRunException(runnableId);
-		} else {
-			return runs;
-		}
+		return new RunSet.Response(runs, createRunnableResponse(runnableId), runnableId, runnableRel, getClass());
 	}
 
 	@PostMapping(path = "/{runnableId}/runs")

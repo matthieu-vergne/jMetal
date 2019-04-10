@@ -1,13 +1,11 @@
 package org.uma.jmetal.service.controller.runnable;
 
-import java.util.Map;
-
-import org.springframework.hateoas.ResourceSupport;
 import org.uma.jmetal.service.model.runnable.ParamsDefinition;
 import org.uma.jmetal.service.model.runnable.ParamsExample;
 import org.uma.jmetal.service.model.runnable.ResultDefinition;
 import org.uma.jmetal.service.model.runnable.ResultExample;
 import org.uma.jmetal.service.model.runnable.Run;
+import org.uma.jmetal.service.model.runnable.RunSet;
 import org.uma.jmetal.service.model.runnable.RunsStats;
 
 public interface RunnableController {
@@ -20,7 +18,7 @@ public interface RunnableController {
 
 	ResultExample.Response getResultExample(String runnableId);
 
-	Map<Long, ResourceSupport> getRuns(String runnableId);
+	RunSet.Response getRuns(String runnableId);
 
 	RunsStats.Response getRunsStats(String runnableId);
 
