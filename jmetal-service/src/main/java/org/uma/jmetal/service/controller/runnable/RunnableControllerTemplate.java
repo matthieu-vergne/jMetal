@@ -101,13 +101,9 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 	@PostMapping(path = "/{runnableId}/runs")
 	public @ResponseBody Run.Response addRun(@PathVariable String runnableId, @RequestBody Run.Request request) {
 		checkIsKnownRunnable(runnableId);
-
-		RunRegister runRegister = getRunRegister(runnableId);
-		Function<Run.Params, Object> function = getRunnableFunction(runnableId);
-		long runId = runRegister.store(request, function);
-
-		executor.submit(runRegister.retrieve(runId));
-
+		Run run = new Run(request, getRunnableFunction(runnableId));
+		long runId = getRunRegister(runnableId).store(run);
+		executor.submit(run);
 		return newRunResponse(runnableId, runId);
 	}
 
