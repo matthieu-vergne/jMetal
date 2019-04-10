@@ -2,6 +2,10 @@ package org.uma.jmetal.service;
 
 public class Rel {
 	public static final String SELF = org.springframework.hateoas.Link.REL_SELF;
+	public static final String FIRST = org.springframework.hateoas.Link.REL_FIRST;
+	public static final String LAST = org.springframework.hateoas.Link.REL_LAST;
+	public static final String PREVIOUS = org.springframework.hateoas.Link.REL_PREVIOUS;
+	public static final String NEXT = org.springframework.hateoas.Link.REL_NEXT;
 	
 	public static final String ALGORITHM = "algorithm";
 	public static final String OPERATOR = "operator";

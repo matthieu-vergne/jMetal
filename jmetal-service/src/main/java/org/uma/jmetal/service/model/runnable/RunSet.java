@@ -2,7 +2,7 @@ package org.uma.jmetal.service.model.runnable;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
-import java.util.Map;
+import java.util.Collection;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.uma.jmetal.service.Rel;
@@ -12,12 +12,19 @@ public class RunSet {
 
 	public static class Response extends ResourceSupport {
 
-		public final Map<Long, ResourceSupport> runs;
+		public final long count;
 
-		public Response(Map<Long, ResourceSupport> runs, ResourceSupport parent, String parentId, String parentRel,
+		public Response(Collection<Long> runIds, ResourceSupport parent, String parentId, String parentRel,
 				Class<? extends RunnableController> parentController) {
-			this.runs = runs;
+			this.count = runIds.size();
+
 			add(linkTo(methodOn(parentController).getRuns(parentId)).withSelfRel());
+			if (!runIds.isEmpty()) {
+				long firstId = runIds.stream().mapToLong(l -> l).min().getAsLong();
+				long lastId = runIds.stream().mapToLong(l -> l).max().getAsLong();
+				add(linkTo(methodOn(parentController).getRun(parentId, firstId)).withRel(Rel.FIRST));
+				add(linkTo(methodOn(parentController).getRun(parentId, lastId)).withRel(Rel.LAST));
+			}
 			add(parent.getLink(Rel.SELF).withRel(parentRel));
 		}
 

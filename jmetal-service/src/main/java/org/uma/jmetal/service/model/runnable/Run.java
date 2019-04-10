@@ -3,11 +3,14 @@ package org.uma.jmetal.service.model.runnable;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.OptionalLong;
 import java.util.function.Function;
 
 import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.uma.jmetal.service.Rel;
 import org.uma.jmetal.service.controller.runnable.RunnableController;
 import org.uma.jmetal.service.executor.RunTask;
@@ -143,14 +146,34 @@ public class Run implements Runnable {
 		public final Run.Result result;
 
 		public Response(Run run, ResourceSupport parent, String parentId, String parentRel,
-				Class<? extends RunnableController> parentController, long runId) {
+				Class<? extends RunnableController> parentController, long runId, Collection<Long> runIds) {
 			this.request = run.request;
 			this.status = run.getStatus();
 			this.result = run.result;
-			add(linkTo(methodOn(parentController).getRun(parentId, runId)).withSelfRel());
+
+			Function<Long, ControllerLinkBuilder> runLinkBuilder = id -> linkTo(
+					methodOn(parentController).getRun(parentId, id));
+
+			add(runLinkBuilder.apply(runId).withSelfRel());
 			add(linkTo(methodOn(parentController).getRunParams(parentId, runId)).withRel(Rel.RUN_PARAMS));
 			add(linkTo(methodOn(parentController).getRunResult(parentId, runId)).withRel(Rel.RUN_RESULT));
 			add(linkTo(methodOn(parentController).getRunStatus(parentId, runId)).withRel(Rel.RUN_STATUS));
+
+			if (!runIds.isEmpty()) {
+				long firstId = runIds.stream().mapToLong(l -> l).min().getAsLong();
+				add(runLinkBuilder.apply(firstId).withRel(Rel.FIRST));
+				OptionalLong previousId = runIds.stream().filter(l -> l < runId).mapToLong(l -> l).max();
+				if (previousId.isPresent()) {
+					add(runLinkBuilder.apply(previousId.getAsLong()).withRel(Rel.PREVIOUS));
+				}
+				OptionalLong nextId = runIds.stream().filter(l -> l > runId).mapToLong(l -> l).min();
+				if (nextId.isPresent()) {
+					add(runLinkBuilder.apply(nextId.getAsLong()).withRel(Rel.NEXT));
+				}
+				long lastId = runIds.stream().mapToLong(l -> l).max().getAsLong();
+				add(runLinkBuilder.apply(lastId).withRel(Rel.LAST));
+			}
+
 			add(parent.getLink(Rel.SELF).withRel(parentRel));
 		}
 

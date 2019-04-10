@@ -1,13 +1,10 @@
 package org.uma.jmetal.service.controller.runnable;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.uma.jmetal.service.Rel;
 import org.uma.jmetal.service.controller.ControllerTemplate;
 import org.uma.jmetal.service.controller.UnknownResourceException;
 import org.uma.jmetal.service.executor.RunExecutor;
@@ -97,13 +93,9 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 	@Override
 	public @ResponseBody RunSet.Response getRuns(@PathVariable String runnableId) {
 		checkIsKnownRunnable(runnableId);
-		Map<Long, ResourceSupport> runs = getRunIds(runnableId).stream().collect(Collectors.toMap(id -> id, id -> {
-			ResourceSupport resource = new ResourceSupport();
-			resource.add(newRunResponse(runnableId, id).getLink(Rel.SELF));
-			resource.add(linkTo(methodOn(getClass()).getRunsStats(runnableId)).withRel(Rel.RUNS_STATS));
-			return resource;
-		}));
-		return new RunSet.Response(runs, createRunnableResponse(runnableId), runnableId, runnableRel, getClass());
+		Collection<Long> runIds = getRunIds(runnableId);
+		RunnableResponse runnableResponse = createRunnableResponse(runnableId);
+		return new RunSet.Response(runIds, runnableResponse, runnableId, runnableRel, getClass());
 	}
 
 	@PostMapping(path = "/{runnableId}/runs")
@@ -188,7 +180,8 @@ public abstract class RunnableControllerTemplate<RunnableResponse extends Resour
 	private Run.Response newRunResponse(String runnableId, long runId) {
 		Run run = getRunRegister(runnableId).retrieve(runId);
 		RunnableResponse parentResponse = createRunnableResponse(runnableId);
-		return new Run.Response(run, parentResponse, runnableId, runnableRel, getClass(), runId);
+		Collection<Long> runIds = getRunIds(runnableId);
+		return new Run.Response(run, parentResponse, runnableId, runnableRel, getClass(), runId, runIds);
 	}
 
 	private RunRegister getRunRegister(String runnableId) {
