@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public class ExposedType<T> {
 
 	public static final ExposedType<Void> VOID = new ExposedType<>("void");
-	public static final ExposedType<Object> OBJECT = new ExposedType<>("object");
 	public static final ExposedType<String> STRING = new ExposedType<>("string");
 	public static final ExposedType<Double> DOUBLE = new ExposedType<>("double");
 
