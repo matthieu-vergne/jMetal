@@ -5,21 +5,28 @@ import static org.uma.jmetal.service.model.runnable.ExposedType.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.uma.jmetal.operator.impl.crossover.NullCrossover;
+import org.uma.jmetal.operator.impl.mutation.BitFlipMutation;
 import org.uma.jmetal.operator.impl.mutation.NullMutation;
+import org.uma.jmetal.problem.BinaryProblem;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.problem.impl.ComposableDoubleProblem;
+import org.uma.jmetal.problem.singleobjective.OneMax;
 import org.uma.jmetal.service.model.operator.Operator;
 import org.uma.jmetal.service.model.runnable.ExposedType;
 import org.uma.jmetal.service.model.runnable.ParamDefinition;
 import org.uma.jmetal.service.model.runnable.ParamsDefinition;
 import org.uma.jmetal.service.model.runnable.ResultDefinition;
 import org.uma.jmetal.service.model.runnable.Run.Params;
+import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.solution.impl.DefaultBinarySolution;
+import org.uma.jmetal.util.binarySet.BinarySet;
 
 @Component
 public class JMetalOperatorsInitializer implements InitializingBean {
@@ -79,6 +86,31 @@ public class JMetalOperatorsInitializer implements InitializingBean {
 			ResultDefinition<Solution<Double>> resultDef = ResultDefinition.of(solutionVars).withExample(solutionEx1);
 			register.store("null-mutation", new Operator<>(paramsDef, function, resultDef));
 		}
+		
+		{
+			DefaultBinarySolution solutionExample = new DefaultBinarySolution(new OneMax(5));
+			ExposedType<BinarySolution> solutionType = new ExposedType<BinarySolution>("binary solution", x -> {
+				@SuppressWarnings("unchecked")
+				List<String> strings = (List<String>) x;
+				List<BinarySet> variables = strings.stream().map(s -> stringToBinary(s)).collect(Collectors.toList());
+				int numberOfObjectives = 0;//TODO
+				DefaultBinarySolution solution = new DefaultBinarySolution(variables.size(), i -> variables.get(i).getBinarySetLength(), numberOfObjectives);
+				solution.setVariables(variables);
+				return solution;
+			}, x -> {
+				return x.getVariables().stream().map(binarySet -> binaryToString(binarySet)).collect(Collectors.toList());
+			});
+			ParamDefinition<BinarySolution> solution = ParamDefinition.of(solutionType, "solution")
+					.withExample(solutionExample);
+			ParamDefinition<Double> mutationProbability = ParamDefinition.of(DOUBLE, "mutation probability")
+					.withExample(0.5);
+			ParamsDefinition paramsDef = new ParamsDefinition(solution);
+			Function<Params, BinarySolution> function = params -> new BitFlipMutation(mutationProbability.from(params))
+					.execute(solution.from(params));
+			ResultDefinition<BinarySolution> resultDef = ResultDefinition.of(solutionType)
+					.withExample(solutionExample);
+			register.store("bit-flip-mutation", new Operator<>(paramsDef, function, resultDef));
+		}
 
 		{
 			ExposedType<List<Solution<Double>>> list = list(solutionVars(DOUBLE));
@@ -90,6 +122,30 @@ public class JMetalOperatorsInitializer implements InitializingBean {
 			ResultDefinition<List<Solution<Double>>> resultDef = ResultDefinition.of(list).withExample(example);
 			register.store("null-crossover", new Operator<>(paramsDef, function, resultDef));
 		}
+	}
+
+	private BinarySet stringToBinary(String s) {
+		BinarySet binarySet = new BinarySet(s.length());
+		int[] index = {0};
+		s.codePoints().mapToObj(i -> {
+			switch (i) {
+			case '0':
+				return false;
+			case '1':
+				return true;
+			default:
+				throw new IllegalArgumentException("Invalid character: " + (char) i);
+			}
+		}).forEach(b -> binarySet.set(index[0]++, b));
+		return binarySet;
+	}
+
+	private String binaryToString(BinarySet binarySet) {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < binarySet.getBinarySetLength(); i++) {
+			builder.append(binarySet.get(i) ? '1' : '0');
+		}
+		return builder.toString();
 	}
 
 }
