@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -22,8 +23,12 @@ public class DefaultBinarySolution
     implements BinarySolution {
 
   /** Constructor */
+  public DefaultBinarySolution(int numberOfVariables, Function<Integer, Integer> numberOfBits, int numberOfObjectives) {
+    super(variablesInitializer(numberOfVariables, numberOfBits, JMetalRandom.getInstance()), numberOfObjectives) ;
+  }
+
   public DefaultBinarySolution(BinaryProblem problem) {
-    super(variablesInitializer(problem, JMetalRandom.getInstance()), problem.getNumberOfObjectives()) ;
+    this(problem.getNumberOfVariables(), problem::getNumberOfBits, problem.getNumberOfObjectives()) ;
   }
 
   /** Copy constructor */
@@ -81,11 +86,11 @@ public class DefaultBinarySolution
     return result ;
   }
   
-  private static List<BinarySet> variablesInitializer(BinaryProblem problem, JMetalRandom randomGenerator) {
-    int numberOfVariables = problem.getNumberOfVariables();
+  private static List<BinarySet> variablesInitializer(int numberOfVariables, Function<Integer, Integer> numberOfBits,
+      JMetalRandom randomGenerator) {
     List<BinarySet> variables = new ArrayList<>(numberOfVariables);
     for (int i = 0; i < numberOfVariables; i++) {
-      variables.add(createNewBitSet(problem.getNumberOfBits(i), randomGenerator));
+      variables.add(createNewBitSet(numberOfBits.apply(i), randomGenerator));
     }
     return variables;
   }
