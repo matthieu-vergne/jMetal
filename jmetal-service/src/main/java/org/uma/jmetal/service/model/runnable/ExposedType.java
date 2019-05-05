@@ -11,9 +11,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public class ExposedType<T> {
 
-	public static final ExposedType<Void> VOID = new ExposedType<>("void");
-	public static final ExposedType<String> STRING = new ExposedType<>("string");
-	public static final ExposedType<Double> DOUBLE = new ExposedType<>("double");
+	public static final ExposedType<Void> VOID = fromClass("void", Void.class);
+	public static final ExposedType<String> STRING = fromClass("string", String.class);
+	public static final ExposedType<Double> DOUBLE = fromClass("double", Double.class);
 
 	private final String name;
 	private final Function<Object, T> internalizer;
@@ -23,11 +23,6 @@ public class ExposedType<T> {
 		this.name = name;
 		this.internalizer = internalizer;
 		this.exposer = exposer;
-	}
-
-	@SuppressWarnings("unchecked")
-	public ExposedType(String name) {
-		this(name, x -> (T) x, x -> x);
 	}
 
 	@JsonValue
@@ -46,6 +41,10 @@ public class ExposedType<T> {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public static <T> ExposedType<T> fromClass(String name, Class<T> clazz) {
+		return new ExposedType<>(name, clazz::cast, x -> x);
 	}
 
 	public static <T> ExposedType<Solution<T>> solutionVars(ExposedType<T> varType) {
